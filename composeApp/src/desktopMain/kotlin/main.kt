@@ -4,19 +4,37 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
+import com.arkivanov.decompose.DefaultComponentContext
+import com.arkivanov.essenty.lifecycle.LifecycleRegistry
+import di.initKoin
+import feature.home.DefaultRootComponent
+import utils.runOnUiThread
 
-fun main() = application {
-    val state = rememberWindowState()
-    val windowsSize = remember { mutableStateOf(state.size) }
+fun main() {
+    initKoin()
+    application {
+        val state = rememberWindowState()
+        val windowsSize = remember { mutableStateOf(state.size) }
+        val lifecycle = LifecycleRegistry()
+        val root =
+            runOnUiThread {
+                DefaultRootComponent(
+                    componentContext = DefaultComponentContext(lifecycle = lifecycle),
+                )
+            }
 
-    Window(
-        onCloseRequest = ::exitApplication,
-        state = state,
-        title = "ColorHelper"
-    ) {
-        LaunchedEffect(state.size) {
-            windowsSize.value = state.size
+        Window(
+            onCloseRequest = ::exitApplication,
+            state = state,
+            title = "ColorHelper"
+        ) {
+            LaunchedEffect(state.size) {
+                windowsSize.value = state.size
+            }
+            App(
+                rootComponent = root,
+                windowSize =  windowsSize.value,
+            )
         }
-        App(windowsSize.value)
     }
 }

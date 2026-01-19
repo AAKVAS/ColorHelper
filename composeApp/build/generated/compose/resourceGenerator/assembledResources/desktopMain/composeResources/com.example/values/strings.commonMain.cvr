@@ -1,8 +1,17 @@
 version:0
 string|app_name|Q29sb3JIZWxwZXI=
+string|cancel|0J7RgtC80LXQvdCw
+string|confirm_delete|0J/QvtC00YLQstC10YDQtNC40YLQtSDRg9C00LDQu9C10L3QuNC1
 string|copied|0KHQutC+0L/QuNGA0L7QstCw0L3Qvg==
 string|copy|0JrQvtC/0LjRgNC+0LLQsNGC0Yw=
+string|delete_color|0KPQtNCw0LvQuNGC0Ywg0YbQstC10YIgJTEkcz8=
+string|delete_palette|0KPQtNCw0LvQuNGC0Ywg0L/QsNC70LjRgtGA0YMgIiUxJHMiPw==
+string|delete|0KPQtNCw0LvQuNGC0Yw=
 string|floor_color|0KbQstC10YIg0L/QvtCy0LXRgNGF0L3QvtGB0YLQuDog
+string|harmonious_colors|0JPQsNGA0LzQvtC90LjRgNGD0Y7RidC40LUg0YbQstC10YLQsA==
+string|lab|0JvQsNCx0L7RgNCw0YLQvtGA0LjRjw==
 string|light_color|0KbQstC10YIg0L7RgdCy0LXRidC10L3QuNGPOiA=
+string|not_canceled_action|0K3RgtC+INC00LXQudGB0YLQstC40LUg0L3QtdC70YzQt9GPINC+0YLQvNC10L3QuNGC0Ywu
+string|palettes|0J/QsNC70LjRgtGA0Ys=
 string|sphere_color|0KbQstC10YIg0YHRhNC10YDRizog
 string|title|Q29sb3JIZWxwZXI=

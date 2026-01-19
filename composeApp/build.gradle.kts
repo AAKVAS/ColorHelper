@@ -52,7 +52,14 @@ kotlin {
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.compose.colorpicker)
-//            implementation(libs.androidx.material3.adaptive)
+            implementation(libs.decompose)
+            implementation(libs.decompose.extensions)
+            implementation(libs.mvikotlin)
+            implementation(libs.mvikotlin.main)
+            implementation(libs.mvikotlin.logging)
+            implementation(libs.mvikotlin.timetravel)
+            implementation(libs.mvikotlin.coroutines)
+            implementation(libs.decompose.lifecycle.coroutines)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)

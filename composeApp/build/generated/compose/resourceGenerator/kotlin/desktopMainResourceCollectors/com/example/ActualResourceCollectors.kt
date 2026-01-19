@@ -2,6 +2,9 @@
 
 package com.example
 
+import kotlin.OptIn
+import kotlin.String
+import kotlin.collections.Map
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.FontResource
 import org.jetbrains.compose.resources.PluralStringResource
@@ -10,6 +13,7 @@ import org.jetbrains.compose.resources.StringResource
 
 public actual val Res.allDrawableResources: Map<String, DrawableResource> by lazy {
   val map = mutableMapOf<String, DrawableResource>()
+  _collectCommonMainDrawable0Resources(map)
   return@lazy map
 }
 

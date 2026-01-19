@@ -8,6 +8,7 @@ object Dimens {
     val paddingSmall = 8.dp
     val paddingMedium = 16.dp
     val paddingLarge = 24.dp
+    val iconButtonSize = 24.dp
     val cardCornerRadius = 12.dp
     val buttonHeight = 48.dp
 }
