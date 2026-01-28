@@ -12,16 +12,17 @@ import utils.runOnUiThread
 
 fun main() {
     initKoin()
+    val lifecycle = LifecycleRegistry()
+    val root =
+        runOnUiThread {
+            DefaultRootComponent(
+                componentContext = DefaultComponentContext(lifecycle = lifecycle),
+            )
+        }
+
     application {
         val state = rememberWindowState()
         val windowsSize = remember { mutableStateOf(state.size) }
-        val lifecycle = LifecycleRegistry()
-        val root =
-            runOnUiThread {
-                DefaultRootComponent(
-                    componentContext = DefaultComponentContext(lifecycle = lifecycle),
-                )
-            }
 
         Window(
             onCloseRequest = ::exitApplication,

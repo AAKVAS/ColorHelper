@@ -2,9 +2,6 @@
 
 package com.example
 
-import kotlin.OptIn
-import kotlin.String
-import kotlin.collections.MutableMap
 import org.jetbrains.compose.resources.InternalResourceApi
 import org.jetbrains.compose.resources.ResourceItem
 import org.jetbrains.compose.resources.StringResource

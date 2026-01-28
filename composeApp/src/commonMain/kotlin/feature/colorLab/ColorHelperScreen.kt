@@ -1,28 +1,23 @@
 package feature.colorLab
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.TooltipArea
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
-import androidx.compose.material.Scaffold
-import androidx.compose.material.SnackbarHost
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -61,6 +56,7 @@ import org.jetbrains.compose.resources.stringResource
 import ui.`3d`.camera.OrbitCamera
 import ui.composeComponents.ColorPickerUI
 import ui.composeComponents.CustomTextField
+import ui.composeComponents.TooltipWrapper
 import ui.theme.Dimens
 import ui.theme.LocalColorProvider
 import utils.toColor
@@ -75,7 +71,6 @@ fun ColorHelperScreen(
     windowSize: DpSize,
     modifier: Modifier = Modifier
 ) {
-    val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
     val clipboardManager = LocalClipboardManager.current
     val state = component.state.collectAsState()
@@ -92,12 +87,13 @@ fun ColorHelperScreen(
     }
 
     val copied = stringResource(Res.string.copied)
+    val snackbarHostState = remember { SnackbarHostState() }
     val onCopyTextToClipboard: (String) -> Unit = { text ->
         scope.launch {
             clipboardManager.setText(
                 AnnotatedString(text)
             )
-            scaffoldState.snackbarHostState.showSnackbar(copied)
+            snackbarHostState.showSnackbar(copied)
         }
     }
 
@@ -123,62 +119,53 @@ fun ColorHelperScreen(
         )
     }
 
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        scaffoldState = scaffoldState,
-        snackbarHost = { SnackbarHost(hostState = scaffoldState.snackbarHostState) },
-        contentWindowInsets = WindowInsets.systemBars
-    ) { innerPadding ->
-        if (!isPortrait.value) {
-            Row(
-                modifier = modifier
-                    .fillMaxSize()
-                    .background(LocalColorProvider.current.onPrimary)
-                    .padding(top = innerPadding.calculateTopPadding())
+    if (!isPortrait.value) {
+        Row(
+            modifier = modifier
+                .fillMaxSize()
+                .background(LocalColorProvider.current.onPrimary)
+        ) {
+            SettingsUI(
+                sphereColorController = sphereColorController,
+                colorPickerController = colorPickerController,
+                floorColorController = floorColorController,
+                lightColorController = lightColorController,
+                colorLabState = state.value,
+                scope = scope,
+                copyTextToClipboard = onCopyTextToClipboard
+            )
+            Box(modifier = Modifier
+                .fillMaxSize()
+                .weight(1f)
+                .background(LocalColorProvider.current.background)
+                .padding(Dimens.paddingSmall)
             ) {
-                SettingsUI(
-                    sphereColorController = sphereColorController,
-                    colorPickerController = colorPickerController,
-                    floorColorController = floorColorController,
-                    lightColorController = lightColorController,
-                    colorLabState = state.value,
-                    scope = scope,
-                    copyTextToClipboard = onCopyTextToClipboard
-                )
-                Box(modifier = Modifier
-                    .fillMaxSize()
-                    .weight(1f)
-                    .background(LocalColorProvider.current.background)
-                    .padding(Dimens.paddingSmall)
-                ) {
-                    Scene(state)
-                }
+                Scene(state)
             }
-        } else {
-            Column(
-                modifier = modifier
-                    .fillMaxSize()
-                    .background(LocalColorProvider.current.onPrimary)
-                    .padding(top = innerPadding.calculateTopPadding())
+        }
+    } else {
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .background(LocalColorProvider.current.onPrimary)
+        ) {
+            Box(modifier = Modifier
+                .fillMaxSize()
+                .weight(1f)
+                .background(LocalColorProvider.current.background)
+                .padding(Dimens.paddingSmall)
             ) {
-                Box(modifier = Modifier
-                    .fillMaxSize()
-                    .weight(1f)
-                    .background(LocalColorProvider.current.background)
-                    .padding(Dimens.paddingSmall)
-                ) {
-                    Scene(state)
-                }
-                SettingsUI(
-                    sphereColorController = sphereColorController,
-                    colorPickerController = colorPickerController,
-                    floorColorController = floorColorController,
-                    lightColorController = lightColorController,
-                    colorLabState = state.value,
-                    scope = scope,
-                    copyTextToClipboard = onCopyTextToClipboard
-                )
+                Scene(state)
             }
+            SettingsUI(
+                sphereColorController = sphereColorController,
+                colorPickerController = colorPickerController,
+                floorColorController = floorColorController,
+                lightColorController = lightColorController,
+                colorLabState = state.value,
+                scope = scope,
+                copyTextToClipboard = onCopyTextToClipboard
+            )
         }
     }
 }
@@ -251,7 +238,8 @@ fun SettingsUI(
             }
             ColorPickerUI(
                 colorController = it,
-                defaultColor = defaultColor
+                defaultColor = defaultColor,
+                onCopyTextToClipboard = copyTextToClipboard
             )
         }
     }
@@ -278,11 +266,10 @@ fun ColorCharacteristic(
             color = LocalColorProvider.current.onSurface
         )
         SelectionContainer {
-            TooltipArea(
+            TooltipWrapper(
                 tooltip = {
                     Surface(
                         shape = RoundedCornerShape(4.dp),
-                        elevation = 4.dp
                     ) {
                         Text(
                             modifier = Modifier.padding(4.dp),
@@ -325,7 +312,7 @@ fun RGBCharacteristic(
     Row(
         modifier = Modifier
         .wrapContentSize()
-        .padding(4.dp),
+        .padding(start = 4.dp, end = 4.dp, top = 0.dp, bottom = 4.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(

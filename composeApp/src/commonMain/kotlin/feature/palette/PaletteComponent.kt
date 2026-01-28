@@ -1,5 +1,6 @@
 package feature.palette
 
+import feature.palette.model.ColorModel
 import feature.palette.model.ColorPalette
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
@@ -10,11 +11,12 @@ interface PaletteComponent {
 
     fun selectHarmoniousColor(color: String)
     fun showDeleteDialog()
-    fun updatePalette(palette: ColorPalette)
     fun addColor(color: String)
-    fun updateColor(index: Int, color: String)
-    fun updateSelectedColorIndex(index: Int)
-    fun showDeleteColorDialog(index: Int)
-    fun deleteColorByIndex(index: Int)
+    fun updateColor(color: ColorModel)
+    fun deleteColor(color: ColorModel)
+    fun updateSelectedColorUid(uid: String)
+    fun showDeleteColorDialog(uid: String)
     fun deletePalette()
+    fun updatePalette(colorPalette: ColorPalette)
+    fun navigateBack()
 }

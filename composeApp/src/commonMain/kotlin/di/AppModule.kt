@@ -7,7 +7,7 @@ fun initKoin(appDeclaration: KoinAppDeclaration = {}) =
     startKoin {
         appDeclaration()
         modules(
-            paletteModule,
+            paletteModule, getPlatformModule()
         )
     }
 

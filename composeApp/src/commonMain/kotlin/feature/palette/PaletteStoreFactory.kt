@@ -6,10 +6,14 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import feature.palette.domain.PaletteRepository
+import feature.palette.model.ColorModel
 import feature.palette.model.ColorPalette
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import java.util.UUID
 import kotlin.coroutines.CoroutineContext
 
 class PaletteStoreFactory(
@@ -58,20 +62,30 @@ class PaletteStoreFactory(
                 is PaletteStore.Intent.AddColor -> {
                     addColor(intent.color)
                 }
-                is PaletteStore.Intent.UpdateSelectedColorIndex -> {
-                    dispatch(PaletteStore.Msg.UpdateSelectedColorIndex(intent.index))
+                is PaletteStore.Intent.UpdateSelectedColorUid -> {
+                    dispatch(PaletteStore.Msg.UpdateSelectedColorUid(intent.uid))
                 }
                 is PaletteStore.Intent.ShowDeleteColorDialog -> {
-                    publish(PaletteStore.Label.ShowDeleteColorDialog(intent.index))
+                    publish(PaletteStore.Label.ShowDeleteColorDialog(intent.uid))
+                }
+                is PaletteStore.Intent.DeleteColor -> {
+                    deleteColor(intent.color)
+                }
+                is PaletteStore.Intent.UpdateColor -> {
+                    updateColor(intent.color)
                 }
             }
 
         private fun observePalette() {
-            scope.launch {
+            scope.launch(Dispatchers.Main) {
                 try {
-                    repository.observePalette(state().palette.id).collect {
-                        it?.let { palette ->
-                            dispatch(PaletteStore.Msg.PaletteUpdated(palette))
+                    withContext(Dispatchers.IO) {
+                        repository.observePalette(state().palette.uid).collect {
+                            it?.let { palette ->
+                                withContext(Dispatchers.Main) {
+                                    dispatch(PaletteStore.Msg.PaletteUpdated(palette))
+                                }
+                            }
                         }
                     }
                 } catch (e: Exception) {
@@ -82,10 +96,13 @@ class PaletteStoreFactory(
             }
         }
 
-        private fun updatePalette(palette: ColorPalette) {
-            scope.launch {
+        private fun updatePalette(colorPalette: ColorPalette) {
+            scope.launch(Dispatchers.Main) {
                 try {
-                    repository.updatePalette(palette)
+                    withContext(Dispatchers.IO) {
+                        repository.updatePalette(colorPalette)
+                    }
+                    dispatch(PaletteStore.Msg.PaletteUpdated(colorPalette))
                 } catch (e: Exception) {
                     val errMessage = e.message ?: "Непредвиденная ошибка"
                     dispatch(PaletteStore.Msg.Error(errMessage))
@@ -95,9 +112,11 @@ class PaletteStoreFactory(
         }
 
         private fun deletePalette() {
-            scope.launch {
+            scope.launch(Dispatchers.Main) {
                 try {
-                    repository.deletePalette(state().palette.id)
+                    withContext(Dispatchers.IO) {
+                        repository.deletePalette(state().palette.uid)
+                    }
                 } catch (e: Exception) {
                     val errMessage = e.message ?: "Непредвиденная ошибка"
                     dispatch(PaletteStore.Msg.Error(errMessage))
@@ -107,19 +126,57 @@ class PaletteStoreFactory(
         }
 
         private fun addColor(color: String) {
-            scope.launch {
+            scope.launch(Dispatchers.Main) {
                 try {
-                    val colors = state().palette.colors + color
-                    val newPalette = state().palette.copy(colors = colors)
-                    repository.updatePalette(newPalette)
-                    dispatch(PaletteStore.Msg.UpdateSelectedColorIndex(colors.size - 1))
+                    val palette = state().palette
+                    val uid = UUID.randomUUID().toString()
+                    val colorModel = ColorModel(
+                        uid = uid,
+                        paletteUid = palette.uid,
+                        value = color,
+                        createdAt = System.currentTimeMillis()
+                    )
+                    withContext(Dispatchers.IO) {
+                        repository.addColor(colorModel)
+                    }
+                    dispatch(PaletteStore.Msg.UpdateSelectedColorUid(uid))
                 } catch (e: Exception) {
                     val errMessage = e.message ?: "Непредвиденная ошибка"
                     dispatch(PaletteStore.Msg.Error(errMessage))
                     publish(PaletteStore.Label.ShowMessage(errMessage))
                 }
             }
+        }
 
+        private fun deleteColor(color: ColorModel) {
+            scope.launch(Dispatchers.Main) {
+                try {
+                    val index = state().palette.colors.indexOf(color)
+                    withContext(Dispatchers.IO) {
+                        repository.deleteColor(color)
+                    }
+                    val newSelectedUid = state().palette.colors.getOrNull(index)?.uid
+                    dispatch(PaletteStore.Msg.UpdateSelectedColorUid(newSelectedUid))
+                } catch (e: Exception) {
+                    val errMessage = e.message ?: "Непредвиденная ошибка"
+                    dispatch(PaletteStore.Msg.Error(errMessage))
+                    publish(PaletteStore.Label.ShowMessage(errMessage))
+                }
+            }
+        }
+
+        private fun updateColor(color: ColorModel) {
+            scope.launch(Dispatchers.Main) {
+                try {
+                    withContext(Dispatchers.IO) {
+                        repository.updateColor(color)
+                    }
+                } catch (e: Exception) {
+                    val errMessage = e.message ?: "Непредвиденная ошибка"
+                    dispatch(PaletteStore.Msg.Error(errMessage))
+                    publish(PaletteStore.Label.ShowMessage(errMessage))
+                }
+            }
         }
 
         private fun selectHarmoniousColors(color: String) {
@@ -140,8 +197,8 @@ class PaletteStoreFactory(
                 is PaletteStore.Msg.PaletteUpdated -> copy(palette = msg.palette)
                 is PaletteStore.Msg.Error -> copy(error = msg.message)
                 is PaletteStore.Msg.UpdateHarmoniousColors -> copy(harmoniousColors = msg.colors)
-                is PaletteStore.Msg.UpdateSelectedColorIndex -> {
-                    copy(selectedColorIndex = msg.index)
+                is PaletteStore.Msg.UpdateSelectedColorUid -> {
+                    copy(selectedColorUid = msg.uid)
                 }
             }
         }

@@ -4,6 +4,7 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
+import feature.palette.model.ColorModel
 import feature.palette.model.ColorPalette
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -14,7 +15,8 @@ class DefaultPaletteComponent(
     componentContext: ComponentContext,
     storeFactory: PaletteStoreFactory,
     colorPalette: ColorPalette,
-    val onDelete: () -> Unit
+    val onDelete: () -> Unit,
+    val onNavigateBack: () -> Unit
 ) : PaletteComponent, ComponentContext by componentContext {
     private val _store = instanceKeeper.getStore {
         storeFactory.create(colorPalette)
@@ -37,42 +39,35 @@ class DefaultPaletteComponent(
         _store.accept(PaletteStore.Intent.ShowDeleteDialog)
     }
 
-    override fun updatePalette(palette: ColorPalette) {
-        _store.accept(PaletteStore.Intent.UpdatePalette(palette))
-    }
-
     override fun addColor(color: String) {
         _store.accept(PaletteStore.Intent.AddColor(color))
     }
 
-    override fun updateColor(index: Int, color: String) {
-        val colors = _store.state.palette.colors.mapIndexed { i, currentColor ->
-            if (i == index) {
-                color
-            } else {
-                currentColor
-            }
-        }
-        updatePalette(_store.state.palette.copy(colors = colors))
+    override fun updateColor(color: ColorModel) {
+        _store.accept(PaletteStore.Intent.UpdateColor(color))
     }
 
-    override fun updateSelectedColorIndex(index: Int) {
-        _store.accept(PaletteStore.Intent.UpdateSelectedColorIndex(index))
+    override fun updateSelectedColorUid(uid: String) {
+        _store.accept(PaletteStore.Intent.UpdateSelectedColorUid(uid))
     }
 
-    override fun showDeleteColorDialog(index: Int) {
-        _store.accept(PaletteStore.Intent.ShowDeleteColorDialog(index))
+    override fun showDeleteColorDialog(uid: String) {
+        _store.accept(PaletteStore.Intent.ShowDeleteColorDialog(uid))
     }
 
-    override fun deleteColorByIndex(index: Int) {
-        val colors = _store.state.palette.colors.filterIndexed { i, _ ->
-            i != index
-        }
-        val palette = _store.state.palette.copy(colors = colors)
-        _store.accept(PaletteStore.Intent.UpdatePalette(palette))
+    override fun deleteColor(color: ColorModel) {
+        _store.accept(PaletteStore.Intent.DeleteColor(color))
     }
 
     override fun deletePalette() {
         onDelete()
+    }
+
+    override fun updatePalette(colorPalette: ColorPalette) {
+        _store.accept(PaletteStore.Intent.UpdatePalette(colorPalette))
+    }
+
+    override fun navigateBack() {
+        onNavigateBack()
     }
 }

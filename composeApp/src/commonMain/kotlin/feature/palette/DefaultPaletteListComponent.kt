@@ -8,14 +8,13 @@ import com.arkivanov.decompose.router.stack.navigate
 import com.arkivanov.decompose.router.stack.popTo
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
-import com.arkivanov.mvikotlin.extensions.coroutines.labelsChannel
+import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import feature.palette.model.ColorPalette
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.IO
-import kotlinx.coroutines.channels.ReceiveChannel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.serialization.Serializable
 
@@ -30,8 +29,7 @@ class DefaultPaletteListComponent(
     @OptIn(ExperimentalCoroutinesApi::class)
     override val state: StateFlow<PaletteListStore.State> = _store.stateFlow
 
-    override val labels: ReceiveChannel<PaletteListStore.Label> =
-        _store.labelsChannel(componentContext.lifecycle)
+    override val labels: Flow<PaletteListStore.Label> = _store.labels
 
     private val navigation = StackNavigation<Config>()
 
@@ -67,7 +65,12 @@ class DefaultPaletteListComponent(
                 Dispatchers.IO
             ),
             colorPalette = colorPalette,
-            onDelete = { deletePalette(colorPalette) }
+            onDelete = { deletePalette(colorPalette) },
+            onNavigateBack = {
+                navigation.navigate { _ ->
+                    listOf(Config.NoChildren)
+                }
+            }
         )
 
 
@@ -94,7 +97,7 @@ class DefaultPaletteListComponent(
         navigation.navigate { _ ->
             listOf(Config.NoChildren)
         }
-        _store.accept(PaletteListStore.Intent.DeletePalette(colorPalette.id))
+        _store.accept(PaletteListStore.Intent.DeletePalette(colorPalette.uid))
     }
 
     @Serializable

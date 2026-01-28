@@ -9,7 +9,9 @@ import feature.palette.PaletteListStore.Intent
 import feature.palette.PaletteListStore.Msg
 import feature.palette.domain.PaletteRepository
 import feature.palette.model.ColorPalette
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.util.UUID
@@ -52,9 +54,6 @@ class PaletteListStoreFactory(
                 is Intent.ShowEditPage -> {
                     dispatch(Msg.EditPalettePageOpened(intent.colorPalette))
                 }
-                is Intent.EditPalette -> {
-                    editPalette(intent.colorPalette)
-                }
                 is Intent.ShowDeleteMessage -> {
                     publish(PaletteListStore.Label.ShowDeleteDialog(intent.colorPalette))
                 }
@@ -62,13 +61,20 @@ class PaletteListStoreFactory(
 
         private fun loadPalettes() {
             dispatch(Msg.LoadingStarted)
-            scope.launch {
+
+            scope.launch(Dispatchers.Main) {
                 try {
-                    val palettes = repository.getPalettes()
+                    val palettes = withContext(Dispatchers.IO) {
+                        repository.getPalettes()
+                    }
                     dispatch(Msg.PalettesLoaded(palettes))
 
-                    repository.observePalettes().collect {
-                        dispatch(Msg.PalettesLoaded(it))
+                    withContext(Dispatchers.IO) {
+                        repository.observePalettes().collect {
+                            withContext(Dispatchers.Main) {
+                                dispatch(Msg.PalettesLoaded(it))
+                            }
+                        }
                     }
                 } catch (e: Exception) {
                     val errMessage = e.message ?: "Непредвиденная ошибка"
@@ -81,14 +87,19 @@ class PaletteListStoreFactory(
         }
 
         private fun addPalette() {
-            scope.launch {
+            scope.launch(Dispatchers.Main) {
                 try {
                     val newPalette = ColorPalette(
-                        id = UUID.randomUUID().toString(),
+                        uid = UUID.randomUUID().toString(),
                         name = "New palette",
-                        colors = listOf()
+                        colors = listOf(),
+                        createdAt = System.currentTimeMillis()
                     )
-                    repository.savePalette(newPalette)
+
+                    withContext(Dispatchers.IO) {
+                        repository.savePalette(newPalette)
+                    }
+
                     dispatch(Msg.EditPalettePageOpened(newPalette))
                     publish(PaletteListStore.Label.ShowEditPage(newPalette))
                 } catch (e: Exception) {
@@ -100,22 +111,12 @@ class PaletteListStoreFactory(
         }
 
         private fun deletePalette(id: String) {
-            scope.launch {
+            scope.launch(Dispatchers.Main) {
                 try {
-                    repository.deletePalette(id)
+                    withContext(Dispatchers.IO) {
+                        repository.deletePalette(id)
+                    }
                     dispatch(Msg.PaletteDeleted(id))
-                } catch (e: Exception) {
-                    val errMessage = e.message ?: "Непредвиденная ошибка"
-                    dispatch(Msg.Error(errMessage))
-                    publish(PaletteListStore.Label.ShowMessage(errMessage))
-                }
-            }
-        }
-
-        private fun editPalette(colorPalette: ColorPalette) {
-            scope.launch {
-                try {
-                    repository.updatePalette(colorPalette)
                 } catch (e: Exception) {
                     val errMessage = e.message ?: "Непредвиденная ошибка"
                     dispatch(Msg.Error(errMessage))
@@ -133,11 +134,11 @@ class PaletteListStoreFactory(
                 is Msg.PalettesLoaded -> copy(items = msg.palettes)
                 is Msg.Error -> copy(error = msg.message)
                 is Msg.PaletteAdded -> copy(items = items + msg.palette)
-                is Msg.PaletteDeleted -> copy(items = items.filter { it.id != msg.id })
+                is Msg.PaletteDeleted -> copy(items = items.filter { it.uid != msg.id })
                 is Msg.PaletteUpdated -> {
                     copy(
                         items = items.map {
-                            if (it.id == msg.palette.id) msg.palette else it
+                            if (it.uid == msg.palette.uid) msg.palette else it
                         },
                         editedPalette = null
                     )

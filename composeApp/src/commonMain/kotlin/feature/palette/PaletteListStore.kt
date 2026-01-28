@@ -12,7 +12,6 @@ interface PaletteListStore : Store<PaletteListStore.Intent, PaletteListStore.Sta
         data class DeletePalette(val id: String): Intent()
         data class ShowEditPage(val colorPalette: ColorPalette): Intent()
         data class ShowDeleteMessage(val colorPalette: ColorPalette): Intent()
-        data class EditPalette(val colorPalette: ColorPalette): Intent()
     }
 
     data class State(

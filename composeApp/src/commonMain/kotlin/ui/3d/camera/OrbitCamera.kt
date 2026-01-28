@@ -24,7 +24,7 @@ class OrbitCamera(
 
     private var thrust = 0.0f
     private val thrustVelocity = 0.01f
-    private var rotationSpeed = 0.1f // Скорость вращения
+    private var rotationSpeed = 0.4f // Скорость вращения
 
     // Углы вращения вокруг цели
     private var azimuthAngle: Float = 0f // Угол по горизонтали (вокруг оси Y)

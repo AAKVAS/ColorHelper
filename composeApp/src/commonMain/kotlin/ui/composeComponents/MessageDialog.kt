@@ -2,10 +2,11 @@ package ui.composeComponents
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material.AlertDialog
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.OutlinedButton
-import androidx.compose.material.Text
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ButtonDefaults.outlinedButtonColors
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -18,10 +19,6 @@ import com.example.not_canceled_action
 import org.jetbrains.compose.resources.stringResource
 import ui.theme.LocalColorProvider
 
-@Composable
-fun MessageDialog(text: String) {
-
-}
 
 @Composable
 fun DeleteColorDialog(
@@ -32,7 +29,6 @@ fun DeleteColorDialog(
     DeleteDialog(
         onDismiss = onDismiss,
         onConfirm = onConfirm,
-        itemName = itemName,
         header = stringResource(Res.string.delete_color, itemName)
     )
 }
@@ -47,21 +43,20 @@ fun DeletePaletteDialog(
     DeleteDialog(
         onDismiss = onDismiss,
         onConfirm = onConfirm,
-        itemName = itemName,
         header = stringResource(Res.string.delete_palette, itemName)
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DeleteDialog(
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
     header: String,
-    itemName: String
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        backgroundColor = LocalColorProvider.current.primaryContainer,
+        containerColor = LocalColorProvider.current.primaryContainer,
         title = {
             Text(
                 text = header,
@@ -80,9 +75,9 @@ fun DeleteDialog(
         confirmButton = {
             OutlinedButton(
                 onClick = onConfirm,
-                colors = ButtonDefaults.outlinedButtonColors(
+                colors = outlinedButtonColors(
                     contentColor = LocalColorProvider.current.onSurface,
-                    backgroundColor = LocalColorProvider.current.primaryContainer
+                    containerColor = LocalColorProvider.current.primaryContainer
                 ),
                 border = BorderStroke(1.dp, LocalColorProvider.current.onSurface)
             ) {
@@ -95,9 +90,9 @@ fun DeleteDialog(
         dismissButton = {
             OutlinedButton(
                 onClick = onDismiss,
-                colors = ButtonDefaults.outlinedButtonColors(
+                colors = outlinedButtonColors(
                     contentColor = LocalColorProvider.current.onBackground,
-                    backgroundColor = LocalColorProvider.current.primaryContainer
+                    containerColor = LocalColorProvider.current.primaryContainer
                 ),
                 border = BorderStroke(1.dp, LocalColorProvider.current.onBackground)
             ) {

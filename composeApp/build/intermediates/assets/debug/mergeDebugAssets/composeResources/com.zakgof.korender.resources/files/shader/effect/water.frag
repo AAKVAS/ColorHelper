@@ -1,0 +1,72 @@
+#import "!shader/lib/header.glsl"
+#import "!shader/lib/ubo.glsl"
+
+in vec2 vtex;
+
+#uniform vec3 waterColor;
+#uniform float transparency;
+#uniform float waveScale;
+#uniform float waveMagnitude;
+
+#uniforms
+
+uniform sampler2D colorInputTexture;
+uniform sampler2D depthInputTexture;
+
+out vec4 fragColor;
+
+#import "!shader/lib/space.glsl"
+#import "!shader/lib/sky.glsl"
+#import "$sky"
+
+#ifdef PLUGIN_SECSKY
+    #import "$secsky"
+#endif
+
+void main() {
+
+    vec3 color = texture(colorInputTexture, vtex).rgb;
+    float depth = texture(depthInputTexture, vtex).r;
+
+    vec3 world = screenToWorldSpace(vtex, depth);
+    vec3 look = normalize(world - cameraPos);
+    vec3 surface = cameraPos - look * cameraPos.y / look.y;
+    float fbmA = fbm(surface.xz / waveScale - 0.03 * time) - 0.5;
+    surface.y += waveMagnitude * fbmA;
+
+    gl_FragDepth = depth;
+    if (depth > 0.999 && look.y < 0.0) {
+        gl_FragDepth = 0.998;
+        world = cameraPos + look * projectionFar * 1e20;
+    }
+
+    if (world.y < surface.y) {
+
+        vec3 normal = normalize(vec3(
+            waveMagnitude * fbmA,
+            1.0f,
+            waveMagnitude * (fbm((msw * surface.xz) / waveScale  + 0.04 * time) - 0.5)
+        ));
+
+        vec3 reflecteddir = reflect(look, normal);
+        vec3 reflectedcolor = sky(reflecteddir, 0.).rgb;
+
+        #ifdef PLUGIN_SECSKY
+            reflectedcolor = pluginSecsky(reflecteddir, reflectedcolor);
+        #endif
+
+        float R0 = 0.0222;
+        float t = 1. - clamp(dot(-look, normal), 0., 1.);
+        float reflectance = R0 + (1. - R0) * t * t * t * t * t;
+
+        float waterDepth = length(world - surface);
+        vec3 ownColor = waterColor.rgb;
+        float ownRatio = clamp(waterDepth * transparency, 0., 1.);
+
+        ownColor = mix(color, ownColor, ownRatio);
+
+        color = mix(ownColor, reflectedcolor, reflectance * 0.7);
+    }
+
+    fragColor = vec4(color, 1.0);
+}

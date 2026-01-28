@@ -15,7 +15,6 @@ import feature.palette.DefaultPaletteListComponent
 import feature.palette.PaletteListComponent
 import feature.palette.PaletteListStoreFactory
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
 import kotlinx.serialization.Serializable
 
 

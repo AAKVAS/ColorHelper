@@ -3,15 +3,18 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Tab
-import androidx.compose.material.TabRow
-import androidx.compose.material.TabRowDefaults
-import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
-import androidx.compose.material.Text
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SecondaryTabRow
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRowDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -32,6 +35,7 @@ import feature.home.RootComponent
 import feature.palette.PaletteListScreen
 import org.jetbrains.compose.resources.stringResource
 import ui.theme.AppTheme
+import ui.theme.Dimens
 import ui.theme.LocalColorProvider
 
 @Composable
@@ -45,31 +49,43 @@ fun App(
                 windowSize.width < windowSize.height
             }
         }
-        Column {
-            TabUI(
-                isPortrait = isPortrait.value,
-            ) { index ->
-                if (index == 0) {
-                    rootComponent.navigateToPaletteList()
-                } else {
-                    rootComponent.navigateToColorLab()
-                }
-            }
 
-            Children(
-                stack = rootComponent.stack,
-                modifier = Modifier,
-                animation = stackAnimation(fade()),
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+            contentWindowInsets = WindowInsets.systemBars
+        ) { innerPadding ->
+            Column(
+                modifier = Modifier.padding(
+                    top = innerPadding.calculateTopPadding(),
+                    bottom = Dimens.paddingSmall
+                )
             ) {
-                when (val child = it.instance) {
-                    is RootComponent.Child.ColorLabChild -> ColorHelperScreen(
-                        component = child.component,
-                        windowSize = windowSize
-                    )
-                    is RootComponent.Child.PaletteListChild -> PaletteListScreen(
-                        component = child.component,
-                        windowSize = windowSize
-                    )
+                TabUI(
+                    isPortrait = isPortrait.value,
+                ) { index ->
+                    if (index == 0) {
+                        rootComponent.navigateToPaletteList()
+                    } else {
+                        rootComponent.navigateToColorLab()
+                    }
+                }
+
+                Children(
+                    stack = rootComponent.stack,
+                    modifier = Modifier,
+                    animation = stackAnimation(fade()),
+                ) {
+                    when (val child = it.instance) {
+                        is RootComponent.Child.ColorLabChild -> ColorHelperScreen(
+                            component = child.component,
+                            windowSize = windowSize
+                        )
+
+                        is RootComponent.Child.PaletteListChild -> PaletteListScreen(
+                            component = child.component,
+                            windowSize = windowSize
+                        )
+                    }
                 }
             }
         }
@@ -109,13 +125,15 @@ fun RowTabulation(
     tabs: List<String>,
     onTabClick: (Int) -> Unit
 ) {
-    TabRow(
+    SecondaryTabRow(
         selectedTabIndex = 0,
         modifier = Modifier.fillMaxWidth(),
-        backgroundColor = LocalColorProvider.current.primaryContainer,
-        indicator = { tabPositions ->
-            TabRowDefaults.Indicator(
-                modifier = Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex]),
+        containerColor = LocalColorProvider.current.primaryContainer,
+        indicator = @Composable {
+            TabRowDefaults.SecondaryIndicator(
+                modifier = Modifier.tabIndicatorOffset(
+                    selectedTabIndex
+                ),
                 height = 2.dp,
                 color = LocalColorProvider.current.primary
             )

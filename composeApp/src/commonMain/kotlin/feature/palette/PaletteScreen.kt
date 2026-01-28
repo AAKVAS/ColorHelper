@@ -1,5 +1,6 @@
 package feature.palette
 
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -19,31 +20,41 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Text
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.Res
+import com.example.copied
 import com.example.delete
 import com.example.harmonious_colors
 import com.example.outline_delete
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
+import feature.palette.model.ColorModel
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import ui.composeComponents.BackNavigationButton
 import ui.composeComponents.ColorPickerUI
 import ui.composeComponents.CustomTextField
 import ui.composeComponents.DeleteButton
@@ -55,7 +66,6 @@ import ui.theme.Dimens.paddingSmall
 import ui.theme.LocalColorProvider
 import utils.toColor
 import utils.toHex
-import kotlin.math.min
 
 
 @Composable
@@ -67,8 +77,24 @@ fun PaletteScreen(
     val state = component.state.collectAsState()
     val focusManager = LocalFocusManager.current
     val showDeleteColorDialog = remember { mutableStateOf(false) }
-    val deletedIndex = remember { mutableStateOf(-1) }
+    val deletedUid = remember { mutableStateOf<String?>(null) }
     val showDeletePaletteDialog = remember { mutableStateOf(false) }
+
+
+    val scope = rememberCoroutineScope()
+    val clipboardManager = LocalClipboardManager.current
+    val copied = stringResource(Res.string.copied)
+
+    val snackbarHostState = remember { SnackbarHostState() }
+    val onCopyTextToClipboard: (String) -> Unit = { text ->
+        scope.launch {
+            clipboardManager.setText(
+                AnnotatedString(text)
+            )
+
+            snackbarHostState.showSnackbar(copied)
+        }
+    }
 
     LaunchedEffect(component.labels) {
         component.labels.collect { label ->
@@ -78,7 +104,7 @@ fun PaletteScreen(
                 }
                 is PaletteStore.Label.ShowDeleteColorDialog -> {
                     showDeleteColorDialog.value = true
-                    deletedIndex.value = label.index
+                    deletedUid.value = label.uid
                 }
                 is PaletteStore.Label.ShowDeletePaletteDialog -> {
                     showDeletePaletteDialog.value = true
@@ -108,64 +134,81 @@ fun PaletteScreen(
                 .fillMaxWidth()
                 .wrapContentHeight(),
             verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start
         ) {
+            if (isPortrait) {
+                BackNavigationButton {
+                    component.navigateBack()
+                }
+            }
             PaletteNameUI(
                 state.value.palette.name,
-                modifier = Modifier
+                modifier = Modifier.weight(1.0f)
             ) { name ->
                 component.updatePalette(state.value.palette.copy(name = name))
             }
-            DeleteButton {
+            DeleteButton(
+                modifier = Modifier.padding(end = Dimens.paddingXXSmall)
+            ) {
                 component.showDeleteDialog()
             }
         }
-        val index = min(state.value.palette.colors.size - 1, state.value.selectedColorIndex)
         PaletteColorsGrid(
             items = state.value.palette.colors,
-            onColorClick = { clickedIndex ->
-                if (clickedIndex == index) {
-                    component.showDeleteColorDialog(clickedIndex)
+            onColorClick = { clickedUid ->
+                if (clickedUid == state.value.selectedColorUid) {
+                    component.showDeleteColorDialog(clickedUid)
                 } else {
-                    component.updateSelectedColorIndex(clickedIndex)
+                    component.updateSelectedColorUid(clickedUid)
                 }
             },
             onAddColorButtonClick = {
                 component.addColor("#FFFFFFFF")
             },
-            selectedItemIndex = index,
+            selectedItemUid = state.value.selectedColorUid ?: "",
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1.0f)
                 .padding(8.dp)
         )
 
-        if (state.value.selectedColorIndex != -1) {
-            val color = state.value.palette.colors[index]
-
-            key(index) {
-                ColorSettings(defaultColor = color.toColor()) { color ->
-                    component.updateColor(index, color)
-                }
+        if (state.value.selectedColorUid != null) {
+            val colorModel = state.value.palette.colors.firstOrNull {
+                it.uid == state.value.selectedColorUid
             }
-            if (state.value.harmoniousColors.isNotEmpty()) {
-                HarmoniousColors(
-                    items = state.value.harmoniousColors,
-                    selectColor = component::selectHarmoniousColor
-                )
+
+            if (colorModel != null) {
+                key(state.value.selectedColorUid) {
+                    ColorSettings(
+                        defaultColor = colorModel.value.toColor(),
+                        onColorChange = { color ->
+                            val newColor = colorModel.copy(value = color)
+                            component.updateColor(newColor)
+                        },
+                        onCopyTextToClipboard = onCopyTextToClipboard
+                    )
+                }
+                if (state.value.harmoniousColors.isNotEmpty()) {
+                    HarmoniousColors(
+                        items = state.value.harmoniousColors,
+                        selectColor = component::selectHarmoniousColor
+                    )
+                }
             }
         }
     }
 
     if (showDeleteColorDialog.value) {
+        val deletedColor = state.value.palette.colors.first { it.uid == deletedUid.value }
         DeleteColorDialog(
             onDismiss = {
                 showDeleteColorDialog.value = false
             },
             onConfirm = {
                 showDeleteColorDialog.value = false
-                component.deleteColorByIndex(deletedIndex.value)
+                component.deleteColor(deletedColor)
             },
-            itemName = state.value.palette.colors[deletedIndex.value]
+            itemName = deletedColor.value
         )
     }
     if (showDeletePaletteDialog.value) {
@@ -201,9 +244,9 @@ fun PaletteNameUI(
 
 @Composable
 fun PaletteColorsGrid(
-    items: List<String>,
-    onColorClick: (Int) -> Unit,
-    selectedItemIndex: Int,
+    items: List<ColorModel>,
+    onColorClick: (String) -> Unit,
+    selectedItemUid: String,
     onAddColorButtonClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -211,24 +254,29 @@ fun PaletteColorsGrid(
         columns = GridCells.FixedSize(size = Dimens.buttonHeight),
         modifier = modifier
     ) {
-        itemsIndexed(items) { index, item ->
+        items(items, key = { color -> color.uid }) { item ->
             Box(
-                modifier = Modifier.size(
-                    Dimens.buttonHeight
-                ).clickable {
-                    onColorClick(index)
-                }
-                .padding(paddingSmall)
-                .background(item.toColor()),
-                contentAlignment = Alignment.Center
+                modifier = Modifier
+                    .size(
+                        Dimens.buttonHeight
+                    ).clickable {
+                        onColorClick(item.uid)
+                    }
+                    .padding(paddingSmall)
+                    .clip(RoundedCornerShape(4.dp))
+                    .background(LocalColorProvider.current.primaryContainer)
+                    .padding(2.dp)
+                    .clip(RoundedCornerShape(4.dp))
+                    .background(item.value.toColor()),
+                    contentAlignment = Alignment.Center
             ) {
-                if (selectedItemIndex == index) {
+                if (item.uid == selectedItemUid) {
                     Box(
                         modifier = Modifier
                             .wrapContentSize(align = Alignment.Center)
                             .padding(Dimens.paddingXXSmall)
                             .clickable {
-                                onColorClick(index)
+                                onColorClick(item.uid)
                             }
                             .background(LocalColorProvider.current.onPrimary),
                         contentAlignment = Alignment.Center,
@@ -260,7 +308,8 @@ fun AddColorButton(
         modifier = modifier
             .size(Dimens.buttonHeight)
             .clickable { onClick() }
-            .padding(Dimens.paddingSmall)
+            .padding(paddingSmall)
+            .clip(RoundedCornerShape(Dimens.paddingXSmall))
             .background(LocalColorProvider.current.secondary),
             contentAlignment = Alignment.Center,
     ) {
@@ -275,16 +324,22 @@ fun AddColorButton(
 @Composable
 fun ColorSettings(
     defaultColor: Color,
-    modifier: Modifier = Modifier,
-    onColorChange: (String) -> Unit,
+    onCopyTextToClipboard: (String) -> Unit,
+    onColorChange: (String) -> Unit
 ) {
     val colorController = rememberColorPickerController()
-    LaunchedEffect(colorController.selectedColor.value) {
-        onColorChange(colorController.selectedColor.value.toHex())
+
+    LaunchedEffect(defaultColor) {
+        colorController.getColorFlow().collect {
+            if (it.fromUser) {
+                onColorChange(it.color.toHex())
+            }
+        }
     }
     ColorPickerUI(
         colorController = colorController,
-        defaultColor = defaultColor
+        defaultColor = defaultColor,
+        onCopyTextToClipboard = onCopyTextToClipboard
     )
 }
 
@@ -317,8 +372,12 @@ fun HarmoniousColors(
                     .clickable {
                         selectColor(item)
                     }
-                    .padding(Dimens.paddingSmall)
-                    .background(item.toColor()),
+                    .padding(paddingSmall)
+                    .clip(RoundedCornerShape(4.dp))
+                    .background(LocalColorProvider.current.primaryContainer)
+                    .padding(2.dp)
+                    .clip(RoundedCornerShape(4.dp))
+                    .background(item.toColor())
                 )
             }
         }

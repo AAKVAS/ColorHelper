@@ -2,6 +2,7 @@ package feature.palette
 
 import androidx.compose.ui.graphics.Color
 import com.arkivanov.mvikotlin.core.store.Store
+import feature.palette.model.ColorModel
 import feature.palette.model.ColorPalette
 
 interface PaletteStore : Store<PaletteStore.Intent, PaletteStore.State, PaletteStore.Label>
@@ -13,9 +14,11 @@ interface PaletteStore : Store<PaletteStore.Intent, PaletteStore.State, PaletteS
         data class SelectHarmoniousColor(val color: String): Intent()
         data class UpdateHarmoniousColors(val colors: List<Color>): Intent()
         data class AddColor(val color: String): Intent()
+        data class UpdateColor(val color: ColorModel): Intent()
+        data class DeleteColor(val color: ColorModel): Intent()
         data object ObservePalette: Intent()
-        data class UpdateSelectedColorIndex(val index: Int): Intent()
-        data class ShowDeleteColorDialog(val index: Int): Intent()
+        data class UpdateSelectedColorUid(val uid: String?): Intent()
+        data class ShowDeleteColorDialog(val uid: String): Intent()
     }
 
     data class State(
@@ -23,12 +26,12 @@ interface PaletteStore : Store<PaletteStore.Intent, PaletteStore.State, PaletteS
         val harmoniousColors: List<String> = listOf("#FFFFFFFF", "#FF000000"),
         val isLoading: Boolean = false,
         val error: String? = null,
-        val selectedColorIndex: Int = -1
+        val selectedColorUid: String? = null
     )
 
     sealed class Label {
         data class ShowMessage(val message: String) : Label()
-        data class ShowDeleteColorDialog(val index: Int) : Label()
+        data class ShowDeleteColorDialog(val uid: String) : Label()
         data object ShowDeletePaletteDialog : Label()
     }
 
@@ -36,6 +39,6 @@ interface PaletteStore : Store<PaletteStore.Intent, PaletteStore.State, PaletteS
         data class Error(val message: String) : Msg()
         data class PaletteUpdated(val palette: ColorPalette) : Msg()
         data class UpdateHarmoniousColors(val colors: List<String>) : Msg()
-        data class UpdateSelectedColorIndex(val index: Int) : Msg()
+        data class UpdateSelectedColorUid(val uid: String?) : Msg()
     }
 }

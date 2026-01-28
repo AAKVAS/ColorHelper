@@ -3,13 +3,13 @@ package feature.palette
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
 import feature.palette.model.ColorPalette
-import kotlinx.coroutines.channels.ReceiveChannel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 
 interface PaletteListComponent {
     val stack: Value<ChildStack<*, Child>>
     val state: StateFlow<PaletteListStore.State>
-    val labels: ReceiveChannel<PaletteListStore.Label>
+    val labels: Flow<PaletteListStore.Label>
 
     fun showEditComponent(colorPalette: ColorPalette)
     fun showDeleteMessage(colorPalette: ColorPalette)

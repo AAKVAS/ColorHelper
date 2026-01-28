@@ -7,17 +7,20 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Text
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -35,7 +38,6 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import feature.palette.PaletteListStore.Label
 import feature.palette.model.ColorPalette
-import kotlinx.coroutines.channels.consumeEach
 import ui.composeComponents.DeleteButton
 import ui.composeComponents.DeletePaletteDialog
 import ui.composeComponents.SimpleButton
@@ -52,7 +54,7 @@ fun PaletteListScreen(
     val deletedPalette = remember { mutableStateOf<ColorPalette?>(null) }
 
     LaunchedEffect(component.labels) {
-        component.labels.consumeEach { label ->
+        component.labels.collect { label ->
             when(label) {
                 is Label.ShowMessage -> {}
                 is Label.ShowEditPage -> {
@@ -72,73 +74,81 @@ fun PaletteListScreen(
         }
     }
 
-    if (isPortrait.value) {
-        Children(
-            stack = component.stack,
-            modifier = Modifier
-                .fillMaxSize()
-                .background(LocalColorProvider.current.onPrimary),
-            animation = stackAnimation(fade()),
-        ) {
-            when (val child = it.instance) {
-                is PaletteListComponent.Child.PaletteChild -> {
-                    PaletteScreen(
-                        component = child.component,
-                        isPortrait = isPortrait.value
-                    )
-                }
-                else -> {
-                    PaletteList(
-                        items = state.value.items,
-                        onItemClick = component::showEditComponent,
-                        onAddButtonClick = component::onAddButtonClicked,
-                        onDeleteButtonClick = component::showDeleteMessage
-                    )
-                }
-            }
-        }
-    } else {
-        Row(modifier = modifier) {
-            PaletteList(
-                items = state.value.items,
-                onItemClick = component::showEditComponent,
-                onAddButtonClick = component::onAddButtonClicked,
-                onDeleteButtonClick = component::showDeleteMessage
-            )
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        contentWindowInsets = WindowInsets.systemBars
+    ) { _ ->
+        if (isPortrait.value) {
             Children(
                 stack = component.stack,
-                modifier = Modifier.weight(1.0f),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(LocalColorProvider.current.onPrimary),
                 animation = stackAnimation(fade()),
             ) {
                 when (val child = it.instance) {
                     is PaletteListComponent.Child.PaletteChild -> {
                         PaletteScreen(
                             component = child.component,
-                            isPortrait = isPortrait.value
+                            isPortrait = isPortrait.value,
                         )
                     }
+
                     else -> {
-                        Spacer(Modifier
-                            .fillMaxSize()
-                            .background(LocalColorProvider.current.onPrimary)
+                        PaletteList(
+                            items = state.value.items,
+                            onItemClick = component::showEditComponent,
+                            onAddButtonClick = component::onAddButtonClicked,
+                            onDeleteButtonClick = component::showDeleteMessage
                         )
                     }
                 }
             }
-        }
-    }
+        } else {
+            Row(modifier = modifier) {
+                PaletteList(
+                    items = state.value.items,
+                    onItemClick = component::showEditComponent,
+                    onAddButtonClick = component::onAddButtonClicked,
+                    onDeleteButtonClick = component::showDeleteMessage
+                )
+                Children(
+                    stack = component.stack,
+                    modifier = Modifier.weight(1.0f),
+                    animation = stackAnimation(fade()),
+                ) {
+                    when (val child = it.instance) {
+                        is PaletteListComponent.Child.PaletteChild -> {
+                            PaletteScreen(
+                                component = child.component,
+                                isPortrait = isPortrait.value,
+                            )
+                        }
 
-    if (showDeletePaletteDialog.value) {
-        DeletePaletteDialog(
-            onDismiss = {
-                showDeletePaletteDialog.value = false
-            },
-            onConfirm = {
-                showDeletePaletteDialog.value = false
-                component.deletePalette(deletedPalette.value!!)
-            },
-            itemName = deletedPalette.value!!.name
-        )
+                        else -> {
+                            Spacer(
+                                Modifier
+                                    .fillMaxSize()
+                                    .background(LocalColorProvider.current.onPrimary)
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
+        if (showDeletePaletteDialog.value) {
+            DeletePaletteDialog(
+                onDismiss = {
+                    showDeletePaletteDialog.value = false
+                },
+                onConfirm = {
+                    showDeletePaletteDialog.value = false
+                    component.deletePalette(deletedPalette.value!!)
+                },
+                itemName = deletedPalette.value!!.name
+            )
+        }
     }
 }
 
@@ -150,6 +160,8 @@ fun PaletteList(
     onDeleteButtonClick: (ColorPalette) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val selectedPaletteUid = remember { mutableStateOf<String?>(null) }
+
     Column(
         modifier = modifier
             .fillMaxHeight()
@@ -160,13 +172,18 @@ fun PaletteList(
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         LazyColumn(
-            modifier = Modifier.width(350.dp)
+            modifier = Modifier
+                .width(350.dp)
+                .weight(1.0f)
         ) {
-            items(items) { palette ->
+            items(items, key = { palette -> palette.uid }) { palette ->
                 PaletteItem(
                     palette = palette,
-                    isFocused = true,
-                    onItemClick = onItemClick,
+                    isFocused = selectedPaletteUid.value == palette.uid,
+                    onItemClick = { param ->
+                        onItemClick(param)
+                        selectedPaletteUid.value = param.uid
+                    },
                     onDeleteButtonClick = onDeleteButtonClick,
                     modifier = modifier
                         .fillMaxWidth()
