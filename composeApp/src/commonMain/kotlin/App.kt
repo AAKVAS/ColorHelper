@@ -1,6 +1,7 @@
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
@@ -9,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SecondaryTabRow
@@ -16,17 +19,16 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.arkivanov.decompose.extensions.compose.stack.Children
-import com.arkivanov.decompose.extensions.compose.stack.animation.fade
-import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.example.Res
 import com.example.lab
 import com.example.palettes
@@ -50,38 +52,54 @@ fun App(
             }
         }
 
+        val tabPageComponents = rootComponent.children
+
+        val pagerState = rememberPagerState(
+            initialPage = 0,
+            pageCount = { tabPageComponents.size }
+        )
+
+        val activePageIndex = remember { mutableIntStateOf(0) }
+        LaunchedEffect(activePageIndex.intValue) {
+            pagerState.animateScrollToPage(activePageIndex.intValue)
+        }
+
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             contentWindowInsets = WindowInsets.systemBars
         ) { innerPadding ->
             Column(
-                modifier = Modifier.padding(
-                    top = innerPadding.calculateTopPadding(),
-                    bottom = Dimens.paddingSmall
-                )
+                modifier = Modifier
+                    .background(LocalColorProvider.current.onPrimary)
+                    .padding(
+                        top = innerPadding.calculateTopPadding(),
+                        bottom = Dimens.paddingSmall
+                    )
             ) {
                 TabUI(
                     isPortrait = isPortrait.value,
+                    selectedTabIndex = pagerState.currentPage
                 ) { index ->
-                    if (index == 0) {
-                        rootComponent.navigateToPaletteList()
-                    } else {
-                        rootComponent.navigateToColorLab()
-                    }
+                    activePageIndex.intValue = index
                 }
 
-                Children(
-                    stack = rootComponent.stack,
-                    modifier = Modifier,
-                    animation = stackAnimation(fade()),
-                ) {
-                    when (val child = it.instance) {
-                        is RootComponent.Child.ColorLabChild -> ColorHelperScreen(
+                HorizontalPager(
+                    state = pagerState,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .pointerInput(Unit) {
+                            detectHorizontalDragGestures { change, _ ->
+                                change.consume()
+                            }
+                        },
+                    userScrollEnabled = true
+                ) { page ->
+                    when (val child = tabPageComponents[page]) {
+                        is RootComponent.Child.PaletteListChild -> PaletteListScreen(
                             component = child.component,
                             windowSize = windowSize
                         )
-
-                        is RootComponent.Child.PaletteListChild -> PaletteListScreen(
+                        is RootComponent.Child.ColorLabChild -> ColorHelperScreen(
                             component = child.component,
                             windowSize = windowSize
                         )
@@ -94,26 +112,24 @@ fun App(
 
 @Composable
 fun TabUI(
+    selectedTabIndex: Int,
     isPortrait: Boolean,
     onTabClick: (Int) -> Unit
 ) {
-    val selectedTabIndex = remember { mutableStateOf(0) }
     val tabs = listOf(stringResource(Res.string.palettes), stringResource(Res.string.lab))
 
     if (isPortrait) {
         RowTabulation(
-            selectedTabIndex = selectedTabIndex.value,
+            selectedTabIndex = selectedTabIndex,
             tabs = tabs
         ) { index ->
-            selectedTabIndex.value = index
             onTabClick(index)
         }
     } else {
         ButtonTabulation(
-            selectedTabIndex = selectedTabIndex.value,
+            selectedTabIndex = selectedTabIndex,
             tabs = tabs
         ) { index ->
-            selectedTabIndex.value = index
             onTabClick(index)
         }
     }

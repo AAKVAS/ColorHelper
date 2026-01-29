@@ -10,6 +10,7 @@
     <string name="palettes">Палитры</string>
     <string name="harmonious_colors">Гармонирующие цвета</string>
     <string name="delete">Удалить</string>
+    <string name="add">Добавить</string>
     <string name="confirm_delete">Подтвердите удаление</string>
     <string name="not_canceled_action">Это действие нельзя отменить.</string>
     <string name="delete_color">Удалить цвет %1$s?</string>

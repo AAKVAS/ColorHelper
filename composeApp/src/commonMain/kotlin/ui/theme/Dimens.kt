@@ -11,5 +11,6 @@ object Dimens {
     val iconButtonSize = 24.dp
     val cardCornerRadius = 12.dp
     val buttonHeight = 48.dp
+    val roundedButtonSize = 52.dp
     val tileSize = 26.dp
 }

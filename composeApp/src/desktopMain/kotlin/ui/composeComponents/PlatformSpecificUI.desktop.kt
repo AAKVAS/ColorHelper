@@ -19,3 +19,17 @@ actual fun TooltipWrapper(
         content()
     }
 }
+
+
+@Composable
+actual fun BackHandlerWrapper(
+    enabled: Boolean,
+    callback: () -> Unit
+) {
+
+}
+
+
+@Composable
+actual fun SetupStatusBar() {
+}

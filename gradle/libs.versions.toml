@@ -20,6 +20,8 @@ room = "2.8.4"
 sqlite = "2.6.2"
 kspVersion = "2.3.4"
 adaptive = "1.2.0"
+systemUiController = "0.36.0"
+
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
@@ -42,9 +44,10 @@ mvikotlin-coroutines =  {module =  "com.arkivanov.mvikotlin:mvikotlin-extensions
 decompose-lifecycle-coroutines = {module =  "com.arkivanov.essenty:lifecycle-coroutines", version.ref = "lifecycleCoroutines"}
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
-#androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 androidx-sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
 androidx-adaptive = { group = "androidx.compose.material3.adaptive", name = "adaptive", version.ref = "adaptive" }
+google-systemuicontroller = { group = "com.google.accompanist", name = "accompanist-systemuicontroller", version.ref = "systemUiController" }
+
 
 [plugins]
 jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }

@@ -54,6 +54,7 @@ import feature.palette.model.ColorModel
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import ui.composeComponents.BackHandlerWrapper
 import ui.composeComponents.BackNavigationButton
 import ui.composeComponents.ColorPickerUI
 import ui.composeComponents.CustomTextField
@@ -128,6 +129,10 @@ fun PaletteScreen(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        BackHandlerWrapper {
+            component.navigateBack()
+        }
+
         Row(
             modifier = Modifier
                 .align(Alignment.Start)

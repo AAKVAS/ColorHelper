@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,6 +18,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.sp
 import com.example.Res
+import com.example.add_icon
 import com.example.back_arrow
 import com.example.copy_icon
 import com.example.delete
@@ -54,6 +56,32 @@ fun SimpleButton(
     }
 }
 
+
+@Composable
+fun RoundedAddButton(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    Box(
+        modifier = modifier
+            .size(Dimens.roundedButtonSize)
+            .clip(CircleShape)
+            .clickable {
+                onClick()
+            }
+            .background(LocalColorProvider.current.secondary),
+        contentAlignment = Alignment.Center,
+    ) {
+        Image(
+            painter = painterResource(Res.drawable.add_icon),
+            contentDescription = stringResource(Res.string.delete),
+            alignment = Alignment.Center,
+            contentScale =  ContentScale.Crop,
+            colorFilter = ColorFilter.tint(color = LocalColorProvider.current.onPrimary),
+            modifier = Modifier.size(iconButtonSize)
+        )
+    }
+}
 
 @Composable
 fun DeleteButton(
@@ -102,8 +130,6 @@ fun CopyButton(
         )
     }
 }
-
-
 
 @Composable
 fun BackNavigationButton(

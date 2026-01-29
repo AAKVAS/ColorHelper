@@ -9,3 +9,12 @@ expect fun TooltipWrapper(
     tooltip: @Composable () -> Unit,
     content: @Composable () -> Unit
 )
+
+@Composable
+expect fun BackHandlerWrapper(
+    enabled: Boolean = true,
+    callback: () -> Unit
+)
+
+@Composable
+expect fun SetupStatusBar()

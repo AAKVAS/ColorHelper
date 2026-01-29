@@ -4,7 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -40,7 +40,8 @@ import feature.palette.PaletteListStore.Label
 import feature.palette.model.ColorPalette
 import ui.composeComponents.DeleteButton
 import ui.composeComponents.DeletePaletteDialog
-import ui.composeComponents.SimpleButton
+import ui.composeComponents.RoundedAddButton
+import ui.theme.Dimens
 import ui.theme.LocalColorProvider
 
 @Composable
@@ -162,19 +163,17 @@ fun PaletteList(
 ) {
     val selectedPaletteUid = remember { mutableStateOf<String?>(null) }
 
-    Column(
+    Box(
         modifier = modifier
             .fillMaxHeight()
             .wrapContentWidth()
             .background(LocalColorProvider.current.onPrimary)
-            .padding(8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceBetween
+            .padding(8.dp)
     ) {
         LazyColumn(
             modifier = Modifier
                 .width(350.dp)
-                .weight(1.0f)
+                .fillMaxHeight(1.0f)
         ) {
             items(items, key = { palette -> palette.uid }) { palette ->
                 PaletteItem(
@@ -191,7 +190,11 @@ fun PaletteList(
                 )
             }
         }
-        AddPaletteButton {
+        RoundedAddButton(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(end = Dimens.paddingSmall, bottom = Dimens.paddingSmall),
+        ) {
             onAddButtonClick()
         }
     }
@@ -242,16 +245,4 @@ fun PaletteItem(
             onDeleteButtonClick(palette)
         }
     }
-}
-
-@Composable
-fun AddPaletteButton(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit
-) {
-    SimpleButton(
-        text = "+",
-        onClick = onClick,
-        modifier = modifier.padding(vertical = 4.dp)
-    )
 }
