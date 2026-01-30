@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ColorHelper</string>
+    <string name="title">ColorHelper</string>
+    <string name="copied">Скопировано</string>
+    <string name="sphere_color">Цвет сферы: </string>
+    <string name="floor_color">Цвет поверхности: </string>
+    <string name="light_color">Цвет освещения: </string>
+    <string name="copy">Копировать</string>
+    <string name="lab">Лаборатория</string>
+    <string name="palettes">Палитры</string>
+    <string name="harmonious_colors">Гармонирующие цвета</string>
+    <string name="delete">Удалить</string>
+    <string name="add">Добавить</string>
+    <string name="confirm_delete">Подтвердите удаление</string>
+    <string name="not_canceled_action">Это действие нельзя отменить.</string>
+    <string name="delete_color">Удалить цвет %1$s?</string>
+    <string name="delete_palette">Удалить палитру "%1$s"?</string>
+    <string name="cancel">Отмена</string>
+</resources>

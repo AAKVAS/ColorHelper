@@ -258,7 +258,7 @@ fun ColorCharacteristic(
     val selectedColor = controller?.selectedColor?.value ?: defaultColor
 
     Row(
-        modifier = modifier.padding(4.dp),
+        modifier = modifier.padding(Dimens.paddingXSmall),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
@@ -268,11 +268,9 @@ fun ColorCharacteristic(
         SelectionContainer {
             TooltipWrapper(
                 tooltip = {
-                    Surface(
-                        shape = RoundedCornerShape(4.dp),
-                    ) {
+                    Surface(shape = RoundedCornerShape(Dimens.roundedCornerShapeSize)) {
                         Text(
-                            modifier = Modifier.padding(4.dp),
+                            modifier = Modifier.padding(Dimens.paddingXSmall),
                             text = stringResource(Res.string.copy)
                         )
                     }
@@ -289,9 +287,9 @@ fun ColorCharacteristic(
         }
         AlphaTile(
             modifier = Modifier
-                .padding(start = 8.dp)
-                .size(18.dp)
-                .clip(RoundedCornerShape(2.dp))
+                .padding(start = Dimens.paddingSmall)
+                .size(Dimens.alphaTileSize)
+                .clip(RoundedCornerShape(Dimens.smallRoundedCornerShapeSize))
                 .clickable {
                     onColorTileClick()
                 },
@@ -312,19 +310,24 @@ fun RGBCharacteristic(
     Row(
         modifier = Modifier
         .wrapContentSize()
-        .padding(start = 4.dp, end = 4.dp, top = 0.dp, bottom = 4.dp),
+        .padding(
+            start = Dimens.paddingXSmall,
+            end = Dimens.paddingXSmall,
+            top = 0.dp,
+            bottom = Dimens.paddingXSmall
+        ),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
             text = text,
             color = LocalColorProvider.current.onSurface
         )
-        Spacer(Modifier.width(4.dp).height(2.dp))
+        Spacer(Modifier.width(Dimens.paddingXSmall).height(Dimens.paddingXXSmall))
         CustomTextField(
             colorValue.toString(),
             modifier = Modifier
-                .width(50.dp)
-                .height(24.dp)
+                .width(Dimens.smallNumberTextFieldWidth)
+                .height(Dimens.smallNumberTextFieldHeight)
         ) {
             if (it.isEmpty() || it.matches(pattern)) {
                 if (it.isEmpty()) {
@@ -355,12 +358,12 @@ fun Scene(colorLabState: State<ColorLabState>) =
             val lightColor = colorLabState.value.lightColor.toColor().toRGB()
             DirectionalLight(Vec3(1f, -1f, -1f), lightColor) {
                 Cascade(
-                    mapSize = 2048,     // Размер карты теней (чем больше, тем качественнее)
-                    near = 1f,          // Ближняя плоскость для этой каскады
-                    far = 20f,          // Дальняя плоскость для этой каскады
+                    mapSize = 2048,
+                    near = 1f,
+                    far = 20f,
                     algorithm = softwarePcf(
-                        samples = 32,    // Количество сэмплов для мягких теней
-                        blurRadius = 0.02f // Радиус размытия теней
+                        samples = 32,
+                        blurRadius = 0.02f
                     )
                 )
 

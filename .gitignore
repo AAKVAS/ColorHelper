@@ -1,0 +1,6 @@
+composeApp/src/commonMain/kotlin/secrets/Secrets.kt
+composeApp/build/
+build/
+/.gradle/
+/.idea/
+.kotlin/sessions/
