@@ -89,7 +89,7 @@ class PaletteStoreFactory(
                         }
                     }
                 } catch (e: Exception) {
-                    val errMessage = e.message ?: "Непредвиденная ошибка"
+                    val errMessage = e.message ?: "Unforeseen error"
                     dispatch(PaletteStore.Msg.Error(errMessage))
                     publish(PaletteStore.Label.ShowMessage(errMessage))
                 }
@@ -104,7 +104,7 @@ class PaletteStoreFactory(
                     }
                     dispatch(PaletteStore.Msg.PaletteUpdated(colorPalette))
                 } catch (e: Exception) {
-                    val errMessage = e.message ?: "Непредвиденная ошибка"
+                    val errMessage = e.message ?: "Unforeseen error"
                     dispatch(PaletteStore.Msg.Error(errMessage))
                     publish(PaletteStore.Label.ShowMessage(errMessage))
                 }
@@ -118,7 +118,7 @@ class PaletteStoreFactory(
                         repository.deletePalette(state().palette.uid)
                     }
                 } catch (e: Exception) {
-                    val errMessage = e.message ?: "Непредвиденная ошибка"
+                    val errMessage = e.message ?: "Unforeseen error"
                     dispatch(PaletteStore.Msg.Error(errMessage))
                     publish(PaletteStore.Label.ShowMessage(errMessage))
                 }
@@ -141,7 +141,7 @@ class PaletteStoreFactory(
                     }
                     dispatch(PaletteStore.Msg.UpdateSelectedColorUid(uid))
                 } catch (e: Exception) {
-                    val errMessage = e.message ?: "Непредвиденная ошибка"
+                    val errMessage = e.message ?: "Unforeseen error"
                     dispatch(PaletteStore.Msg.Error(errMessage))
                     publish(PaletteStore.Label.ShowMessage(errMessage))
                 }
@@ -158,7 +158,7 @@ class PaletteStoreFactory(
                     val newSelectedUid = state().palette.colors.getOrNull(index)?.uid
                     dispatch(PaletteStore.Msg.UpdateSelectedColorUid(newSelectedUid))
                 } catch (e: Exception) {
-                    val errMessage = e.message ?: "Непредвиденная ошибка"
+                    val errMessage = e.message ?: "Unforeseen error"
                     dispatch(PaletteStore.Msg.Error(errMessage))
                     publish(PaletteStore.Label.ShowMessage(errMessage))
                 }
@@ -172,7 +172,7 @@ class PaletteStoreFactory(
                         repository.updateColor(color)
                     }
                 } catch (e: Exception) {
-                    val errMessage = e.message ?: "Непредвиденная ошибка"
+                    val errMessage = e.message ?: "Unforeseen error"
                     dispatch(PaletteStore.Msg.Error(errMessage))
                     publish(PaletteStore.Label.ShowMessage(errMessage))
                 }

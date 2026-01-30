@@ -9,7 +9,6 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import com.example.Res
 import com.example.cancel
 import com.example.delete
@@ -17,6 +16,7 @@ import com.example.delete_color
 import com.example.delete_palette
 import com.example.not_canceled_action
 import org.jetbrains.compose.resources.stringResource
+import ui.theme.Dimens
 import ui.theme.LocalColorProvider
 
 
@@ -79,7 +79,10 @@ fun DeleteDialog(
                     contentColor = LocalColorProvider.current.onSurface,
                     containerColor = LocalColorProvider.current.primaryContainer
                 ),
-                border = BorderStroke(1.dp, LocalColorProvider.current.onSurface)
+                border = BorderStroke(
+                    Dimens.smallestPadding,
+                    LocalColorProvider.current.onSurface
+                )
             ) {
                 Text(
                     text = stringResource(Res.string.delete),
@@ -94,7 +97,10 @@ fun DeleteDialog(
                     contentColor = LocalColorProvider.current.onBackground,
                     containerColor = LocalColorProvider.current.primaryContainer
                 ),
-                border = BorderStroke(1.dp, LocalColorProvider.current.onBackground)
+                border = BorderStroke(
+                    Dimens.smallestPadding,
+                    LocalColorProvider.current.onBackground
+                )
             ) {
                 Text(
                     text = stringResource(Res.string.cancel),

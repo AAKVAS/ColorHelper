@@ -11,13 +11,16 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -29,20 +32,23 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import feature.palette.PaletteListStore.Label
+import feature.palette.model.ColorModel
 import feature.palette.model.ColorPalette
 import ui.composeComponents.DeleteButton
 import ui.composeComponents.DeletePaletteDialog
 import ui.composeComponents.RoundedAddButton
 import ui.theme.Dimens
 import ui.theme.LocalColorProvider
+import utils.toColor
 
 @Composable
 fun PaletteListScreen(
@@ -168,11 +174,11 @@ fun PaletteList(
             .fillMaxHeight()
             .wrapContentWidth()
             .background(LocalColorProvider.current.onPrimary)
-            .padding(8.dp)
+            .padding(Dimens.paddingSmall)
     ) {
         LazyColumn(
             modifier = Modifier
-                .width(350.dp)
+                .width(Dimens.paletteListWidth)
                 .fillMaxHeight(1.0f)
         ) {
             items(items, key = { palette -> palette.uid }) { palette ->
@@ -186,7 +192,7 @@ fun PaletteList(
                     onDeleteButtonClick = onDeleteButtonClick,
                     modifier = modifier
                         .fillMaxWidth()
-                        .padding(8.dp)
+                        .padding(Dimens.paddingSmall)
                 )
             }
         }
@@ -215,14 +221,14 @@ fun PaletteItem(
                 onItemClick(palette)
             }
             .border(
-                width = 2.dp,
+                width = Dimens.paddingXXSmall,
                 color =
                     if (isFocused) {
                         LocalColorProvider.current.primary
                     } else {
                         LocalColorProvider.current.primaryContainer
                     },
-                shape = RoundedCornerShape(4.dp)
+                shape = RoundedCornerShape(Dimens.roundedCornerShapeSize)
             )
         ,
         verticalAlignment = Alignment.CenterVertically,
@@ -232,17 +238,53 @@ fun PaletteItem(
             text = palette.name,
             color = LocalColorProvider.current.primary,
             modifier = Modifier
-                .padding(12.dp)
-                .width(260.dp),
+                .padding(Dimens.paddingRegular)
+                .padding(Dimens.paddingXXSmall)
+                .width(Dimens.paletteTitleWidth),
             overflow = TextOverflow.Ellipsis,
             maxLines = 1,
-            fontSize = 16.sp
+            fontSize = Dimens.smallTextSize
         )
-        //TODO 3 first color view
+        PalettePreview(palette.colors)
         DeleteButton(
-            modifier = Modifier.padding(vertical = 4.dp)
+            modifier = Modifier.padding(vertical = Dimens.paddingXSmall)
         ) {
             onDeleteButtonClick(palette)
+        }
+    }
+}
+
+@Composable
+fun PalettePreview(
+    colors: List<ColorModel>,
+    modifier: Modifier = Modifier
+) {
+    val previewColors = colors.take(3)
+    val overlapOffset = Dimens.colorCircleSize * 0.4f
+    val visiblePart = Dimens.colorCircleSize - overlapOffset
+    val totalWidth = Dimens.colorCircleSize + visiblePart * (previewColors.size - 1)
+
+    Box(
+        modifier = modifier
+            .wrapContentHeight()
+            .width(totalWidth),
+        contentAlignment = Alignment.CenterStart
+    ) {
+        previewColors.forEachIndexed { index, color ->
+            Box(
+                modifier = Modifier
+                    .zIndex((previewColors.size - index).toFloat())
+                    .offset(x = visiblePart * index)
+                    .size(Dimens.colorCircleSize)
+                    .clip(CircleShape)
+                    .background(LocalColorProvider.current.primaryContainer)
+                    .padding(2.dp)
+                    .clip(CircleShape)
+                    .background(color.value.toColor()),
+                contentAlignment = Alignment.Center,
+            ) {
+
+            }
         }
     }
 }

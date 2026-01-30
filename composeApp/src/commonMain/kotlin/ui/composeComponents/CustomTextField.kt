@@ -23,7 +23,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.dp
+import ui.theme.Dimens
 import ui.theme.LocalColorProvider
 
 @Composable
@@ -81,16 +81,16 @@ fun CustomTextField(
                 }
             }
             .border(
-                width = 1.dp,
+                width = Dimens.smallestPadding,
                 color =
                     if (isFocused) {
                         LocalColorProvider.current.primary
                     } else {
                         LocalColorProvider.current.primaryContainer
                     },
-                shape = RoundedCornerShape(4.dp)
+                shape = RoundedCornerShape(Dimens.roundedCornerShapeSize)
             )
             .background(LocalColorProvider.current.onPrimary)
-            .padding(4.dp)
+            .padding(Dimens.paddingXSmall)
     )
 }

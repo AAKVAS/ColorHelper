@@ -44,6 +44,7 @@ import com.example.sphere_color
 import com.github.skydoves.colorpicker.compose.AlphaTile
 import com.github.skydoves.colorpicker.compose.ColorPickerController
 import com.zakgof.korender.Korender
+import com.zakgof.korender.TouchEvent
 import com.zakgof.korender.math.Transform.Companion.scale
 import com.zakgof.korender.math.Transform.Companion.translate
 import com.zakgof.korender.math.Vec3
@@ -66,9 +67,10 @@ import utils.toRGBA
 
 
 @Composable
-fun ColorHelperScreen(
+fun ColorLabScreen(
     component: ColorLabComponent,
     windowSize: DpSize,
+    onSceneInteractionChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val scope = rememberCoroutineScope()
@@ -140,7 +142,7 @@ fun ColorHelperScreen(
                 .background(LocalColorProvider.current.background)
                 .padding(Dimens.paddingSmall)
             ) {
-                Scene(state)
+                Scene(state, onSceneInteractionChange)
             }
         }
     } else {
@@ -155,7 +157,7 @@ fun ColorHelperScreen(
                 .background(LocalColorProvider.current.background)
                 .padding(Dimens.paddingSmall)
             ) {
-                Scene(state)
+                Scene(state, onSceneInteractionChange)
             }
             SettingsUI(
                 sphereColorController = sphereColorController,
@@ -344,11 +346,25 @@ fun RGBCharacteristic(
 }
 
 @Composable
-fun Scene(colorLabState: State<ColorLabState>) =
+fun Scene(
+    colorLabState: State<ColorLabState>,
+    onSceneInteractionChange: (Boolean) -> Unit,
+) =
     Korender(appResourceLoader = { Res.readBytes(it) }) {
         val sphereRadius = 6f
         val freeOrbitCamera = OrbitCamera(20.z, 2.y, sphereRadius)
-        OnTouch { freeOrbitCamera.touch(it) }
+        OnTouch {
+            when(it.type) {
+                TouchEvent.Type.DOWN -> {
+                    onSceneInteractionChange(true)
+                }
+                TouchEvent.Type.UP -> {
+                    onSceneInteractionChange(false)
+                }
+                else -> {}
+            }
+            freeOrbitCamera.touch(it)
+        }
         OnKey { freeOrbitCamera.handle(it)  }
 
         Frame {

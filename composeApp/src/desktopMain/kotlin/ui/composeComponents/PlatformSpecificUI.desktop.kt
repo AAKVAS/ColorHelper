@@ -32,4 +32,5 @@ actual fun BackHandlerWrapper(
 
 @Composable
 actual fun SetupStatusBar() {
+
 }

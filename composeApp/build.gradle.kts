@@ -4,7 +4,6 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
-    //alias(libs.plugins.android.kotlin.multiplatform.library)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
     kotlin("plugin.serialization") version "2.0.20"
@@ -119,12 +118,41 @@ android {
 compose.desktop {
     application {
         mainClass = "MainKt"
-        jvmArgs("--add-exports", "java.desktop/sun.awt=ALL-UNNAMED")
+        jvmArgs += listOf(
+            "--add-opens", "java.base/java.lang=ALL-UNNAMED",
+            "--add-opens", "java.base/java.util=ALL-UNNAMED",
+            "--add-opens", "java.base/sun.security.action=ALL-UNNAMED",
+            "--add-opens", "java.base/sun.nio.ch=ALL-UNNAMED",
+            "--add-opens", "java.base/sun.security.x509=ALL-UNNAMED",
+            "--add-opens", "java.desktop/sun.awt=ALL-UNNAMED",
+            "--add-opens", "java.desktop/sun.swing=ALL-UNNAMED",
+            "--add-exports", "java.desktop/sun.awt=ALL-UNNAMED",
+            "--add-exports", "java.base/sun.security.x509=ALL-UNNAMED",
+            "--add-exports", "java.base/sun.security.util=ALL-UNNAMED",
+            "--add-exports", "java.desktop/com.sun.java.swing.plaf.windows=ALL-UNNAMED"
+        )
 
         nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "com.example"
+            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb, TargetFormat.Exe)
+            packageName = "colorHelper"
             packageVersion = "1.0.0"
+
+            modules("java.sql", "jdk.unsupported")
+
+            windows {
+                iconFile.set(project.file("launcher.ico"))
+                menuGroup = "Color Helper"
+                menu = true
+                shortcut = true
+
+                jvmArgs += listOf(
+                    "-Djava.awt.headless=false",
+                    "--add-opens", "java.base/sun.nio.ch=ALL-UNNAMED",
+                    "--add-opens", "java.base/java.lang=ALL-UNNAMED",
+                    "--add-opens", "java.base/java.util=ALL-UNNAMED"
+                )
+                includeAllModules = true
+            }
         }
     }
 }

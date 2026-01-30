@@ -42,8 +42,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.Res
 import com.example.copied
 import com.example.delete
@@ -62,8 +60,6 @@ import ui.composeComponents.DeleteButton
 import ui.composeComponents.DeleteColorDialog
 import ui.composeComponents.DeletePaletteDialog
 import ui.theme.Dimens
-import ui.theme.Dimens.iconButtonSize
-import ui.theme.Dimens.paddingSmall
 import ui.theme.LocalColorProvider
 import utils.toColor
 import utils.toHex
@@ -174,7 +170,7 @@ fun PaletteScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1.0f)
-                .padding(8.dp)
+                .padding(Dimens.paddingSmall)
         )
 
         if (state.value.selectedColorUid != null) {
@@ -239,10 +235,10 @@ fun PaletteNameUI(
     CustomTextField(
         text = text,
         modifier = modifier
-            .padding(10.dp)
-            .widthIn(240.dp, 300.dp)
-            .height(30.dp),
-        fontSize = 18.sp,
+            .padding(Dimens.paddingRegular)
+            .widthIn(Dimens.minTextFieldWidth, Dimens.maxTextFieldWidth)
+            .height(Dimens.regularTextFieldHeight),
+        fontSize = Dimens.textSize,
         onValueChange = onNameChanged
     )
 }
@@ -262,16 +258,15 @@ fun PaletteColorsGrid(
         items(items, key = { color -> color.uid }) { item ->
             Box(
                 modifier = Modifier
-                    .size(
-                        Dimens.buttonHeight
-                    ).clickable {
+                    .size(Dimens.buttonHeight)
+                    .clickable {
                         onColorClick(item.uid)
                     }
-                    .padding(paddingSmall)
-                    .clip(RoundedCornerShape(4.dp))
+                    .padding(Dimens.paddingSmall)
+                    .clip(RoundedCornerShape(Dimens.roundedCornerShapeSize))
                     .background(LocalColorProvider.current.primaryContainer)
-                    .padding(2.dp)
-                    .clip(RoundedCornerShape(4.dp))
+                    .padding(Dimens.paddingXXSmall)
+                    .clip(RoundedCornerShape(Dimens.roundedCornerShapeSize))
                     .background(item.value.toColor()),
                     contentAlignment = Alignment.Center
             ) {
@@ -292,7 +287,7 @@ fun PaletteColorsGrid(
                             alignment = Alignment.Center,
                             contentScale = ContentScale.Crop,
                             colorFilter = ColorFilter.tint(color = LocalColorProvider.current.onBackground),
-                            modifier = Modifier.size(iconButtonSize)
+                            modifier = Modifier.size(Dimens.iconButtonSize)
                         )
                     }
                 }
@@ -313,14 +308,14 @@ fun AddColorButton(
         modifier = modifier
             .size(Dimens.buttonHeight)
             .clickable { onClick() }
-            .padding(paddingSmall)
+            .padding(Dimens.paddingSmall)
             .clip(RoundedCornerShape(Dimens.paddingXSmall))
             .background(LocalColorProvider.current.secondary),
             contentAlignment = Alignment.Center,
     ) {
         Text(
             text = "+",
-            fontSize = 18.sp,
+            fontSize = Dimens.textSize,
             color = LocalColorProvider.current.onPrimary
         )
     }
@@ -363,12 +358,12 @@ fun HarmoniousColors(
         Text(
             text = stringResource(Res.string.harmonious_colors),
             color = LocalColorProvider.current.onSurface,
-            fontSize = 16.sp,
+            fontSize = Dimens.smallTextSize,
         )
         LazyRow(
             modifier = modifier
                 .fillMaxWidth()
-                .padding(8.dp),
+                .padding(Dimens.paddingSmall),
             horizontalArrangement = Arrangement.Center
         ) {
             items(items) { item ->
@@ -377,11 +372,11 @@ fun HarmoniousColors(
                     .clickable {
                         selectColor(item)
                     }
-                    .padding(paddingSmall)
-                    .clip(RoundedCornerShape(4.dp))
+                    .padding(Dimens.paddingSmall)
+                    .clip(RoundedCornerShape(Dimens.roundedCornerShapeSize))
                     .background(LocalColorProvider.current.primaryContainer)
-                    .padding(2.dp)
-                    .clip(RoundedCornerShape(4.dp))
+                    .padding(Dimens.paddingXXSmall)
+                    .clip(RoundedCornerShape(Dimens.roundedCornerShapeSize))
                     .background(item.toColor())
                 )
             }

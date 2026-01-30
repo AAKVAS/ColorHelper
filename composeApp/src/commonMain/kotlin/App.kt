@@ -22,17 +22,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.DpSize
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.Res
 import com.example.lab
 import com.example.palettes
-import feature.colorLab.ColorHelperScreen
+import feature.colorLab.ColorLabScreen
 import feature.home.RootComponent
 import feature.palette.PaletteListScreen
 import org.jetbrains.compose.resources.stringResource
@@ -53,16 +52,18 @@ fun App(
         }
 
         val tabPageComponents = rootComponent.children
-
         val pagerState = rememberPagerState(
             initialPage = 0,
             pageCount = { tabPageComponents.size }
         )
-
         val activePageIndex = remember { mutableIntStateOf(0) }
         LaunchedEffect(activePageIndex.intValue) {
             pagerState.animateScrollToPage(activePageIndex.intValue)
         }
+        LaunchedEffect(pagerState.currentPage) {
+            activePageIndex.intValue = pagerState.currentPage
+        }
+        val isSceneInteracting = remember { mutableStateOf(false) }
 
         Scaffold(
             modifier = Modifier.fillMaxSize(),
@@ -92,16 +93,19 @@ fun App(
                                 change.consume()
                             }
                         },
-                    userScrollEnabled = true
+                    userScrollEnabled = !isSceneInteracting.value
                 ) { page ->
                     when (val child = tabPageComponents[page]) {
                         is RootComponent.Child.PaletteListChild -> PaletteListScreen(
                             component = child.component,
                             windowSize = windowSize
                         )
-                        is RootComponent.Child.ColorLabChild -> ColorHelperScreen(
+                        is RootComponent.Child.ColorLabChild -> ColorLabScreen(
                             component = child.component,
-                            windowSize = windowSize
+                            windowSize = windowSize,
+                            onSceneInteractionChange = { interacting ->
+                                isSceneInteracting.value = interacting
+                            }
                         )
                     }
                 }
@@ -116,7 +120,10 @@ fun TabUI(
     isPortrait: Boolean,
     onTabClick: (Int) -> Unit
 ) {
-    val tabs = listOf(stringResource(Res.string.palettes), stringResource(Res.string.lab))
+    val tabs = listOf(
+        stringResource(Res.string.palettes),
+        stringResource(Res.string.lab)
+    )
 
     if (isPortrait) {
         RowTabulation(
@@ -150,7 +157,7 @@ fun RowTabulation(
                 modifier = Modifier.tabIndicatorOffset(
                     selectedTabIndex
                 ),
-                height = 2.dp,
+                height = Dimens.paddingXXSmall,
                 color = LocalColorProvider.current.primary
             )
         }
@@ -179,7 +186,7 @@ fun ButtonTabulation(
         .wrapContentHeight()
         .fillMaxWidth()
         .background(LocalColorProvider.current.primaryContainer)
-        .padding(8.dp)
+        .padding(Dimens.paddingSmall)
     ) {
         tabs.forEachIndexed { index, tab ->
             TabButton(
@@ -216,20 +223,20 @@ fun TabButton(
                 onTabClick()
             }
             .padding(
-                vertical = 2.dp,
-                horizontal = 4.dp
+                vertical = Dimens.paddingXXSmall,
+                horizontal = Dimens.paddingXSmall
             )
             .border(
-                width = 1.dp,
+                width = Dimens.smallestPadding,
                 color = borderColor,
-                shape = RoundedCornerShape(4.dp)
+                shape = RoundedCornerShape(Dimens.roundedCornerShapeSize)
             )
             .padding(
-                vertical = 4.dp,
-                horizontal = 8.dp
+                vertical = Dimens.paddingXSmall,
+                horizontal = Dimens.paddingSmall
             )
         ,
         color = textColor,
-        fontSize = 18.sp
+        fontSize = Dimens.textSize
     )
 }

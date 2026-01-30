@@ -24,7 +24,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import com.github.skydoves.colorpicker.compose.AlphaSlider
 import com.github.skydoves.colorpicker.compose.AlphaTile
 import com.github.skydoves.colorpicker.compose.BrightnessSlider
@@ -50,7 +49,7 @@ fun ColorPickerUI(
         modifier = Modifier
             .background(LocalColorProvider.current.onPrimary)
             .wrapContentSize()
-            .padding(10.dp),
+            .padding(Dimens.paddingRegular),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         key(colorController.hashCode()) {
@@ -65,15 +64,16 @@ fun ColorPickerUI(
             ) {
                 HsvColorPicker(
                     modifier = Modifier
-                        .width(150.dp)
-                        .height(150.dp)
-                        .padding(10.dp),
+                        .width(Dimens.hsvColorPickerSize)
+                        .height(Dimens.hsvColorPickerSize)
+                        .padding(Dimens.paddingRegular),
                     controller = colorController,
                     initialColor = defaultColor
                 )
                 Column(
                     modifier = Modifier
-                        .padding(12.dp)
+                        .padding(Dimens.paddingRegular)
+                        .padding(Dimens.paddingXXSmall)
                         .wrapContentHeight()
                         .width(IntrinsicSize.Max),
                     verticalArrangement = Arrangement.Top,
@@ -84,8 +84,8 @@ fun ColorPickerUI(
                     CustomTextField(
                         text = hexColorString.value,
                         modifier = Modifier
-                            .padding(start = 24.dp)
-                            .width(100.dp)
+                            .padding(start = Dimens.paddingLarge)
+                            .width(Dimens.hexTextFieldWidth)
                     ) {
                         if (it.matches(pattern)) {
                             hexColorString.value = it
@@ -98,7 +98,7 @@ fun ColorPickerUI(
                         modifier = Modifier
                             .fillMaxWidth()
                             .wrapContentHeight()
-                            .padding(4.dp),
+                            .padding(Dimens.paddingXSmall),
                         verticalAlignment = Alignment.Top,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
@@ -110,13 +110,12 @@ fun ColorPickerUI(
                             Box(
                                 modifier = Modifier
                                     .wrapContentSize()
-                                    .clip(RoundedCornerShape(6.dp))
+                                    .clip(RoundedCornerShape(Dimens.alphaTileRoundedCornerSize))
                                     .background(LocalColorProvider.current.primaryContainer)
-                                    .padding(1.dp)
+                                    .padding(Dimens.smallestPadding)
                             ) {
                                 AlphaTile(
-                                    modifier = Modifier
-                                        .size(Dimens.tileSize),
+                                    modifier = Modifier.size(Dimens.tileSize),
                                     controller = colorController,
                                     selectedColor = defaultColor
                                 )
@@ -135,18 +134,18 @@ fun ColorPickerUI(
 
             AlphaSlider(
                 modifier = Modifier
-                    .width(320.dp)
-                    .padding(4.dp)
-                    .height(24.dp),
+                    .width(Dimens.alphaSliderWidth)
+                    .padding(Dimens.paddingXSmall)
+                    .height(Dimens.alphaSliderHeight),
                 controller = colorController,
                 initialColor = defaultColor
             )
 
             BrightnessSlider(
                 modifier = Modifier
-                    .width(320.dp)
-                    .padding(4.dp)
-                    .height(24.dp),
+                    .width(Dimens.alphaSliderWidth)
+                    .padding(Dimens.paddingXSmall)
+                    .height(Dimens.alphaSliderHeight),
                 controller = colorController,
                 initialColor = defaultColor
             )

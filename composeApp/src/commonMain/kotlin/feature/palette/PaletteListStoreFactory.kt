@@ -77,7 +77,7 @@ class PaletteListStoreFactory(
                         }
                     }
                 } catch (e: Exception) {
-                    val errMessage = e.message ?: "Непредвиденная ошибка"
+                    val errMessage = e.message ?: "Unforeseen error"
                     dispatch(Msg.Error(errMessage))
                     publish(PaletteListStore.Label.ShowMessage(errMessage))
                 } finally {
@@ -103,7 +103,7 @@ class PaletteListStoreFactory(
                     dispatch(Msg.EditPalettePageOpened(newPalette))
                     publish(PaletteListStore.Label.ShowEditPage(newPalette))
                 } catch (e: Exception) {
-                    val errMessage = e.message ?: "Непредвиденная ошибка"
+                    val errMessage = e.message ?: "Unforeseen error"
                     dispatch(Msg.Error(errMessage))
                     publish(PaletteListStore.Label.ShowMessage(errMessage))
                 }
@@ -118,7 +118,7 @@ class PaletteListStoreFactory(
                     }
                     dispatch(Msg.PaletteDeleted(id))
                 } catch (e: Exception) {
-                    val errMessage = e.message ?: "Непредвиденная ошибка"
+                    val errMessage = e.message ?: "Unforeseen error"
                     dispatch(Msg.Error(errMessage))
                     publish(PaletteListStore.Label.ShowMessage(errMessage))
                 }
