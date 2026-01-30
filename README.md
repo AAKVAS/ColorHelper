@@ -1,36 +1,35 @@
-[English](README.md)
+[Russian](README_ru.md)
 
 # KMP ColorHelper
 
-KMP приложение для начинающих художников, созданное для упрощения работы с цветами.
-На текущий момент предлагает два инструмента: редактор палитр и интерактивную лабораторию для тестирования цветов.
+A KMP application for aspiring artists, designed to simplify color work.
+Currently offers two tools: a palette editor and an interactive color testing laboratory.
 
+## 📖 Description
 
-## 📖 Описание
+🎨 Palette Editor
+* Create color palettes for your projects.
+* Add, delete, and modify colors within palettes.
 
-🎨 Редактор палитр
-* Создавайте неограниченное количество цветовых палитр для ваших проектов.
-* Добавляйте, удаляйте и изменяйте цвета внутри палитры.
+🔬 Color Laboratory
+* A simple 3D scene for color evaluation.
+* Modify object colors in real-time: sphere color, surface color, and lighting.
 
-🔬 Цветовая лаборатория
-* Небольшая 3D-сцена для оценки цветов.
-* Изменяйте в реальном времени цвета объектов: Цвет шара, поверхности и освещения.
-
-## 📷 Скриншоты
+## 📷 Screenshots
 
 #### Android
 
-<img width="220" alt="image" src="https://github.com/user-attachments/assets/c99e693c-5dde-416e-aada-8d847870bd9c" />
-<img width="220" alt="image" src="https://github.com/user-attachments/assets/1aba99fa-182a-4b1b-9389-fe205a5641dd" />
-<img width="220" alt="image" src="https://github.com/user-attachments/assets/0e27f12d-9e89-4130-b7e5-793336656970" />
+<img width="220" alt="image" src="https://github.com/user-attachments/assets/9c62473d-1841-4415-b6d3-fbce82116f35" />
+<img width="220" alt="image" src="https://github.com/user-attachments/assets/96bce18c-957b-408a-b3cb-7020d5cee11c" />
+<img width="220" alt="image" src="https://github.com/user-attachments/assets/5b0276f0-1724-474e-a1e0-6196df9c2e15" />
 
-#### Десктоп
-
-<img width="440" height="742" alt="image" src="https://github.com/user-attachments/assets/129422cb-98c7-4d77-9c48-31ff1841755b" />
-<img width="440" height="742" alt="image" src="https://github.com/user-attachments/assets/75eb7b11-b839-4c4e-96d5-e66470e90d06" />
+#### Desktop
 
 
-## Используемые технологии
+<img width="440" alt="image" src="https://github.com/user-attachments/assets/5fa9fc4a-696d-4f75-b0ac-70543fefab25" />
+<img width="440" alt="image" src="https://github.com/user-attachments/assets/8d13a7b4-0d3b-4510-9e2c-ad5135bf2959" />
+
+## Technologies Used
 
 * Kotlin Multiplatform
 * Compose Multiplatform
@@ -41,3 +40,4 @@ KMP приложение для начинающих художников, со�
 * Room
 * Korender
 * ColorPickerView
+
