@@ -1,6 +1,8 @@
 [Russian](README_ru.md)
 
-# KMP ColorHelper
+
+<img width="361" height="93" alt="KMP ColorHelper" src="https://github.com/user-attachments/assets/ad311ea2-6fc3-4552-a4a9-f7805f98521b" />
+
 
 A KMP application for aspiring artists, designed to simplify color work.
 Currently offers two tools: a palette editor and an interactive color testing laboratory.
