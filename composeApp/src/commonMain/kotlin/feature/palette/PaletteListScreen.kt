@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -46,6 +47,7 @@ import feature.palette.model.ColorPalette
 import ui.composeComponents.DeleteButton
 import ui.composeComponents.DeletePaletteDialog
 import ui.composeComponents.RoundedAddButton
+import ui.composeComponents.RoundedCameraButton
 import ui.theme.Dimens
 import ui.theme.LocalColorProvider
 import utils.toColor
@@ -196,12 +198,22 @@ fun PaletteList(
                 )
             }
         }
-        RoundedAddButton(
+        Row(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
+                .wrapContentSize()
                 .padding(end = Dimens.paddingSmall, bottom = Dimens.paddingSmall),
+                verticalAlignment = Alignment.Bottom,
+            horizontalArrangement = Arrangement.End
         ) {
-            onAddButtonClick()
+            RoundedAddButton(
+                modifier = Modifier.padding(end = Dimens.paddingSmall),
+            ) {
+                onAddButtonClick()
+            }
+            RoundedCameraButton() {
+
+            }
         }
     }
 }

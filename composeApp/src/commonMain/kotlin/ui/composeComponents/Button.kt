@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.sp
 import com.example.Res
 import com.example.add_icon
 import com.example.back_arrow
+import com.example.camera_icon
 import com.example.copy_icon
 import com.example.delete
 import com.example.outline_delete
@@ -74,6 +75,32 @@ fun RoundedAddButton(
     ) {
         Image(
             painter = painterResource(Res.drawable.add_icon),
+            contentDescription = stringResource(Res.string.delete),
+            alignment = Alignment.Center,
+            contentScale =  ContentScale.Crop,
+            colorFilter = ColorFilter.tint(color = LocalColorProvider.current.onPrimary),
+            modifier = Modifier.size(iconButtonSize)
+        )
+    }
+}
+
+@Composable
+fun RoundedCameraButton(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    Box(
+        modifier = modifier
+            .size(Dimens.roundedCameraButtonSize)
+            .clip(CircleShape)
+            .clickable {
+                onClick()
+            }
+            .background(LocalColorProvider.current.secondary),
+        contentAlignment = Alignment.Center,
+    ) {
+        Image(
+            painter = painterResource(Res.drawable.camera_icon),
             contentDescription = stringResource(Res.string.delete),
             alignment = Alignment.Center,
             contentScale =  ContentScale.Crop,

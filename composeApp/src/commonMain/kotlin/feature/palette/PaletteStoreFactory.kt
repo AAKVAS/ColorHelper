@@ -5,6 +5,7 @@ import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
+import feature.palette.domain.ColorCompositor
 import feature.palette.domain.PaletteRepository
 import feature.palette.model.ColorModel
 import feature.palette.model.ColorPalette
@@ -18,9 +19,10 @@ import kotlin.coroutines.CoroutineContext
 
 class PaletteStoreFactory(
     private val storeFactory: StoreFactory,
-    private val coroutineContext: CoroutineContext,
+    private val coroutineContext: CoroutineContext
 ): KoinComponent {
     private val repository by inject<PaletteRepository>()
+    private val colorCompositor: ColorCompositor by inject<ColorCompositor>()
 
     fun create(palette: ColorPalette): Store<PaletteStore.Intent, PaletteStore.State, PaletteStore.Label> =
         object : Store<PaletteStore.Intent, PaletteStore.State, PaletteStore.Label> by storeFactory.create(
@@ -33,7 +35,7 @@ class PaletteStoreFactory(
     private fun createExecutor(): Executor<PaletteStore.Intent, Unit, PaletteStore.State, PaletteStore.Msg, PaletteStore.Label> =
         ExecutorImpl(repository, coroutineContext)
 
-    private class ExecutorImpl(
+    private inner class ExecutorImpl(
         private val repository: PaletteRepository,
         coroutineContext: CoroutineContext
     ) : CoroutineExecutor<PaletteStore.Intent, Unit, PaletteStore.State, PaletteStore.Msg, PaletteStore.Label>(
@@ -84,6 +86,7 @@ class PaletteStoreFactory(
                             it?.let { palette ->
                                 withContext(Dispatchers.Main) {
                                     dispatch(PaletteStore.Msg.PaletteUpdated(palette))
+                                    refillHarmoniousColors()
                                 }
                             }
                         }
@@ -187,7 +190,8 @@ class PaletteStoreFactory(
         }
 
         private fun refillHarmoniousColors() {
-            //TODO very complex logic
+            val harmoniousColors = colorCompositor.getHarmoniousColors(state().palette.colors)
+            dispatch(PaletteStore.Msg.UpdateHarmoniousColors(harmoniousColors))
         }
     }
 

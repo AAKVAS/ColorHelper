@@ -35,4 +35,5 @@ object Dimens {
     val alphaSliderHeight = 24.dp
     val alphaSliderWidth = 320.dp
     val colorCircleSize = 36.dp
+    val roundedCameraButtonSize = 40.dp
 }
