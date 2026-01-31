@@ -1,4 +1,4 @@
-#Fri Jan 30 21:24:04 MSK 2026
+#Sat Jan 31 19:55:03 MSK 2026
 base.0=C\:\\Users\\Hp\\Documents\\projects\\kotlin\\ColorHelper\\composeApp\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes.dex
 base.1=C\:\\Users\\Hp\\Documents\\projects\\kotlin\\ColorHelper\\composeApp\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\0\\classes.dex
 base.10=C\:\\Users\\Hp\\Documents\\projects\\kotlin\\ColorHelper\\composeApp\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\5\\classes.dex

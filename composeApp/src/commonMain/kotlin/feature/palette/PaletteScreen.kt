@@ -2,6 +2,7 @@ package feature.palette
 
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -17,17 +18,20 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,6 +46,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.unit.DpSize
 import com.example.Res
 import com.example.copied
 import com.example.delete
@@ -68,7 +73,7 @@ import utils.toHex
 @Composable
 fun PaletteScreen(
     component: PaletteComponent,
-    isPortrait: Boolean,
+    windowSize: DpSize,
     modifier: Modifier = Modifier
 ) {
     val state = component.state.collectAsState()
@@ -76,7 +81,6 @@ fun PaletteScreen(
     val showDeleteColorDialog = remember { mutableStateOf(false) }
     val deletedUid = remember { mutableStateOf<String?>(null) }
     val showDeletePaletteDialog = remember { mutableStateOf(false) }
-
 
     val scope = rememberCoroutineScope()
     val clipboardManager = LocalClipboardManager.current
@@ -90,6 +94,12 @@ fun PaletteScreen(
             )
 
             snackbarHostState.showSnackbar(copied)
+        }
+    }
+
+    val isPortrait = remember(windowSize) {
+        derivedStateOf {
+            windowSize.width < windowSize.height
         }
     }
 
@@ -110,92 +120,69 @@ fun PaletteScreen(
         }
     }
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(LocalColorProvider.current.onPrimary)
-            .pointerInput(Unit) {
-                detectTapGestures(
-                    onTap = { _ ->
-                        focusManager.clearFocus()
-                    }
-                )
-            }
-        ,
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        BackHandlerWrapper {
-            component.navigateBack()
-        }
-
+    if (windowSize.height < Dimens.lowLargeWindowHeight) {
         Row(
-            modifier = Modifier
-                .align(Alignment.Start)
-                .fillMaxWidth()
-                .wrapContentHeight(),
+            modifier = modifier
+                .fillMaxSize()
+                .background(LocalColorProvider.current.onPrimary)
+                .pointerInput(Unit) {
+                    detectTapGestures(
+                        onTap = { _ ->
+                            focusManager.clearFocus()
+                        }
+                    )
+                }
+            ,
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Start
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            if (isPortrait) {
-                BackNavigationButton {
-                    component.navigateBack()
-                }
+            BackHandlerWrapper {
+                component.navigateBack()
             }
-            PaletteNameUI(
-                state.value.palette.name,
-                modifier = Modifier.weight(1.0f)
-            ) { name ->
-                component.updatePalette(state.value.palette.copy(name = name))
-            }
-            DeleteButton(
-                modifier = Modifier.padding(end = Dimens.paddingXXSmall)
-            ) {
-                component.showDeleteDialog()
-            }
+            EditPaletteContainer(
+                state = state.value,
+                component = component,
+                showBackNavButton = true,
+                modifier = Modifier.weight(0.5f).wrapContentHeight()
+            )
+            ColorSettingsComponent(
+                state = state.value,
+                component = component,
+                onCopyTextToClipboard = onCopyTextToClipboard,
+                modifier = Modifier.weight(0.5f).wrapContentHeight()
+            )
         }
-        PaletteColorsGrid(
-            items = state.value.palette.colors,
-            onColorClick = { clickedUid ->
-                if (clickedUid == state.value.selectedColorUid) {
-                    component.showDeleteColorDialog(clickedUid)
-                } else {
-                    component.updateSelectedColorUid(clickedUid)
-                }
-            },
-            onAddColorButtonClick = {
-                component.addColor("#FFFFFFFF")
-            },
-            selectedItemUid = state.value.selectedColorUid ?: "",
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1.0f)
-                .padding(Dimens.paddingSmall)
-        )
-
-        if (state.value.selectedColorUid != null) {
-            val colorModel = state.value.palette.colors.firstOrNull {
-                it.uid == state.value.selectedColorUid
-            }
-
-            if (colorModel != null) {
-                key(state.value.selectedColorUid) {
-                    ColorSettings(
-                        defaultColor = colorModel.value.toColor(),
-                        onColorChange = { color ->
-                            val newColor = colorModel.copy(value = color)
-                            component.updateColor(newColor)
-                        },
-                        onCopyTextToClipboard = onCopyTextToClipboard
+    } else {
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .background(LocalColorProvider.current.onPrimary)
+                .pointerInput(Unit) {
+                    detectTapGestures(
+                        onTap = { _ ->
+                            focusManager.clearFocus()
+                        }
                     )
                 }
-                if (state.value.harmoniousColors.isNotEmpty()) {
-                    HarmoniousColors(
-                        items = state.value.harmoniousColors,
-                        selectColor = component::selectHarmoniousColor
-                    )
-                }
+            ,
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            BackHandlerWrapper {
+                component.navigateBack()
             }
+            EditPaletteContainer(
+                state = state.value,
+                component = component,
+                showBackNavButton = isPortrait.value,
+                modifier = Modifier.weight(1f).wrapContentWidth()
+            )
+            ColorSettingsComponent(
+                state = state.value,
+                component = component,
+                onCopyTextToClipboard = onCopyTextToClipboard,
+                modifier = Modifier.wrapContentHeight().wrapContentWidth()
+            )
         }
     }
 
@@ -223,6 +210,103 @@ fun PaletteScreen(
             },
             itemName = state.value.palette.name
         )
+    }
+}
+
+@Composable
+fun EditPaletteContainer(
+    state: PaletteStore.State,
+    component: PaletteComponent,
+    showBackNavButton: Boolean,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Row(
+            modifier = Modifier
+                .align(Alignment.Start)
+                .fillMaxWidth()
+                .wrapContentHeight(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start
+        ) {
+            if (showBackNavButton) {
+                BackNavigationButton(onClick = {
+                    component.navigateBack()
+                })
+            }
+            PaletteNameUI(
+                state.palette.name,
+                modifier = Modifier.weight(1.0f)
+            ) { name ->
+                component.updatePalette(state.palette.copy(name = name))
+            }
+            DeleteButton(
+                modifier = Modifier.padding(end = Dimens.paddingXXSmall)
+            ) {
+                component.showDeleteDialog()
+            }
+        }
+        PaletteColorsGrid(
+            items = state.palette.colors,
+            onColorClick = { clickedUid ->
+                if (clickedUid == state.selectedColorUid) {
+                    component.showDeleteColorDialog(clickedUid)
+                } else {
+                    component.updateSelectedColorUid(clickedUid)
+                }
+            },
+            onAddColorButtonClick = {
+                component.addColor("#FFFFFFFF")
+            },
+            selectedItemUid = state.selectedColorUid ?: "",
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1.0f)
+                .padding(Dimens.paddingSmall)
+        )
+    }
+}
+
+@Composable
+fun ColorSettingsComponent(
+    state: PaletteStore.State,
+    component: PaletteComponent,
+    onCopyTextToClipboard: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier.verticalScroll(ScrollState(0)),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        if (state.selectedColorUid != null) {
+            val colorModel = state.palette.colors.firstOrNull {
+                it.uid == state.selectedColorUid
+            }
+
+            if (colorModel != null) {
+                key(state.selectedColorUid) {
+                    ColorSettings(
+                        defaultColor = colorModel.value.toColor(),
+                        onColorChange = { color ->
+                            val newColor = colorModel.copy(value = color)
+                            component.updateColor(newColor)
+                        },
+                        onCopyTextToClipboard = onCopyTextToClipboard
+                    )
+                }
+                if (state.harmoniousColors.isNotEmpty()) {
+                    HarmoniousColors(
+                        items = state.harmoniousColors,
+                        selectColor = component::selectHarmoniousColor
+                    )
+                }
+            }
+        }
     }
 }
 

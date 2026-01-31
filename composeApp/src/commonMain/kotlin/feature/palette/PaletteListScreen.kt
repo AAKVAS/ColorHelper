@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -87,7 +86,7 @@ fun PaletteListScreen(
         modifier = Modifier.fillMaxSize(),
         contentWindowInsets = WindowInsets.systemBars
     ) { _ ->
-        if (isPortrait.value) {
+        if (isPortrait.value || windowSize.height < Dimens.lowLargeWindowHeight) {
             Children(
                 stack = component.stack,
                 modifier = Modifier
@@ -99,7 +98,7 @@ fun PaletteListScreen(
                     is PaletteListComponent.Child.PaletteChild -> {
                         PaletteScreen(
                             component = child.component,
-                            isPortrait = isPortrait.value,
+                            windowSize = windowSize
                         )
                     }
 
@@ -108,7 +107,8 @@ fun PaletteListScreen(
                             items = state.value.items,
                             onItemClick = component::showEditComponent,
                             onAddButtonClick = component::onAddButtonClicked,
-                            onDeleteButtonClick = component::showDeleteMessage
+                            onDeleteButtonClick = component::showDeleteMessage,
+                            modifier = Modifier.fillMaxWidth()
                         )
                     }
                 }
@@ -119,7 +119,8 @@ fun PaletteListScreen(
                     items = state.value.items,
                     onItemClick = component::showEditComponent,
                     onAddButtonClick = component::onAddButtonClicked,
-                    onDeleteButtonClick = component::showDeleteMessage
+                    onDeleteButtonClick = component::showDeleteMessage,
+                    modifier = Modifier.width(Dimens.paletteListWidth)
                 )
                 Children(
                     stack = component.stack,
@@ -130,7 +131,7 @@ fun PaletteListScreen(
                         is PaletteListComponent.Child.PaletteChild -> {
                             PaletteScreen(
                                 component = child.component,
-                                isPortrait = isPortrait.value,
+                                windowSize = windowSize
                             )
                         }
 
@@ -174,14 +175,11 @@ fun PaletteList(
     Box(
         modifier = modifier
             .fillMaxHeight()
-            .wrapContentWidth()
             .background(LocalColorProvider.current.onPrimary)
             .padding(Dimens.paddingSmall)
     ) {
         LazyColumn(
-            modifier = Modifier
-                .width(Dimens.paletteListWidth)
-                .fillMaxHeight(1.0f)
+            modifier = Modifier.fillMaxSize()
         ) {
             items(items, key = { palette -> palette.uid }) { palette ->
                 PaletteItem(
@@ -257,11 +255,17 @@ fun PaletteItem(
             maxLines = 1,
             fontSize = Dimens.smallTextSize
         )
-        PalettePreview(palette.colors)
-        DeleteButton(
-            modifier = Modifier.padding(vertical = Dimens.paddingXSmall)
+        Row(
+            modifier = Modifier.wrapContentSize(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            onDeleteButtonClick(palette)
+            PalettePreview(palette.colors)
+            DeleteButton(
+                modifier = Modifier.padding(vertical = Dimens.paddingXSmall)
+            ) {
+                onDeleteButtonClick(palette)
+            }
         }
     }
 }

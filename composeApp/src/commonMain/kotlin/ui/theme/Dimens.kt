@@ -11,6 +11,7 @@ object Dimens {
     val paddingRegular = 10.dp
     val paddingMedium = 16.dp
     val paddingLarge = 24.dp
+    val paddingXLarge = 36.dp
     val smallRoundedCornerShapeSize = 2.dp
     val roundedCornerShapeSize = 4.dp
     val alphaTileRoundedCornerSize = 6.dp
@@ -36,4 +37,6 @@ object Dimens {
     val alphaSliderWidth = 320.dp
     val colorCircleSize = 36.dp
     val roundedCameraButtonSize = 40.dp
+
+    val lowLargeWindowHeight = 400.dp
 }

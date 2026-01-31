@@ -1,6 +1,7 @@
 package feature.colorLab
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -182,7 +184,9 @@ fun SettingsUI(
     scope: CoroutineScope,
     copyTextToClipboard: (text: String) -> Unit
 ) {
-    Column {
+    Column(
+        modifier = Modifier.verticalScroll(ScrollState(0))
+    ) {
         ColorCharacteristic(
             text = stringResource(Res.string.sphere_color),
             controller = sphereColorController.value,
