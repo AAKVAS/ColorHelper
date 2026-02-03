@@ -6,12 +6,16 @@ import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.navigate
 import com.arkivanov.decompose.router.stack.popTo
+import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import feature.palette.model.ColorPalette
+import feature.palette.photoPicker.DefaultPhotoPickerComponent
+import feature.palette.photoPicker.PhotoPickerComponent
+import feature.palette.photoPicker.PhotoPickerStoreFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -41,6 +45,11 @@ class DefaultPaletteListComponent(
             handleBackButton = true,
             childFactory = ::child,
         )
+
+    private val _modalChild = MutableValue<PaletteListComponent.ModalChild>(
+        PaletteListComponent.ModalChild.NoModal
+    )
+    override val modalChild: Value<PaletteListComponent.ModalChild> = _modalChild
 
     private fun child(config: Config, componentContext: ComponentContext): PaletteListComponent.Child =
         when (config) {
@@ -73,6 +82,22 @@ class DefaultPaletteListComponent(
             }
         )
 
+    private fun photoPickerComponent(
+        componentContext: ComponentContext
+    ): PhotoPickerComponent {
+        return DefaultPhotoPickerComponent(
+            componentContext = componentContext,
+            onExtractionCancel = ::closeExtractPaletteComponent,
+            storeFactory = PhotoPickerStoreFactory(
+                DefaultStoreFactory(),
+                Dispatchers.Main
+            ),
+            navToPalette = { palette ->
+                closeExtractPaletteComponent()
+                showEditComponent(palette)
+            }
+        )
+    }
 
     init {
         _store.accept(PaletteListStore.Intent.LoadPalettes)
@@ -98,6 +123,16 @@ class DefaultPaletteListComponent(
             listOf(Config.NoChildren)
         }
         _store.accept(PaletteListStore.Intent.DeletePalette(colorPalette.uid))
+    }
+
+    override fun showExtractPaletteComponent() {
+        _modalChild.value = PaletteListComponent.ModalChild.PhotoPickerChild(
+            photoPickerComponent(componentContext = this)
+        )
+    }
+
+    override fun closeExtractPaletteComponent() {
+        _modalChild.value = PaletteListComponent.ModalChild.NoModal
     }
 
     @Serializable

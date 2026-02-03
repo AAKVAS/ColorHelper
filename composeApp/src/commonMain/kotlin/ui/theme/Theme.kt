@@ -7,6 +7,8 @@ import androidx.compose.ui.graphics.Color
 
 data class ColorTheme(
     val primary: Color,
+    val primaryVariant: Color,
+    val primaryWeak: Color,
     val secondary: Color,
     val background: Color,
     val onPrimary: Color,
@@ -17,6 +19,8 @@ data class ColorTheme(
 
 val darkColorTheme = ColorTheme(
     primary = md_theme_dark_primary,
+    primaryVariant = md_theme_dark_primary_variant,
+    primaryWeak = md_theme_dark_primary_weak,
     secondary = md_theme_dark_secondary,
     onPrimary = md_theme_dark_onPrimary,
     primaryContainer = md_theme_dark_primaryContainer,

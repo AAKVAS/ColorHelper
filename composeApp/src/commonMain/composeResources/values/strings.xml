@@ -17,4 +17,14 @@
     <string name="delete_color">Delete color %1$s?</string>
     <string name="delete_palette">Delete palette "%1$s"?</string>
     <string name="cancel">Cancel</string>
+    <string name="select_photo">Select photo</string>
+    <string name="selected_photo">Selected photo</string>
+    <string name="extract_palette">Extract palette</string>
+    <string name="continue">Continue</string>
+    <string name="color_count">Color count: %1$s</string>
+    <string name="extraction_method">Extraction method</string>
+    <string name="dominant_colors">Dominant Colors</string>
+    <string name="k_means_clustering">K-Means Clustering</string>
+    <string name="median_cut">Median Cut</string>
+    <string name="color_thief_algorithm">Color Thief Algorithm</string>
 </resources>

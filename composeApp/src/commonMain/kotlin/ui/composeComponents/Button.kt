@@ -16,11 +16,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.unit.sp
 import com.example.Res
 import com.example.add_icon
 import com.example.back_arrow
 import com.example.camera_icon
+import com.example.close_icon
 import com.example.copy_icon
 import com.example.delete
 import com.example.menu_icon
@@ -28,14 +28,13 @@ import com.example.outline_delete
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ui.theme.Dimens
-import ui.theme.Dimens.iconButtonSize
-import ui.theme.Dimens.paddingSmall
 import ui.theme.LocalColorProvider
 
 @Composable
 fun SimpleButton(
     modifier: Modifier = Modifier,
     text: String,
+    enabled: Boolean = true,
     onClick: () -> Unit
 ) {
     Box(
@@ -48,7 +47,7 @@ fun SimpleButton(
     ) {
         Text(
             text = text,
-            fontSize = 18.sp,
+            fontSize = Dimens.smallTextSize,
             color = LocalColorProvider.current.onPrimary,
             modifier = Modifier.padding(
                 vertical = Dimens.paddingXXSmall,
@@ -80,7 +79,7 @@ fun RoundedAddButton(
             alignment = Alignment.Center,
             contentScale =  ContentScale.Crop,
             colorFilter = ColorFilter.tint(color = LocalColorProvider.current.onPrimary),
-            modifier = Modifier.size(iconButtonSize)
+            modifier = Modifier.size(Dimens.iconButtonSize)
         )
     }
 }
@@ -106,7 +105,7 @@ fun RoundedCameraButton(
             alignment = Alignment.Center,
             contentScale =  ContentScale.Crop,
             colorFilter = ColorFilter.tint(color = LocalColorProvider.current.onPrimary),
-            modifier = Modifier.size(iconButtonSize)
+            modifier = Modifier.size(Dimens.iconButtonSize)
         )
     }
 }
@@ -118,9 +117,9 @@ fun DeleteButton(
 ) {
     Box(
         modifier = modifier
-            .padding(horizontal = paddingSmall)
+            .padding(horizontal = Dimens.paddingSmall)
             .wrapContentSize(align = Alignment.Center)
-            .clip(RoundedCornerShape(paddingSmall))
+            .clip(RoundedCornerShape(Dimens.paddingSmall))
             .clickable { onClick() },
         contentAlignment = Alignment.Center,
     ) {
@@ -130,7 +129,31 @@ fun DeleteButton(
             alignment = Alignment.Center,
             contentScale =  ContentScale.Crop,
             colorFilter = ColorFilter.tint(color = LocalColorProvider.current.onBackground),
-            modifier = Modifier.size(iconButtonSize)
+            modifier = Modifier.size(Dimens.iconButtonSize)
+        )
+    }
+}
+
+@Composable
+fun CloseButton(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    Box(
+        modifier = modifier
+            .padding(horizontal = Dimens.paddingSmall)
+            .wrapContentSize(align = Alignment.Center)
+            .clip(RoundedCornerShape(Dimens.paddingSmall))
+            .clickable { onClick() },
+        contentAlignment = Alignment.Center,
+    ) {
+        Image(
+            painter = painterResource(Res.drawable.close_icon),
+            contentDescription = stringResource(Res.string.delete),
+            alignment = Alignment.Center,
+            contentScale =  ContentScale.Crop,
+            colorFilter = ColorFilter.tint(color = LocalColorProvider.current.onBackground),
+            modifier = Modifier.size(Dimens.iconButtonSize)
         )
     }
 }
@@ -142,9 +165,9 @@ fun MenuButton(
 ) {
     Box(
         modifier = modifier
-            .padding(horizontal = paddingSmall)
+            .padding(horizontal = Dimens.paddingSmall)
             .wrapContentSize(align = Alignment.Center)
-            .clip(RoundedCornerShape(paddingSmall))
+            .clip(RoundedCornerShape(Dimens.paddingSmall))
             .clickable { onClick() },
         contentAlignment = Alignment.Center,
     ) {
@@ -154,7 +177,7 @@ fun MenuButton(
             alignment = Alignment.Center,
             contentScale =  ContentScale.Crop,
             colorFilter = ColorFilter.tint(color = LocalColorProvider.current.onBackground),
-            modifier = Modifier.size(iconButtonSize)
+            modifier = Modifier.size(Dimens.iconButtonSize)
         )
     }
 }
@@ -167,7 +190,7 @@ fun CopyButton(
     Box(
         modifier = modifier
             .wrapContentSize(align = Alignment.Center)
-            .clip(RoundedCornerShape(paddingSmall))
+            .clip(RoundedCornerShape(Dimens.paddingSmall))
             .clickable { onClick() },
         contentAlignment = Alignment.Center,
     ) {
@@ -177,7 +200,31 @@ fun CopyButton(
             alignment = Alignment.Center,
             contentScale =  ContentScale.Crop,
             colorFilter = ColorFilter.tint(color = LocalColorProvider.current.onBackground),
-            modifier = Modifier.size(iconButtonSize)
+            modifier = Modifier.size(Dimens.iconButtonSize)
+        )
+    }
+}
+
+@Composable
+fun PickPhotoButton(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    Box(
+        modifier = modifier
+            .padding(horizontal = Dimens.paddingSmall)
+            .wrapContentSize(align = Alignment.Center)
+            .clip(RoundedCornerShape(Dimens.paddingSmall))
+            .clickable { onClick() },
+        contentAlignment = Alignment.Center,
+    ) {
+        Image(
+            painter = painterResource(Res.drawable.camera_icon),
+            contentDescription = stringResource(Res.string.delete),
+            alignment = Alignment.Center,
+            contentScale =  ContentScale.Crop,
+            colorFilter = ColorFilter.tint(color = LocalColorProvider.current.onBackground),
+            modifier = Modifier.size(Dimens.bigIconButtonSize)
         )
     }
 }
@@ -189,9 +236,9 @@ fun BackNavigationButton(
 ) {
     Box(
         modifier = modifier
-            .padding(horizontal = paddingSmall)
+            .padding(horizontal = Dimens.paddingSmall)
             .wrapContentSize(align = Alignment.Center)
-            .clip(RoundedCornerShape(paddingSmall))
+            .clip(RoundedCornerShape(Dimens.paddingSmall))
             .clickable { onClick() },
         contentAlignment = Alignment.Center,
     ) {
@@ -201,7 +248,7 @@ fun BackNavigationButton(
             alignment = Alignment.Center,
             contentScale =  ContentScale.Crop,
             colorFilter = ColorFilter.tint(color = LocalColorProvider.current.onBackground),
-            modifier = Modifier.size(iconButtonSize)
+            modifier = Modifier.size(Dimens.iconButtonSize)
         )
     }
 }

@@ -44,6 +44,7 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.adaptive)
             implementation(libs.google.systemuicontroller)
+            implementation(libs.google.permissions)
         }
         commonMain.dependencies {
             implementation(compose.ui)
@@ -74,9 +75,12 @@ kotlin {
             implementation(libs.androidx.room.runtime)
             implementation(libs.androidx.sqlite.bundled)
             implementation(libs.androidx.room.compiler)
+            implementation(libs.coil.compose)
+            implementation(libs.coil.network)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
+            implementation(libs.kotlinx.coroutines.swing)
         }
     }
 }

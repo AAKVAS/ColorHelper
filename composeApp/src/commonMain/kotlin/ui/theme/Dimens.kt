@@ -17,6 +17,7 @@ object Dimens {
     val alphaTileRoundedCornerSize = 6.dp
     val alphaTileSize = 18.dp
     val iconButtonSize = 24.dp
+    val bigIconButtonSize = 36.dp
     val smallNumberTextFieldHeight = 24.dp
     val smallNumberTextFieldWidth = 50.dp
     val regularTextFieldHeight = 30.dp
@@ -25,6 +26,9 @@ object Dimens {
     val buttonHeight = 48.dp
     val roundedButtonSize = 52.dp
     val tileSize = 26.dp
+    val circularProgressIndicatorSize = 40.dp
+    val sliderHeight = 28.dp
+    val radioButtonSize = 20.dp
 
     val smallTextSize = 16.sp
     val textSize = 18.sp
@@ -39,4 +43,6 @@ object Dimens {
     val roundedCameraButtonSize = 40.dp
 
     val lowLargeWindowHeight = 400.dp
+    val photoPickerHeight = 100.dp
+    val pickedPhotoHeight = 200.dp
 }

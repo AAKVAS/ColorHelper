@@ -22,6 +22,10 @@ class PaletteRepositoryImpl(
 
     override suspend fun savePalette(palette: ColorPalette) {
         _paletteDao.savePalette(palette.toEntity())
+        if (palette.colors.isNotEmpty()) {
+            val colors = palette.colors.map { it.toColorEntity() }
+            _colorDao.saveColors(colors)
+        }
     }
 
     override suspend fun updatePalette(palette: ColorPalette) {

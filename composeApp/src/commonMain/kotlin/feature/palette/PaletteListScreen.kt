@@ -40,9 +40,11 @@ import androidx.compose.ui.zIndex
 import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
+import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import feature.palette.PaletteListStore.Label
 import feature.palette.model.ColorModel
 import feature.palette.model.ColorPalette
+import feature.palette.photoPicker.PhotoPickerScreen
 import ui.composeComponents.DeleteButton
 import ui.composeComponents.DeletePaletteDialog
 import ui.composeComponents.RoundedAddButton
@@ -60,6 +62,7 @@ fun PaletteListScreen(
     val state = component.state.collectAsState()
     val showDeletePaletteDialog = remember { mutableStateOf(false) }
     val deletedPalette = remember { mutableStateOf<ColorPalette?>(null) }
+    val modalComponent = component.modalChild.subscribeAsState()
 
     LaunchedEffect(component.labels) {
         component.labels.collect { label ->
@@ -108,6 +111,7 @@ fun PaletteListScreen(
                             onItemClick = component::showEditComponent,
                             onAddButtonClick = component::onAddButtonClicked,
                             onDeleteButtonClick = component::showDeleteMessage,
+                            onPhotoPickerButtonClicked = component::showExtractPaletteComponent,
                             modifier = Modifier.fillMaxWidth()
                         )
                     }
@@ -120,6 +124,7 @@ fun PaletteListScreen(
                     onItemClick = component::showEditComponent,
                     onAddButtonClick = component::onAddButtonClicked,
                     onDeleteButtonClick = component::showDeleteMessage,
+                    onPhotoPickerButtonClicked = component::showExtractPaletteComponent,
                     modifier = Modifier.width(Dimens.paletteListWidth)
                 )
                 Children(
@@ -137,7 +142,7 @@ fun PaletteListScreen(
 
                         else -> {
                             Spacer(
-                                Modifier
+                                modifier = Modifier
                                     .fillMaxSize()
                                     .background(LocalColorProvider.current.onPrimary)
                             )
@@ -159,6 +164,12 @@ fun PaletteListScreen(
                 itemName = deletedPalette.value!!.name
             )
         }
+        when(val modalChild = modalComponent.value) {
+            is PaletteListComponent.ModalChild.NoModal -> {}
+            is PaletteListComponent.ModalChild.PhotoPickerChild -> {
+                PhotoPickerScreen(modalChild.component)
+            }
+        }
     }
 }
 
@@ -168,6 +179,7 @@ fun PaletteList(
     onItemClick: (ColorPalette) -> Unit,
     onAddButtonClick: () -> Unit,
     onDeleteButtonClick: (ColorPalette) -> Unit,
+    onPhotoPickerButtonClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val selectedPaletteUid = remember { mutableStateOf<String?>(null) }
@@ -209,9 +221,7 @@ fun PaletteList(
             ) {
                 onAddButtonClick()
             }
-            RoundedCameraButton() {
-
-            }
+            RoundedCameraButton(onClick = onPhotoPickerButtonClicked)
         }
     }
 }
@@ -298,9 +308,7 @@ fun PalettePreview(
                     .clip(CircleShape)
                     .background(color.value.toColor()),
                 contentAlignment = Alignment.Center,
-            ) {
-
-            }
+            ) {}
         }
     }
 }

@@ -59,6 +59,10 @@ public class ColorDao_Impl(
     __insertAdapterOfColorEntity.insert(_connection, color)
   }
 
+  public override suspend fun saveColors(colors: List<ColorEntity>): Unit = performSuspending(__db, false, true) { _connection ->
+    __insertAdapterOfColorEntity.insert(_connection, colors)
+  }
+
   public override suspend fun updateColor(color: ColorEntity): Unit = performSuspending(__db, false, true) { _connection ->
     __updateAdapterOfColorEntity.handle(_connection, color)
   }

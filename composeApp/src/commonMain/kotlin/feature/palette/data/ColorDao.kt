@@ -19,6 +19,9 @@ interface ColorDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveColor(color: ColorEntity)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun saveColors(colors: List<ColorEntity>)
+
     @Update
     suspend fun updateColor(color: ColorEntity)
 

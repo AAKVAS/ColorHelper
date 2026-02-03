@@ -18,3 +18,15 @@ expect fun BackHandlerWrapper(
 
 @Composable
 expect fun SetupStatusBar()
+
+
+@Composable
+expect fun ImagePicker(onImagePicked: (String?) -> Unit)
+
+
+@Composable
+expect fun PhotoInputBox(
+    modifier: Modifier = Modifier,
+    onImageDropped: (String) -> Unit,
+    onPickButtonClick: () -> Unit
+)

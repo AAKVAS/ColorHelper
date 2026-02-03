@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "org.example.composeApp-mergeDebugResources-42:/values-v25/values-v25.xml",
+            "outputFile": "org.example.composeApp-mergeDebugResources-44:/values-v25/values-v25.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Hp\\.gradle\\caches\\9.2.1\\transforms\\8eabed61468379a9c0fea0ee5fccda52\\workspace\\transformed\\appcompat-1.7.1\\res\\values-v25\\values-v25.xml",
+                    "source": "C:\\Users\\Hp\\.gradle\\caches\\9.2.1\\transforms\\1c52e6bdb2e25a339bfbc878c1748d78\\workspace\\transformed\\appcompat-1.7.1\\res\\values-v25\\values-v25.xml",
                     "from": {
                         "startLines": "2,3,4,6",
                         "startColumns": "4,4,4,4",
