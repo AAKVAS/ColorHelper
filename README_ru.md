@@ -21,14 +21,18 @@ KMP приложение для начинающих художников, со�
 
 #### Android
 
-<img width="220" alt="image" src="https://github.com/user-attachments/assets/8c758eb7-34f3-4e4c-bbef-93a810a83a4b" />
-<img width="220" alt="image" src="https://github.com/user-attachments/assets/1aba99fa-182a-4b1b-9389-fe205a5641dd" />
-<img width="220" alt="image" src="https://github.com/user-attachments/assets/0e27f12d-9e89-4130-b7e5-793336656970" />
+<img width="180" alt="image" src="https://github.com/user-attachments/assets/8c758eb7-34f3-4e4c-bbef-93a810a83a4b" />
+<img width="180" alt="image" src="https://github.com/user-attachments/assets/1aba99fa-182a-4b1b-9389-fe205a5641dd" />
+<img width="180" alt="image" src="https://github.com/user-attachments/assets/6ef29a6f-9368-4ec2-a598-ee6deea460bb" />
+<img width="180" alt="image" src="https://github.com/user-attachments/assets/b763d126-9bee-438f-8e61-834c3c3e0149" />
+<img width="180" alt="image" src="https://github.com/user-attachments/assets/0e27f12d-9e89-4130-b7e5-793336656970" />
+
 
 #### Десктоп
 
-<img width="440" alt="image" src="https://github.com/user-attachments/assets/75641618-e412-4684-92ca-8a83556f525c" />
-<img width="440" alt="image" src="https://github.com/user-attachments/assets/75eb7b11-b839-4c4e-96d5-e66470e90d06" />
+<img width="300" alt="image" src="https://github.com/user-attachments/assets/75641618-e412-4684-92ca-8a83556f525c" />
+<img width="300" alt="image" src="https://github.com/user-attachments/assets/bb21a204-5efd-4942-98a4-75ff4e2f3820" />
+<img width="300" alt="image" src="https://github.com/user-attachments/assets/75eb7b11-b839-4c4e-96d5-e66470e90d06" />
 
 
 ## Используемые технологии
