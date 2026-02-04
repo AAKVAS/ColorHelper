@@ -1,7 +1,7 @@
-package feature.palette.photoPicker.paletteExtractor
+package feature.palette.photoPicker.domain
 
 import androidx.compose.ui.graphics.Color
-import kotlin.math.sqrt
+import feature.palette.photoPicker.model.RGBPixel
 import kotlin.random.Random
 
 
@@ -19,17 +19,20 @@ class KMeansPaletteExtractor : PaletteExtractor() {
         val assignments = IntArray(pixels.size)
         var changed: Boolean
 
-        repeat(maxIterations) { iteration ->
+        repeat(maxIterations) {
             changed = false
+            val clusterSums = Array(k) { doubleArrayOf(0.0, 0.0, 0.0) }
+            val clusterSizes = IntArray(k)
+
             pixels.forEachIndexed { index, pixel ->
                 var minDistance = Double.MAX_VALUE
-                var bestCluster = assignments[index]
+                var bestCluster = 0
 
-                centroids.forEachIndexed { clusterIndex, centroid ->
-                    val distance = pixel.distanceTo(centroid)
+                for (i in 0 until k) {
+                    val distance = colorDistanceSquared(pixel, centroids[i]).toDouble()
                     if (distance < minDistance) {
                         minDistance = distance
-                        bestCluster = clusterIndex
+                        bestCluster = i
                     }
                 }
 
@@ -37,20 +40,14 @@ class KMeansPaletteExtractor : PaletteExtractor() {
                     assignments[index] = bestCluster
                     changed = true
                 }
+
+                clusterSums[bestCluster][0] += pixel.r.toDouble()
+                clusterSums[bestCluster][1] += pixel.g.toDouble()
+                clusterSums[bestCluster][2] += pixel.b.toDouble()
+                clusterSizes[bestCluster]++
             }
 
             if (!changed) return@repeat
-
-            val clusterSums = Array(k) { doubleArrayOf(0.0, 0.0, 0.0) }
-            val clusterSizes = IntArray(k)
-
-            pixels.forEachIndexed { index, pixel ->
-                val cluster = assignments[index]
-                clusterSums[cluster][0] += pixel.r.toDouble()
-                clusterSums[cluster][1] += pixel.g.toDouble()
-                clusterSums[cluster][2] += pixel.b.toDouble()
-                clusterSizes[cluster]++
-            }
 
             for (i in 0 until k) {
                 if (clusterSizes[i] > 0) {
@@ -59,6 +56,8 @@ class KMeansPaletteExtractor : PaletteExtractor() {
                         g = (clusterSums[i][1] / clusterSizes[i]).toInt(),
                         b = (clusterSums[i][2] / clusterSizes[i]).toInt()
                     )
+                } else {
+                    centroids[i] = pixels[Random.nextInt(pixels.size)]
                 }
             }
         }
@@ -66,50 +65,42 @@ class KMeansPaletteExtractor : PaletteExtractor() {
         return centroids.map { it.toColor() }
     }
 
-    private fun kMeansPlusPlusInit(pixels: List<RGBPixel>, k: Int): MutableList<RGBPixel> {
-        val centroids = mutableListOf<RGBPixel>()
+    private fun kMeansPlusPlusInit(pixels: List<RGBPixel>, k: Int): Array<RGBPixel> {
+        val centroids = Array(k) { RGBPixel(0, 0, 0) }
 
-        centroids.add(pixels.random())
+        centroids[0] = pixels[Random.nextInt(pixels.size)]
+        val distances = DoubleArray(pixels.size)
 
         for (i in 1 until k) {
-            val distances = DoubleArray(pixels.size)
             var totalDistance = 0.0
 
-            pixels.forEachIndexed { index, pixel ->
+            for (j in pixels.indices) {
                 var minDist = Double.MAX_VALUE
-                centroids.forEach { centroid ->
-                    val dist = pixel.distanceTo(centroid)
+                for (c in 0 until i) {
+                    val dist = colorDistanceSquared(pixels[j], centroids[c]).toDouble()
                     if (dist < minDist) {
                         minDist = dist
                     }
                 }
-                distances[index] = minDist * minDist
-                totalDistance += distances[index]
+                distances[j] = minDist
+                totalDistance += distances[j]
             }
 
-            val random = Random.nextDouble() * totalDistance
+            val threshold = Random.nextDouble() * totalDistance
             var cumulative = 0.0
             var selectedIndex = 0
 
-            for (j in distances.indices) {
+            for (j in pixels.indices) {
                 cumulative += distances[j]
-                if (cumulative >= random) {
+                if (cumulative >= threshold) {
                     selectedIndex = j
                     break
                 }
             }
 
-            centroids.add(pixels[selectedIndex])
+            centroids[i] = pixels[selectedIndex]
         }
 
         return centroids
     }
-
-    private fun RGBPixel.distanceTo(other: RGBPixel): Double {
-        val dr = (r - other.r).toDouble()
-        val dg = (g - other.g).toDouble()
-        val db = (b - other.b).toDouble()
-        return sqrt(dr * dr + dg * dg + db * db)
-    }
-
 }

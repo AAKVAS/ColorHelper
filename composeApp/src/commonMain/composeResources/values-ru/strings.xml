@@ -20,11 +20,12 @@
     <string name="select_photo">Выбрать фото</string>
     <string name="selected_photo">Выбранное фото</string>
     <string name="extract_palette">Извлечь палитру</string>
+    <string name="palette_generated">Ваша палитра</string>
     <string name="continue">Далее</string>
     <string name="color_count">Количество цветов: %1$s</string>
     <string name="extraction_method">Метод извлечения</string>
-    <string name="dominant_colors">Доминирующие цвета</string>
-    <string name="k_means_clustering">Кластеризация K-средних</string>
-    <string name="median_cut">Алгоритм Median Cut</string>
-    <string name="color_thief_algorithm">Алгоритм Color Thief</string>
+    <string name="dominant_colors">Доминирующие цвета (для изображений с ограниченной палитрой)</string>
+    <string name="k_means_clustering">Кластеризация K-средних (для сложных изображений)</string>
+    <string name="median_cut">Алгоритм Median Cut (быстрое извлечение, подходит для градиентов)</string>
+    <string name="color_thief_algorithm">Алгоритм Color Thief (для гармоничных палитр)</string>
 </resources>

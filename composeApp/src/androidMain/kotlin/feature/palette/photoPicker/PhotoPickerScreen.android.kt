@@ -7,13 +7,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.net.toUri
 import coil3.Bitmap
-import feature.palette.photoPicker.paletteExtractor.Image
-import feature.palette.photoPicker.paletteExtractor.RGBPixel
+import feature.palette.photoPicker.model.Image
+import feature.palette.photoPicker.model.RGBPixel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 @Composable
-actual fun getImageByPath(
+actual fun GetImageByPath(
     path: String,
     onLoad: (Image?) -> Unit
 ) {

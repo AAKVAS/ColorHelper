@@ -39,7 +39,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.DpSize
-import androidx.compose.ui.unit.dp
 import com.example.Res
 import com.example.lab
 import com.example.palettes
@@ -344,7 +343,7 @@ fun VerticalNavModalSheet(
         drawerContainerColor = LocalColorProvider.current.primaryContainer,
         drawerContentColor = LocalColorProvider.current.primaryContainer,
         drawerShape = RoundedCornerShape(Dimens.roundedCornerShapeSize),
-        modifier = Modifier.width(240.dp)
+        modifier = Modifier.width(Dimens.modalDrawerSheetWidth)
     ) {
         Column(
             modifier = Modifier

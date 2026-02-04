@@ -5,7 +5,6 @@ import androidx.compose.foundation.TooltipArea
 import androidx.compose.foundation.background
 import androidx.compose.foundation.draganddrop.dragAndDropTarget
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -22,9 +21,12 @@ import androidx.compose.ui.draganddrop.DragAndDropEvent
 import androidx.compose.ui.draganddrop.DragAndDropTarget
 import androidx.compose.ui.draganddrop.awtTransferable
 import androidx.compose.ui.draw.clip
+import com.example.Res
+import com.example.select_photo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.swing.Swing
 import kotlinx.coroutines.withContext
+import org.jetbrains.compose.resources.stringResource
 import ui.theme.Dimens
 import ui.theme.LocalColorProvider
 import java.awt.FileDialog
@@ -65,11 +67,12 @@ actual fun SetupStatusBar() {
 
 @Composable
 actual fun ImagePicker(onImagePicked: (String?) -> Unit) {
+    val title = stringResource(Res.string.select_photo)
     LaunchedEffect(Unit) {
         withContext(Dispatchers.IO) {
             val fileDialog = FileDialog(
                 null as Frame?,
-                "Выберите изображение",
+                title,
                 FileDialog.LOAD
             )
 
@@ -164,7 +167,6 @@ actual fun PhotoInputBox(
                     LocalColorProvider.current.primaryContainer
             )
             .height(Dimens.photoPickerHeight)
-            .fillMaxWidth()
             .dragAndDropTarget(
                 shouldStartDragAndDrop = { true },
                 target = dragAndDropTarget

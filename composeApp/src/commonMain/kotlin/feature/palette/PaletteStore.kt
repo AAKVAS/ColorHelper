@@ -1,6 +1,5 @@
 package feature.palette
 
-import androidx.compose.ui.graphics.Color
 import com.arkivanov.mvikotlin.core.store.Store
 import feature.palette.model.ColorModel
 import feature.palette.model.ColorPalette
@@ -12,7 +11,7 @@ interface PaletteStore : Store<PaletteStore.Intent, PaletteStore.State, PaletteS
         object DeletePalette: Intent()
         object ShowDeleteDialog: Intent()
         data class SelectHarmoniousColor(val color: String): Intent()
-        data class UpdateHarmoniousColors(val colors: List<Color>): Intent()
+        object UpdateHarmoniousColors: Intent()
         data class AddColor(val color: String): Intent()
         data class UpdateColor(val color: ColorModel): Intent()
         data class DeleteColor(val color: ColorModel): Intent()

@@ -2,8 +2,8 @@ package feature.palette.photoPicker
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import feature.palette.photoPicker.paletteExtractor.Image
-import feature.palette.photoPicker.paletteExtractor.RGBPixel
+import feature.palette.photoPicker.model.Image
+import feature.palette.photoPicker.model.RGBPixel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.awt.image.BufferedImage
@@ -12,7 +12,7 @@ import javax.imageio.ImageIO
 
 
 @Composable
-actual fun getImageByPath(path: String, onLoad: (Image?) -> Unit) {
+actual fun GetImageByPath(path: String, onLoad: (Image?) -> Unit) {
     LaunchedEffect(path) {
         withContext(Dispatchers.IO) {
             try {
@@ -23,7 +23,7 @@ actual fun getImageByPath(path: String, onLoad: (Image?) -> Unit) {
 
                 val bufferedImage = ImageIO.read(file) ?: return@withContext
                 onLoad(bufferedImage.toImage(path))
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 onLoad(null)
             }
         }

@@ -6,7 +6,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -86,7 +85,6 @@ actual fun PhotoInputBox(
             .clip(RoundedCornerShape(Dimens.roundedCornerShapeSize))
             .background(LocalColorProvider.current.primaryContainer)
             .height(Dimens.photoPickerHeight)
-            .fillMaxWidth()
     ) {
         PickPhotoButton(modifier = Modifier.align(Alignment.Center)) {
             onPickButtonClick()

@@ -4,8 +4,8 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
 import feature.palette.model.ColorPalette
-import feature.palette.photoPicker.paletteExtractor.ExtractionMethod
-import feature.palette.photoPicker.paletteExtractor.Image
+import feature.palette.photoPicker.domain.ExtractionMethod
+import feature.palette.photoPicker.model.Image
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
 

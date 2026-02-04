@@ -2,8 +2,8 @@ package feature.palette.photoPicker
 
 import com.arkivanov.mvikotlin.core.store.Store
 import feature.palette.model.ColorPalette
-import feature.palette.photoPicker.paletteExtractor.ExtractionMethod
-import feature.palette.photoPicker.paletteExtractor.Image
+import feature.palette.photoPicker.domain.ExtractionMethod
+import feature.palette.photoPicker.model.Image
 
 interface PhotoPickerStore : Store<PhotoPickerStore.Intent, PhotoPickerStore.State, Nothing> {
     sealed class Intent {

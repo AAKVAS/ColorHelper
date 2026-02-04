@@ -35,7 +35,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.DpSize
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
@@ -167,7 +166,10 @@ fun PaletteListScreen(
         when(val modalChild = modalComponent.value) {
             is PaletteListComponent.ModalChild.NoModal -> {}
             is PaletteListComponent.ModalChild.PhotoPickerChild -> {
-                PhotoPickerScreen(modalChild.component)
+                PhotoPickerScreen(
+                    component = modalChild.component,
+                    windowSize = windowSize
+                )
             }
         }
     }
@@ -304,7 +306,7 @@ fun PalettePreview(
                     .size(Dimens.colorCircleSize)
                     .clip(CircleShape)
                     .background(LocalColorProvider.current.primaryContainer)
-                    .padding(2.dp)
+                    .padding(Dimens.paddingXXSmall)
                     .clip(CircleShape)
                     .background(color.value.toColor()),
                 contentAlignment = Alignment.Center,

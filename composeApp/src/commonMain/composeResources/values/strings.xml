@@ -20,11 +20,12 @@
     <string name="select_photo">Select photo</string>
     <string name="selected_photo">Selected photo</string>
     <string name="extract_palette">Extract palette</string>
+    <string name="palette_generated">Palette generated</string>
     <string name="continue">Continue</string>
     <string name="color_count">Color count: %1$s</string>
     <string name="extraction_method">Extraction method</string>
-    <string name="dominant_colors">Dominant Colors</string>
-    <string name="k_means_clustering">K-Means Clustering</string>
-    <string name="median_cut">Median Cut</string>
-    <string name="color_thief_algorithm">Color Thief Algorithm</string>
+    <string name="dominant_colors">Dominant Colors (Best for simple graphics and logos)</string>
+    <string name="k_means_clustering">K-Means Clustering (Most accurate for photos and analysis)</string>
+    <string name="median_cut">Median Cut (Ideal for gradients and smooth transitions)</string>
+    <string name="color_thief_algorithm">Color Thief Algorithm (Best for harmonious palettes)</string>
 </resources>

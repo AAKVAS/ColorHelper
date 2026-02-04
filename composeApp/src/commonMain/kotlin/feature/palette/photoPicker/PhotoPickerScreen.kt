@@ -38,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.DpSize
 import coil3.compose.AsyncImage
 import com.example.Res
 import com.example.color_count
@@ -48,9 +49,11 @@ import com.example.extract_palette
 import com.example.extraction_method
 import com.example.k_means_clustering
 import com.example.median_cut
+import com.example.palette_generated
+import com.example.selected_photo
 import feature.palette.model.ColorModel
-import feature.palette.photoPicker.paletteExtractor.ExtractionMethod
-import feature.palette.photoPicker.paletteExtractor.Image
+import feature.palette.photoPicker.domain.ExtractionMethod
+import feature.palette.photoPicker.model.Image
 import org.jetbrains.compose.resources.stringResource
 import ui.composeComponents.CloseButton
 import ui.composeComponents.ImagePicker
@@ -63,6 +66,7 @@ import utils.toColor
 @Composable
 fun PhotoPickerScreen(
     component: PhotoPickerComponent,
+    windowSize: DpSize,
     modifier: Modifier = Modifier
 ) {
     val state = component.state.collectAsState()
@@ -83,62 +87,80 @@ fun PhotoPickerScreen(
                 .verticalScroll(scrollState),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Column(
-                modifier = Modifier.wrapContentHeight().wrapContentWidth()
-            ) {
-                CloseButton {
-                    component.onCancel()
-                }
-
-                imagePath?.let { path ->
-                    Box(
-                        modifier = Modifier
-                            .padding(Dimens.paddingSmall)
-                            .clip(RoundedCornerShape(Dimens.roundedCornerShapeSize))
-                            .background(LocalColorProvider.current.onPrimary)
-                            .padding(Dimens.paddingXXSmall)
-                            .clip(RoundedCornerShape(Dimens.roundedCornerShapeSize))
-                            .background(LocalColorProvider.current.onPrimary)
-                            .fillMaxWidth()
-                            .height(Dimens.pickedPhotoHeight)
-                    ) {
-                        AsyncImage(
-                            model = path,
-                            contentDescription = "Selected photo",
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(Dimens.pickedPhotoHeight)
-                        )
-                        CloseButton(
-                            modifier = Modifier
-                                .align(Alignment.TopEnd)
-                                .padding(Dimens.paddingSmall)
-                        ) {
-                            imagePath = null
-                        }
+            if (windowSize.height < Dimens.lowLargeWindowHeight) {
+                Column(
+                    modifier = Modifier.wrapContentHeight().wrapContentWidth()
+                ) {
+                    CloseButton {
+                        component.onCancel()
                     }
-                } ?: run {
-                    PhotoInputBox(
+                    Row(
+                        modifier = modifier
+                            .wrapContentHeight()
+                            .fillMaxWidth()
+                            .background(LocalColorProvider.current.primaryContainer),
+                        verticalAlignment = Alignment.Top,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        PhotoInputArea(
+                            imagePath = imagePath,
+                            onImageDropped = { path ->
+                                imagePath = path
+                            },
+                            onPickButtonClick = {
+                                showImagePicker = true
+                            },
+                            onCloseImageButtonClick = {
+                                imagePath = null
+                            },
+                            modifier = Modifier.weight(1f)
+                        )
+                        SettingsSection(
+                            colorCount = colorCount,
+                            onColorCountChange = { colorCount = it },
+                            extractionMethod = extractionMethod,
+                            onMethodChange = { extractionMethod = it },
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                }
+            } else {
+                Column(
+                    modifier = Modifier.wrapContentHeight().wrapContentWidth()
+                ) {
+                    CloseButton {
+                        component.onCancel()
+                    }
+
+                    PhotoInputArea(
+                        imagePath = imagePath,
                         onImageDropped = { path ->
                             imagePath = path
                         },
                         onPickButtonClick = {
                             showImagePicker = true
-                        }
+                        },
+                        onCloseImageButtonClick = {
+                            imagePath = null
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    SettingsSection(
+                        colorCount = colorCount,
+                        onColorCountChange = { colorCount = it },
+                        extractionMethod = extractionMethod,
+                        onMethodChange = { extractionMethod = it },
+                        modifier = Modifier.fillMaxWidth()
                     )
                 }
-                SettingsSection(
-                    colorCount = colorCount,
-                    onColorCountChange = { colorCount = it },
-                    extractionMethod = extractionMethod,
-                    onMethodChange = { extractionMethod = it }
-                )
-                state.value.extractedPalette?.let { palette ->
-                    if (palette.colors.isNotEmpty()) {
-                        GeneratedPaletteColors(palette.colors)
-                    }
+            }
+
+            state.value.extractedPalette?.let { palette ->
+                if (palette.colors.isNotEmpty()) {
+                    GeneratedPaletteColors(palette.colors)
                 }
             }
+
             Row(
                 modifier = Modifier
                     .padding(top = Dimens.paddingMedium)
@@ -158,50 +180,51 @@ fun PhotoPickerScreen(
                 }
                 if (state.value.extractedPalette != null) {
                     SimpleButton(
-                        text = stringResource (Res.string.`continue`)
+                        text = stringResource(Res.string.`continue`)
                     ) {
                         component.onSavePalette()
                     }
                 }
             }
-        }
-        if (showImagePicker) {
-            ImagePicker { path ->
-                imagePath = path
-                showImagePicker = false
-            }
-        }
-        if (state.value.isLoading) {
-            Box (
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(Dimens.paddingSmall)
-                    .background(Color.Black.copy(alpha = 0.5f))
-                    .clickable(
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() }
-                    ) {}
-            ) {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .size(Dimens.circularProgressIndicatorSize)
-                        .align(Alignment.Center),
-                    strokeWidth = Dimens.paddingXXSmall
-                )
-                CloseButton(
-                    modifier = Modifier.align(Alignment.TopStart)
-                ) {
-                    component.onCancel()
+
+            if (showImagePicker) {
+                ImagePicker { path ->
+                    imagePath = path
+                    showImagePicker = false
                 }
             }
-        }
-        if (state.value.loadImage) {
-            imagePath?.let { path ->
-                getImageByPath(path) { image ->
-                    image?.let {
-                        component.extractImage(it, colorCount, extractionMethod)
-                    } ?: run {
-                        component.imageNotLoaded()
+            if (state.value.isLoading) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(Dimens.paddingSmall)
+                        .background(Color.Black.copy(alpha = 0.5f))
+                        .clickable(
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() }
+                        ) {}
+                ) {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .size(Dimens.circularProgressIndicatorSize)
+                            .align(Alignment.Center),
+                        strokeWidth = Dimens.paddingXXSmall
+                    )
+                    CloseButton(
+                        modifier = Modifier.align(Alignment.TopStart)
+                    ) {
+                        component.onCancel()
+                    }
+                }
+            }
+            if (state.value.loadImage) {
+                imagePath?.let { path ->
+                    GetImageByPath(path) { image ->
+                        image?.let {
+                            component.extractImage(it, colorCount, extractionMethod)
+                        } ?: run {
+                            component.imageNotLoaded()
+                        }
                     }
                 }
             }
@@ -210,16 +233,57 @@ fun PhotoPickerScreen(
 }
 
 @Composable
+fun PhotoInputArea(
+    imagePath: String?,
+    onImageDropped: (String) -> Unit,
+    onPickButtonClick: () -> Unit,
+    onCloseImageButtonClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    imagePath?.let { path ->
+        Box(
+            modifier = modifier
+                .padding(Dimens.paddingSmall)
+                .clip(RoundedCornerShape(Dimens.roundedCornerShapeSize))
+                .background(LocalColorProvider.current.onPrimary)
+                .padding(Dimens.paddingXXSmall)
+                .clip(RoundedCornerShape(Dimens.roundedCornerShapeSize))
+                .background(LocalColorProvider.current.onPrimary)
+                .height(Dimens.pickedPhotoHeight)
+        ) {
+            AsyncImage(
+                model = path,
+                contentDescription = stringResource(Res.string.selected_photo),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(Dimens.pickedPhotoHeight)
+            )
+            CloseButton(
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(Dimens.paddingSmall),
+                onClick = onCloseImageButtonClick
+            )
+        }
+    } ?: run {
+        PhotoInputBox(
+            onImageDropped = onImageDropped,
+            onPickButtonClick = onPickButtonClick,
+            modifier = modifier
+        )
+    }
+}
+
+@Composable
 fun SettingsSection(
     colorCount: Int,
     onColorCountChange: (Int) -> Unit,
     extractionMethod: ExtractionMethod,
-    onMethodChange: (ExtractionMethod) -> Unit
+    onMethodChange: (ExtractionMethod) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = Modifier
-            .padding(top = Dimens.paddingSmall)
-            .fillMaxWidth(),
+        modifier = modifier.padding(top = Dimens.paddingSmall),
         verticalArrangement = Arrangement.spacedBy(Dimens.paddingRegular)
     ) {
         Text(
@@ -277,7 +341,7 @@ fun GeneratedPaletteColors(
 ) {
     Text(
         modifier = Modifier.padding(top = Dimens.paddingSmall).fillMaxWidth(),
-        text = "Ваша палитра",
+        text = stringResource(Res.string.palette_generated),
         color = LocalColorProvider.current.onBackground,
         textAlign = TextAlign.Center
     )
@@ -312,4 +376,4 @@ fun ExtractionMethod.getMethodName(): String {
 }
 
 @Composable
-expect fun getImageByPath(path: String, onLoad: (Image?) -> Unit)
+expect fun GetImageByPath(path: String, onLoad: (Image?) -> Unit)

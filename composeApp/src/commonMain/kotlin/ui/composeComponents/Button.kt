@@ -34,7 +34,6 @@ import ui.theme.LocalColorProvider
 fun SimpleButton(
     modifier: Modifier = Modifier,
     text: String,
-    enabled: Boolean = true,
     onClick: () -> Unit
 ) {
     Box(

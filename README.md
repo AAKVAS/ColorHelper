@@ -12,6 +12,7 @@ Currently offers two tools: a palette editor and an interactive color testing la
 🎨 Palette Editor
 * Create color palettes for your projects.
 * Add, delete, and modify colors within palettes.
+* Extract color palettes from photos using different color extraction algorithms.
 
 🔬 Color Laboratory
 * A simple 3D scene for color evaluation.

@@ -41,6 +41,7 @@ object Dimens {
     val alphaSliderWidth = 320.dp
     val colorCircleSize = 36.dp
     val roundedCameraButtonSize = 40.dp
+    val modalDrawerSheetWidth = 240.dp
 
     val lowLargeWindowHeight = 400.dp
     val photoPickerHeight = 100.dp
