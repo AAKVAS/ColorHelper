@@ -17,6 +17,7 @@ fun main() {
         runOnUiThread {
             DefaultRootComponent(
                 componentContext = DefaultComponentContext(lifecycle = lifecycle),
+                withImageBusket = true
             )
         }
 

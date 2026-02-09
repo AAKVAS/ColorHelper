@@ -40,10 +40,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.DpSize
 import com.example.Res
+import com.example.image_busket
 import com.example.lab
 import com.example.palettes
 import feature.colorLab.ColorLabScreen
 import feature.home.RootComponent
+import feature.imageBusket.ImageBusketScreen
 import feature.palette.PaletteListScreen
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
@@ -79,7 +81,8 @@ fun App(
         val isSceneInteracting = remember { mutableStateOf(false) }
         val tabs = listOf(
             stringResource(Res.string.palettes),
-            stringResource(Res.string.lab)
+            stringResource(Res.string.lab),
+            stringResource(Res.string.image_busket),
         )
 
         Scaffold(
@@ -125,6 +128,10 @@ fun App(
                                 onSceneInteractionChange = { interacting ->
                                     isSceneInteracting.value = interacting
                                 }
+                            )
+                            is RootComponent.Child.ImageBusketChild -> ImageBusketScreen(
+                                component = child.component,
+                                windowSize = windowSize,
                             )
                         }
                     }
@@ -174,13 +181,16 @@ fun App(
                                     component = child.component,
                                     windowSize = windowSize
                                 )
-
                                 is RootComponent.Child.ColorLabChild -> ColorLabScreen(
                                     component = child.component,
                                     windowSize = windowSize,
                                     onSceneInteractionChange = { interacting ->
                                         isSceneInteracting.value = interacting
                                     }
+                                )
+                                is RootComponent.Child.ImageBusketChild -> ImageBusketScreen(
+                                    component = child.component,
+                                    windowSize = windowSize,
                                 )
                             }
                         }

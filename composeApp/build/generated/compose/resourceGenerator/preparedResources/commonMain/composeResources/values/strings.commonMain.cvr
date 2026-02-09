@@ -1,7 +1,9 @@
 version:0
 string|add|QWRk
 string|app_name|Q29sb3JIZWxwZXI=
+string|buffered_image|QnVmZmVyZWQgaW1hZ2U=
 string|cancel|Q2FuY2Vs
+string|clear|Q2xlYXI=
 string|color_count|Q29sb3IgY291bnQ6ICUxJHM=
 string|color_thief_algorithm|Q29sb3IgVGhpZWYgQWxnb3JpdGhtIChCZXN0IGZvciBoYXJtb25pb3VzIHBhbGV0dGVzKQ==
 string|confirm_delete|Q29uZmlybSBkZWxldGlvbg==
@@ -16,6 +18,7 @@ string|extract_palette|RXh0cmFjdCBwYWxldHRl
 string|extraction_method|RXh0cmFjdGlvbiBtZXRob2Q=
 string|floor_color|Rmxvb3IgY29sb3I6IA==
 string|harmonious_colors|SGFybW9uaW91cyBjb2xvcnM=
+string|image_busket|SW1hZ2UgYnVza2V0
 string|k_means_clustering|Sy1NZWFucyBDbHVzdGVyaW5nIChNb3N0IGFjY3VyYXRlIGZvciBwaG90b3MgYW5kIGFuYWx5c2lzKQ==
 string|lab|Q29sb3IgbGFi
 string|light_color|TGlnaHQgY29sb3I6IA==
@@ -23,7 +26,9 @@ string|median_cut|TWVkaWFuIEN1dCAoSWRlYWwgZm9yIGdyYWRpZW50cyBhbmQgc21vb3RoIHRyYW
 string|not_canceled_action|VGhpcyBhY3Rpb24gY2Fubm90IGJlIHVuZG9uZS4=
 string|palette_generated|UGFsZXR0ZSBnZW5lcmF0ZWQ=
 string|palettes|UGFsZXR0ZXM=
+string|preview|UHJldmlldw==
 string|select_photo|U2VsZWN0IHBob3Rv
 string|selected_photo|U2VsZWN0ZWQgcGhvdG8=
 string|sphere_color|U3BoZXJlIGNvbG9yOiA=
 string|title|Q29sb3JIZWxwZXI=
+string|total|VG90YWw6ICUxJHM=

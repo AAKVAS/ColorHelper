@@ -56,6 +56,12 @@ public val Res.drawable.outline_delete: DrawableResource by lazy {
       ))
     }
 
+public val Res.drawable.paste_icon: DrawableResource by lazy {
+      DrawableResource("drawable:paste_icon", setOf(
+        ResourceItem(setOf(), "${MD}drawable/paste_icon.xml", -1, -1),
+      ))
+    }
+
 @InternalResourceApi
 internal fun _collectCommonMainDrawable0Resources(map: MutableMap<String, DrawableResource>) {
   map.put("add_icon", Res.drawable.add_icon)
@@ -66,4 +72,5 @@ internal fun _collectCommonMainDrawable0Resources(map: MutableMap<String, Drawab
   map.put("copy_icon", Res.drawable.copy_icon)
   map.put("menu_icon", Res.drawable.menu_icon)
   map.put("outline_delete", Res.drawable.outline_delete)
+  map.put("paste_icon", Res.drawable.paste_icon)
 }

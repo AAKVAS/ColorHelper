@@ -9,6 +9,7 @@
     <string name="copy">Копировать</string>
     <string name="lab">Лаборатория</string>
     <string name="palettes">Палитры</string>
+    <string name="image_busket">Корзинка</string>
     <string name="harmonious_colors">Гармонирующие цвета</string>
     <string name="delete">Удалить</string>
     <string name="add">Добавить</string>
@@ -23,6 +24,10 @@
     <string name="palette_generated">Ваша палитра</string>
     <string name="continue">Далее</string>
     <string name="color_count">Количество цветов: %1$s</string>
+    <string name="total">Всего: %1$s</string>
+    <string name="buffered_image">Изображеине в буфере</string>
+    <string name="clear">Очистить всё</string>
+    <string name="preview">Предпросмотр</string>
     <string name="extraction_method">Метод извлечения</string>
     <string name="dominant_colors">Доминирующие цвета (для изображений с ограниченной палитрой)</string>
     <string name="k_means_clustering">Кластеризация K-средних (для сложных изображений)</string>

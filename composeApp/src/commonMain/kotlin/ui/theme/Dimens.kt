@@ -32,6 +32,8 @@ object Dimens {
 
     val smallTextSize = 16.sp
     val textSize = 18.sp
+    val mediumTextSize = 20.sp
+    val largeTextSize = 26.sp
 
     val paletteListWidth = 350.dp
     val paletteTitleWidth = 180.dp
@@ -46,4 +48,7 @@ object Dimens {
     val lowLargeWindowHeight = 400.dp
     val photoPickerHeight = 100.dp
     val pickedPhotoHeight = 200.dp
+
+    val bufferedPhotoHeight = 100.dp
+    val bufferedPhotoWidth = 250.dp
 }

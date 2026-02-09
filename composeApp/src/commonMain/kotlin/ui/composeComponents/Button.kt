@@ -23,8 +23,10 @@ import com.example.camera_icon
 import com.example.close_icon
 import com.example.copy_icon
 import com.example.delete
+import com.example.image_busket
 import com.example.menu_icon
 import com.example.outline_delete
+import com.example.paste_icon
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ui.theme.Dimens
@@ -196,6 +198,29 @@ fun CopyButton(
         Image(
             painter = painterResource(Res.drawable.copy_icon),
             contentDescription = stringResource(Res.string.delete),
+            alignment = Alignment.Center,
+            contentScale =  ContentScale.Crop,
+            colorFilter = ColorFilter.tint(color = LocalColorProvider.current.onBackground),
+            modifier = Modifier.size(Dimens.iconButtonSize)
+        )
+    }
+}
+
+@Composable
+fun PasteButton(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    Box(
+        modifier = modifier
+            .wrapContentSize(align = Alignment.Center)
+            .clip(RoundedCornerShape(Dimens.paddingSmall))
+            .clickable { onClick() },
+        contentAlignment = Alignment.Center,
+    ) {
+        Image(
+            painter = painterResource(Res.drawable.paste_icon),
+            contentDescription = stringResource(Res.string.image_busket),
             alignment = Alignment.Center,
             contentScale =  ContentScale.Crop,
             colorFilter = ColorFilter.tint(color = LocalColorProvider.current.onBackground),
