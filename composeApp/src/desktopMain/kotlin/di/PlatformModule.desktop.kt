@@ -6,7 +6,7 @@ import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import data.AppDatabase
 import data.AppDatabase.Companion.DB_NAME
 import feature.imageBusket.domain.ImageBusketRepository
-import feature.imageBusket.domain.InMemoryImageBusketRepository
+import feature.imageBusket.domain.LocalImageBusketRepository
 import kotlinx.coroutines.Dispatchers
 import org.koin.core.module.Module
 import org.koin.dsl.module
@@ -20,7 +20,7 @@ actual fun getPlatformModule(): Module = module {
         getDatabaseBuilder().build()
     }
 
-    single<ImageBusketRepository> { InMemoryImageBusketRepository() }
+    single<ImageBusketRepository> { LocalImageBusketRepository() }
 }
 
 fun getDatabaseBuilder(): RoomDatabase.Builder<AppDatabase> {

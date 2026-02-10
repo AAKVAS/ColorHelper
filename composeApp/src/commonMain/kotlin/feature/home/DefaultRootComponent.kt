@@ -12,12 +12,15 @@ import feature.palette.DefaultPaletteListComponent
 import feature.palette.PaletteListComponent
 import feature.palette.PaletteListStoreFactory
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 
 class DefaultRootComponent(
     componentContext: ComponentContext,
     withImageBusket: Boolean = false
-) : RootComponent, ComponentContext by componentContext {
+) : RootComponent, CloseHandler, ComponentContext by componentContext {
     override val children: List<RootComponent.Child> =
         if (withImageBusket) {
             listOf(
@@ -42,6 +45,9 @@ class DefaultRootComponent(
             )
         }
 
+    private val _closeConfirmed = MutableStateFlow(false)
+    override val closeConfirmed: StateFlow<Boolean>
+        get() = _closeConfirmed.asStateFlow()
 
     private fun colorLabComponent(componentContext: ComponentContext): ColorLabComponent =
         DefaultColorLabComponent(
@@ -54,7 +60,8 @@ class DefaultRootComponent(
             storeFactory = ImageBusketStoreFactory(
                 DefaultStoreFactory(),
                 Dispatchers.IO
-            )
+            ),
+            onClose = ::closeWindow
         )
 
     @OptIn(DelicateDecomposeApi::class)
@@ -66,4 +73,20 @@ class DefaultRootComponent(
                 Dispatchers.IO
             )
         )
+
+    override fun onWindowClosing(): Boolean {
+        for (child in children) {
+            if (child is RootComponent.Child.ImageBusketChild) {
+                val canClose = child.component.onWindowClosing()
+                if (!canClose) {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+
+    private fun closeWindow() {
+        _closeConfirmed.value = true
+    }
 }

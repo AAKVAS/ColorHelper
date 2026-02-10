@@ -19,6 +19,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import feature.palette.photoPicker.ImageSource
 import ui.theme.Dimens
 import ui.theme.LocalColorProvider
 
@@ -55,11 +56,14 @@ actual fun SetupStatusBar() {
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-actual fun ImagePicker(onImagePicked: (String?) -> Unit) {
+actual fun ImagePicker(onImagePicked: (ImageSource?) -> Unit) {
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
         onResult = { uri ->
-            onImagePicked(uri?.toString())
+            val source = uri?.toString()?.let {
+                ImageSource.Path(it)
+            }
+            onImagePicked(source)
         }
     )
 
@@ -73,7 +77,7 @@ actual fun ImagePicker(onImagePicked: (String?) -> Unit) {
 @Composable
 actual fun PhotoInputBox(
     modifier: Modifier,
-    onImageDropped: (String) -> Unit,
+    onImageDropped: (ImageSource) -> Unit,
     onPickButtonClick: () -> Unit
 ) {
     Box(

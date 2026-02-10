@@ -1,34 +1,12 @@
 package feature.palette.photoPicker
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.toPixelMap
 import feature.palette.photoPicker.model.Image
 import feature.palette.photoPicker.model.RGBPixel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import java.awt.image.BufferedImage
-import java.io.File
-import javax.imageio.ImageIO
+import java.util.UUID
 
-
-@Composable
-actual fun GetImageByPath(path: String, onLoad: (Image?) -> Unit) {
-    LaunchedEffect(path) {
-        withContext(Dispatchers.IO) {
-            try {
-                val file = File(path)
-                if (!file.exists()) {
-                    return@withContext
-                }
-
-                val bufferedImage = ImageIO.read(file) ?: return@withContext
-                onLoad(bufferedImage.toImage(path))
-            } catch (_: Exception) {
-                onLoad(null)
-            }
-        }
-    }
-}
 
 fun BufferedImage.toImage(path: String, sampleStep: Int = 4): Image {
     val pixels = mutableListOf<RGBPixel>()
@@ -45,6 +23,29 @@ fun BufferedImage.toImage(path: String, sampleStep: Int = 4): Image {
                     b = rgb and 0xFF
                 )
             )
+        }
+    }
+
+    return Image(path, width, height, pixels)
+}
+
+fun ImageBitmap.toImage(sampleStep: Int = 4): Image {
+    val pixels = mutableListOf<RGBPixel>()
+    val width = this.width
+    val height = this.height
+    val path = UUID.randomUUID().toString()
+
+    val pixelMap = this.toPixelMap()
+
+    for (y in 0 until height step sampleStep) {
+        for (x in 0 until width step sampleStep) {
+            val color = pixelMap[x, y]
+
+            val r = (color.red * 255).toInt()
+            val g = (color.green * 255).toInt()
+            val b = (color.blue * 255).toInt()
+
+            pixels.add(RGBPixel(r, g, b))
         }
     }
 

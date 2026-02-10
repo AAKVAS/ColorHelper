@@ -28,6 +28,9 @@
     <string name="buffered_image">Buffered image</string>
     <string name="clear">Clear</string>
     <string name="preview">Preview</string>
+    <string name="save_image_busket_message">You have unsaved images in your basket. Would you like to save them?</string>
+    <string name="close_with_saving">Save and close</string>
+    <string name="close_without_saving">Close without saving</string>
     <string name="extraction_method">Extraction method</string>
     <string name="dominant_colors">Dominant Colors (Best for simple graphics and logos)</string>
     <string name="k_means_clustering">K-Means Clustering (Most accurate for photos and analysis)</string>

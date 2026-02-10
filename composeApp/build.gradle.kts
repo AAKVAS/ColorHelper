@@ -77,6 +77,7 @@ kotlin {
             implementation(libs.androidx.room.compiler)
             implementation(libs.coil.compose)
             implementation(libs.coil.network)
+            implementation(libs.kotlinx.serialization.json)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)

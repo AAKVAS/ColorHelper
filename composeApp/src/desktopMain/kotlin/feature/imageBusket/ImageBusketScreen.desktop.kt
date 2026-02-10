@@ -1,5 +1,6 @@
 package feature.imageBusket
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -21,6 +22,9 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ButtonDefaults.outlinedButtonColors
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -48,8 +52,11 @@ import androidx.compose.ui.unit.dp
 import com.example.Res
 import com.example.buffered_image
 import com.example.clear
+import com.example.close_with_saving
+import com.example.close_without_saving
 import com.example.image_busket
 import com.example.preview
+import com.example.save_image_busket_message
 import com.example.total
 import feature.imageBusket.data.ImageData
 import kotlinx.coroutines.delay
@@ -60,6 +67,8 @@ import ui.composeComponents.PasteButton
 import ui.composeComponents.SimpleButton
 import ui.theme.Dimens
 import ui.theme.LocalColorProvider
+import utils.HandleClipboardCopy
+import utils.HandleClipboardPaste
 import utils.copyImageToClipboard
 import utils.getImageFromClipboard
 import utils.rememberImageBitmap
@@ -92,6 +101,21 @@ actual fun ImageBusketScreen(
             }
 
             delay(500)
+        }
+    }
+
+    HandleClipboardPaste {
+        getImageFromClipboard()?.let {
+            component.addImage(it)
+        }
+    }
+
+    HandleClipboardCopy {
+        val selectedIndex = state.value.selectedImageIndex
+        if (selectedIndex != -1) {
+            state.value.items.getOrNull(selectedIndex)?.let { imageData ->
+                copyImageToClipboard(imageData)
+            }
         }
     }
 
@@ -160,6 +184,20 @@ actual fun ImageBusketScreen(
                 }
             )
         }
+    }
+
+    if (state.value.showSaveDialog) {
+        SaveDialog(
+            closeSaveDialog = {
+                component.closeSaveDialog()
+            },
+            closeWithSave = {
+                component.closeWithSaving()
+            },
+            closeWithoutSave = {
+                component.closeWithoutSaving()
+            }
+        )
     }
 }
 
@@ -399,6 +437,62 @@ fun PlusButton(
         fontSize = Dimens.largeTextSize,
         modifier = modifier.clickable {
             onItemClick()
+        }
+    )
+}
+
+@Composable
+fun SaveDialog(
+    closeSaveDialog: () -> Unit,
+    closeWithSave: () -> Unit,
+    closeWithoutSave: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = closeSaveDialog,
+        containerColor = LocalColorProvider.current.primaryContainer,
+        text = {
+            Column {
+                Text(
+                    text = stringResource(Res.string.save_image_busket_message),
+                    color = LocalColorProvider.current.onBackground
+                )
+            }
+        },
+        confirmButton = {
+            OutlinedButton(
+                onClick = closeWithSave,
+                colors = outlinedButtonColors(
+                    contentColor = LocalColorProvider.current.onSurface,
+                    containerColor = LocalColorProvider.current.primaryContainer
+                ),
+                border = BorderStroke(
+                    Dimens.smallestPadding,
+                    LocalColorProvider.current.onSurface
+                )
+            ) {
+                Text(
+                    text = stringResource(Res.string.close_with_saving),
+                    color = LocalColorProvider.current.onSurface
+                )
+            }
+        },
+        dismissButton = {
+            OutlinedButton(
+                onClick = closeWithoutSave,
+                colors = outlinedButtonColors(
+                    contentColor = LocalColorProvider.current.onBackground,
+                    containerColor = LocalColorProvider.current.primaryContainer
+                ),
+                border = BorderStroke(
+                    Dimens.smallestPadding,
+                    LocalColorProvider.current.onBackground
+                )
+            ) {
+                Text(
+                    text = stringResource(Res.string.close_without_saving),
+                    color = LocalColorProvider.current.onBackground
+                )
+            }
         }
     )
 }

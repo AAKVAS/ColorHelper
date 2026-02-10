@@ -3,7 +3,7 @@ package feature.imageBusket.domain
 import feature.imageBusket.data.ImageData
 
 interface ImageBusketRepository {
-    fun getImages(): List<ImageData>
-    fun addImage(image: ImageData)
-    fun deleteImage(index: Int)
+    suspend fun getImages(): List<ImageData>
+    suspend fun saveImages(images: List<ImageData>)
+    suspend fun deleteImages()
 }

@@ -5,6 +5,7 @@ package feature.home
 import feature.colorLab.ColorLabComponent
 import feature.imageBusket.ImageBusketComponent
 import feature.palette.PaletteListComponent
+import kotlinx.coroutines.flow.StateFlow
 
 interface RootComponent {
     val children: List<Child>
@@ -13,4 +14,5 @@ interface RootComponent {
         class PaletteListChild(val component: PaletteListComponent): Child()
         class ImageBusketChild(val component: ImageBusketComponent): Child()
     }
+    val closeConfirmed: StateFlow<Boolean>
 }

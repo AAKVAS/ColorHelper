@@ -37,6 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpSize
 import coil3.compose.AsyncImage
@@ -53,7 +54,6 @@ import com.example.palette_generated
 import com.example.selected_photo
 import feature.palette.model.ColorModel
 import feature.palette.photoPicker.domain.ExtractionMethod
-import feature.palette.photoPicker.model.Image
 import org.jetbrains.compose.resources.stringResource
 import ui.composeComponents.CloseButton
 import ui.composeComponents.ImagePicker
@@ -61,7 +61,15 @@ import ui.composeComponents.PhotoInputBox
 import ui.composeComponents.SimpleButton
 import ui.theme.Dimens
 import ui.theme.LocalColorProvider
+import utils.GetImageBySource
+import utils.HandleClipboardPaste
+import utils.pasteImageFromClipboard
 import utils.toColor
+
+sealed interface ImageSource {
+    data class Path(val value: String): ImageSource
+    data class BitmapSource(val value: ImageBitmap): ImageSource
+}
 
 @Composable
 fun PhotoPickerScreen(
@@ -70,13 +78,21 @@ fun PhotoPickerScreen(
     modifier: Modifier = Modifier
 ) {
     val state = component.state.collectAsState()
-    var imagePath by remember { mutableStateOf<String?>(null) }
+    var imageSource by remember { mutableStateOf<ImageSource?>(null) }
     var showImagePicker by remember { mutableStateOf(false) }
     var colorCount by remember { mutableIntStateOf(5) }
     var extractionMethod by remember { mutableStateOf(ExtractionMethod.DOMINANT_COLORS) }
     val scrollState = rememberScrollState()
 
-    Box(modifier = modifier.fillMaxSize()) {
+    HandleClipboardPaste {
+        imageSource = pasteImageFromClipboard()?.let {
+            ImageSource.BitmapSource(it)
+        }
+    }
+
+    Box(
+        modifier = modifier.fillMaxSize()
+    ) {
         Column(
             modifier = Modifier
                 .padding(Dimens.paddingMedium)
@@ -103,15 +119,15 @@ fun PhotoPickerScreen(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         PhotoInputArea(
-                            imagePath = imagePath,
-                            onImageDropped = { path ->
-                                imagePath = path
+                            imageSource = imageSource,
+                            onImageDropped = { source ->
+                                imageSource = source
                             },
                             onPickButtonClick = {
                                 showImagePicker = true
                             },
                             onCloseImageButtonClick = {
-                                imagePath = null
+                                imageSource = null
                             },
                             modifier = Modifier.weight(1f)
                         )
@@ -133,15 +149,15 @@ fun PhotoPickerScreen(
                     }
 
                     PhotoInputArea(
-                        imagePath = imagePath,
-                        onImageDropped = { path ->
-                            imagePath = path
+                        imageSource = imageSource,
+                        onImageDropped = { source ->
+                            imageSource = source
                         },
                         onPickButtonClick = {
                             showImagePicker = true
                         },
                         onCloseImageButtonClick = {
-                            imagePath = null
+                            imageSource = null
                         },
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -169,11 +185,11 @@ fun PhotoPickerScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.Bottom
             ) {
-                imagePath?.let {
+                imageSource?.let {
                     SimpleButton(
                         text = stringResource(Res.string.extract_palette)
                     ) {
-                        imagePath?.let {
+                        imageSource?.let {
                             component.loadImage()
                         }
                     }
@@ -188,8 +204,8 @@ fun PhotoPickerScreen(
             }
 
             if (showImagePicker) {
-                ImagePicker { path ->
-                    imagePath = path
+                ImagePicker { source ->
+                    imageSource = source
                     showImagePicker = false
                 }
             }
@@ -218,8 +234,8 @@ fun PhotoPickerScreen(
                 }
             }
             if (state.value.loadImage) {
-                imagePath?.let { path ->
-                    GetImageByPath(path) { image ->
+                imageSource?.let { source ->
+                    GetImageBySource(source) { image ->
                         image?.let {
                             component.extractImage(it, colorCount, extractionMethod)
                         } ?: run {
@@ -234,13 +250,13 @@ fun PhotoPickerScreen(
 
 @Composable
 fun PhotoInputArea(
-    imagePath: String?,
-    onImageDropped: (String) -> Unit,
+    imageSource: ImageSource?,
+    onImageDropped: (ImageSource) -> Unit,
     onPickButtonClick: () -> Unit,
     onCloseImageButtonClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    imagePath?.let { path ->
+    imageSource?.let { source ->
         Box(
             modifier = modifier
                 .padding(Dimens.paddingSmall)
@@ -251,13 +267,24 @@ fun PhotoInputArea(
                 .background(LocalColorProvider.current.onPrimary)
                 .height(Dimens.pickedPhotoHeight)
         ) {
-            AsyncImage(
-                model = path,
-                contentDescription = stringResource(Res.string.selected_photo),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(Dimens.pickedPhotoHeight)
-            )
+            when (source) {
+                is ImageSource.Path -> AsyncImage(
+                    model = source.value,
+                    contentDescription = stringResource(Res.string.selected_photo),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(Dimens.pickedPhotoHeight)
+                )
+                is ImageSource.BitmapSource -> {
+                    androidx.compose.foundation.Image(
+                        bitmap = source.value,
+                        contentDescription = stringResource(Res.string.selected_photo),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(Dimens.pickedPhotoHeight)
+                    )
+                }
+            }
             CloseButton(
                 modifier = Modifier
                     .align(Alignment.TopEnd)
@@ -374,6 +401,3 @@ fun ExtractionMethod.getMethodName(): String {
         ExtractionMethod.COLOR_THIEF -> stringResource(Res.string.color_thief_algorithm)
     }
 }
-
-@Composable
-expect fun GetImageByPath(path: String, onLoad: (Image?) -> Unit)

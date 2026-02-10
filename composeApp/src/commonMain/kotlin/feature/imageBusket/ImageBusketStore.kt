@@ -9,11 +9,17 @@ interface ImageBusketStore : Store<ImageBusketStore.Intent, ImageBusketStore.Sta
         data class DeleteImage(val index: Int): Intent()
         data class ChangeSelectedImageIndex(val index: Int): Intent()
         object Clear: Intent()
+        object ShowSaveDialog: Intent()
+        object CloseSaveDialog: Intent()
+        object SaveState: Intent()
+        object LoadState: Intent()
     }
 
     data class State(
         val items: List<ImageData> = emptyList(),
-        val selectedImageIndex: Int = -1
+        val selectedImageIndex: Int = -1,
+        val showSaveDialog: Boolean = false,
+        val stateSaved: Boolean = false
     )
 
     sealed class Msg {
@@ -21,5 +27,9 @@ interface ImageBusketStore : Store<ImageBusketStore.Intent, ImageBusketStore.Sta
         data class ImageDeleted(val index: Int): Msg()
         data class ChangeSelectedImageIndex(val index: Int): Msg()
         object Clear: Msg()
+        object ShowSaveDialog: Msg()
+        object CloseSaveDialog: Msg()
+        object StateSaved: Msg()
+        data class StateLoaded(val items: List<ImageData>): Msg()
     }
 }

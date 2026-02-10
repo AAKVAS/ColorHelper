@@ -2,6 +2,7 @@ package ui.composeComponents
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import feature.palette.photoPicker.ImageSource
 
 @Composable
 expect fun TooltipWrapper(
@@ -21,12 +22,12 @@ expect fun SetupStatusBar()
 
 
 @Composable
-expect fun ImagePicker(onImagePicked: (String?) -> Unit)
+expect fun ImagePicker(onImagePicked: (ImageSource?) -> Unit)
 
 
 @Composable
 expect fun PhotoInputBox(
     modifier: Modifier = Modifier,
-    onImageDropped: (String) -> Unit,
+    onImageDropped: (ImageSource) -> Unit,
     onPickButtonClick: () -> Unit
 )

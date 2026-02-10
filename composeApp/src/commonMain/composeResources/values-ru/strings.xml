@@ -28,6 +28,9 @@
     <string name="buffered_image">Изображеине в буфере</string>
     <string name="clear">Очистить всё</string>
     <string name="preview">Предпросмотр</string>
+    <string name="save_image_busket_message">У вас остались изображения в корзинке. Сохранить их для следующего запуска?</string>
+    <string name="close_with_saving">Сохранить и выйти</string>
+    <string name="close_without_saving">Выйти без сохранения</string>
     <string name="extraction_method">Метод извлечения</string>
     <string name="dominant_colors">Доминирующие цвета (для изображений с ограниченной палитрой)</string>
     <string name="k_means_clustering">Кластеризация K-средних (для сложных изображений)</string>

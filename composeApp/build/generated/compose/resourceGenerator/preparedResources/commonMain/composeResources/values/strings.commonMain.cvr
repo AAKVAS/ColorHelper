@@ -4,6 +4,8 @@ string|app_name|Q29sb3JIZWxwZXI=
 string|buffered_image|QnVmZmVyZWQgaW1hZ2U=
 string|cancel|Q2FuY2Vs
 string|clear|Q2xlYXI=
+string|close_with_saving|U2F2ZSBhbmQgY2xvc2U=
+string|close_without_saving|Q2xvc2Ugd2l0aG91dCBzYXZpbmc=
 string|color_count|Q29sb3IgY291bnQ6ICUxJHM=
 string|color_thief_algorithm|Q29sb3IgVGhpZWYgQWxnb3JpdGhtIChCZXN0IGZvciBoYXJtb25pb3VzIHBhbGV0dGVzKQ==
 string|confirm_delete|Q29uZmlybSBkZWxldGlvbg==
@@ -27,6 +29,7 @@ string|not_canceled_action|VGhpcyBhY3Rpb24gY2Fubm90IGJlIHVuZG9uZS4=
 string|palette_generated|UGFsZXR0ZSBnZW5lcmF0ZWQ=
 string|palettes|UGFsZXR0ZXM=
 string|preview|UHJldmlldw==
+string|save_image_busket_message|WW91IGhhdmUgdW5zYXZlZCBpbWFnZXMgaW4geW91ciBiYXNrZXQuIFdvdWxkIHlvdSBsaWtlIHRvIHNhdmUgdGhlbT8=
 string|select_photo|U2VsZWN0IHBob3Rv
 string|selected_photo|U2VsZWN0ZWQgcGhvdG8=
 string|sphere_color|U3BoZXJlIGNvbG9yOiA=

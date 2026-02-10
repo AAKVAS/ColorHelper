@@ -6,13 +6,21 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import feature.imageBusket.data.ImageData
+import feature.imageBusket.domain.ImageBusketRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import kotlin.coroutines.CoroutineContext
 
 
 class ImageBusketStoreFactory(
     private val storeFactory: StoreFactory,
     private val coroutineContext: CoroutineContext,
-) {
+) : KoinComponent {
+    private val repository by inject<ImageBusketRepository>()
+
     fun create(): Store<ImageBusketStore.Intent, ImageBusketStore.State, Nothing> =
         object : Store<ImageBusketStore.Intent, ImageBusketStore.State, Nothing> by storeFactory.create(
             name = "ImageBusketStore",
@@ -22,10 +30,11 @@ class ImageBusketStoreFactory(
         ) {}
 
     private fun createExecutor(): Executor<ImageBusketStore.Intent, Unit, ImageBusketStore.State, ImageBusketStore.Msg, Nothing> =
-        ExecutorImpl(coroutineContext)
+        ExecutorImpl(coroutineContext, repository)
 
     private class ExecutorImpl(
-        coroutineContext: CoroutineContext
+        coroutineContext: CoroutineContext,
+        private val repository: ImageBusketRepository
     ) : CoroutineExecutor<ImageBusketStore.Intent, Unit, ImageBusketStore.State, ImageBusketStore.Msg, Nothing>(
         coroutineContext
     ) {
@@ -43,6 +52,18 @@ class ImageBusketStoreFactory(
                 is ImageBusketStore.Intent.ChangeSelectedImageIndex -> {
                     changeSelectedImageIndex(intent.index)
                 }
+                is ImageBusketStore.Intent.ShowSaveDialog -> {
+                    showSaveDialog()
+                }
+                is ImageBusketStore.Intent.LoadState -> {
+                    loadState()
+                }
+                is ImageBusketStore.Intent.SaveState -> {
+                    saveState()
+                }
+                is ImageBusketStore.Intent.CloseSaveDialog -> {
+                    closeSaveDialog()
+                }
             }
 
         private fun addImage(imageData: ImageData) {
@@ -59,6 +80,35 @@ class ImageBusketStoreFactory(
 
         private fun changeSelectedImageIndex(index: Int) {
             dispatch(ImageBusketStore.Msg.ChangeSelectedImageIndex(index))
+        }
+
+        private fun showSaveDialog() {
+            dispatch(ImageBusketStore.Msg.ShowSaveDialog)
+        }
+
+        private fun closeSaveDialog() {
+            dispatch(ImageBusketStore.Msg.CloseSaveDialog)
+        }
+
+        private fun saveState() {
+            scope.launch(Dispatchers.Main) {
+                withContext(Dispatchers.IO) {
+                    repository.saveImages(state().items)
+                }
+                dispatch(ImageBusketStore.Msg.StateSaved)
+            }
+        }
+
+        private fun loadState() {
+            scope.launch(Dispatchers.Main) {
+                val images = withContext(Dispatchers.IO) {
+                    repository.getImages()
+                }
+                dispatch(ImageBusketStore.Msg.StateLoaded(images))
+                withContext(Dispatchers.IO) {
+                    repository.deleteImages()
+                }
+            }
         }
     }
 
@@ -89,6 +139,18 @@ class ImageBusketStoreFactory(
                 )
                 is ImageBusketStore.Msg.ChangeSelectedImageIndex -> {
                     copy(selectedImageIndex = msg.index)
+                }
+                is ImageBusketStore.Msg.ShowSaveDialog -> {
+                    copy(showSaveDialog = true)
+                }
+                is ImageBusketStore.Msg.CloseSaveDialog -> {
+                    copy(showSaveDialog = false)
+                }
+                is ImageBusketStore.Msg.StateLoaded -> {
+                    copy(items = msg.items)
+                }
+                is ImageBusketStore.Msg.StateSaved -> {
+                    copy(stateSaved = true)
                 }
             }
         }

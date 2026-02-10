@@ -23,6 +23,7 @@ import androidx.compose.ui.draganddrop.awtTransferable
 import androidx.compose.ui.draw.clip
 import com.example.Res
 import com.example.select_photo
+import feature.palette.photoPicker.ImageSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.swing.Swing
 import kotlinx.coroutines.withContext
@@ -66,7 +67,7 @@ actual fun SetupStatusBar() {
 }
 
 @Composable
-actual fun ImagePicker(onImagePicked: (String?) -> Unit) {
+actual fun ImagePicker(onImagePicked: (ImageSource?) -> Unit) {
     val title = stringResource(Res.string.select_photo)
     LaunchedEffect(Unit) {
         withContext(Dispatchers.IO) {
@@ -94,7 +95,7 @@ actual fun ImagePicker(onImagePicked: (String?) -> Unit) {
             fileDialog.file?.let { fileName ->
                 val file = File(fileDialog.directory, fileName)
                 withContext(Dispatchers.Main) {
-                    onImagePicked(file.absolutePath)
+                    onImagePicked(ImageSource.Path(file.absolutePath))
                 }
             } ?: run {
                 withContext(Dispatchers.Main) {
@@ -109,7 +110,7 @@ actual fun ImagePicker(onImagePicked: (String?) -> Unit) {
 @Composable
 actual fun PhotoInputBox(
     modifier: Modifier,
-    onImageDropped: (String) -> Unit,
+    onImageDropped: (ImageSource) -> Unit,
     onPickButtonClick: () -> Unit
 ) {
     var isDraggingOver by remember { mutableStateOf(false) }
@@ -138,7 +139,7 @@ actual fun PhotoInputBox(
                                 name.endsWith(".jpeg") || name.endsWith(".gif") ||
                                 name.endsWith(".bmp") || name.endsWith(".webp")) {
 
-                                onImageDropped(file.absolutePath)
+                                onImageDropped(ImageSource.Path(file.absolutePath))
                                 return true
                             }
                         }
