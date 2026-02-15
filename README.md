@@ -3,17 +3,13 @@
 
 <img width="361" height="93" alt="KMP ColorHelper" src="https://github.com/user-attachments/assets/ad311ea2-6fc3-4552-a4a9-f7805f98521b" />
 
-
-A KMP application for aspiring artists, designed to simplify color work.
-Currently offers two tools: a palette editor and an interactive color testing laboratory.
-
 A KMP application for aspiring artists, providing various tools for creating palettes and experimenting with colors.
 
 ## 📖 Description
 
 🎨 Palette Editor
 * Create color palettes for your projects.
-* Add, delete, and modify colors within palettes.
+* Add, delete and modify colors within palettes.
 * Extract color palettes from photos using different color extraction algorithms.
 
 🔬 Color Laboratory
@@ -40,9 +36,10 @@ A KMP application for aspiring artists, providing various tools for creating pal
 
 #### Desktop
 
-<img width="300" alt="image" src="https://github.com/user-attachments/assets/5fa9fc4a-696d-4f75-b0ac-70543fefab25" />
-<img width="300" alt="image" src="https://github.com/user-attachments/assets/2b799e17-635f-4853-8d0d-6103ca68d3ba" />
-<img width="300" alt="image" src="https://github.com/user-attachments/assets/8d13a7b4-0d3b-4510-9e2c-ad5135bf2959" />
+<img width="300" alt="image" src="https://github.com/user-attachments/assets/d89c3d1a-79a3-489d-87b7-21bc397a94e1" />
+<img width="300" alt="image" src="https://github.com/user-attachments/assets/aa39fb0e-0401-40ba-97e1-ab7e9ab8a03d" />
+<img width="300" alt="image" src="https://github.com/user-attachments/assets/312f23a7-f505-47b0-b9ba-cb304f7667f5" />
+<img width="300" alt="image" src="https://github.com/user-attachments/assets/c70fc374-d1ea-4894-bbdf-c1d9d14587ed" />
 
 
 ## Technologies Used
