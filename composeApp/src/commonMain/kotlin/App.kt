@@ -39,16 +39,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.DpSize
-import com.example.Res
-import com.example.image_busket
-import com.example.lab
-import com.example.palettes
 import feature.colorLab.ColorLabScreen
 import feature.home.RootComponent
 import feature.imageBusket.ImageBusketScreen
 import feature.palette.PaletteListScreen
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.stringResource
 import ui.composeComponents.MenuButton
 import ui.theme.AppTheme
 import ui.theme.Dimens
@@ -79,11 +74,7 @@ fun App(
             activePageIndex.intValue = pagerState.currentPage
         }
         val isSceneInteracting = remember { mutableStateOf(false) }
-        val tabs = listOf(
-            stringResource(Res.string.palettes),
-            stringResource(Res.string.lab),
-            stringResource(Res.string.image_busket),
-        )
+        val tabs = getMenuTabs()
 
         Scaffold(
             modifier = Modifier.fillMaxSize(),
@@ -415,3 +406,6 @@ fun CustomDrawerItem(
         )
     }
 }
+
+@Composable
+expect fun getMenuTabs(): List<String>

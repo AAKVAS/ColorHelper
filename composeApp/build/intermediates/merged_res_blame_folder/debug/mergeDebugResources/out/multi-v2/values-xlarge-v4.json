@@ -4,7 +4,7 @@
             "outputFile": "org.example.composeApp-mergeDebugResources-44:/values-xlarge-v4/values-xlarge-v4.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Hp\\.gradle\\caches\\9.2.1\\transforms\\1c52e6bdb2e25a339bfbc878c1748d78\\workspace\\transformed\\appcompat-1.7.1\\res\\values-xlarge-v4\\values-xlarge-v4.xml",
+                    "source": "C:\\Users\\Hp\\.gradle\\caches\\9.2.1\\transforms\\e2664b60815d664821fd98c1b163b863\\workspace\\transformed\\appcompat-1.7.1\\res\\values-xlarge-v4\\values-xlarge-v4.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7",
                         "startColumns": "4,4,4,4,4,4",
