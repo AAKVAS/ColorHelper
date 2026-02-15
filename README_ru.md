@@ -35,9 +35,11 @@ KMP приложение для начинающих художников, пр�
 
 #### Десктоп
 
-<img width="300" alt="image" src="https://github.com/user-attachments/assets/75641618-e412-4684-92ca-8a83556f525c" />
-<img width="300" alt="image" src="https://github.com/user-attachments/assets/bb21a204-5efd-4942-98a4-75ff4e2f3820" />
-<img width="300" alt="image" src="https://github.com/user-attachments/assets/75eb7b11-b839-4c4e-96d5-e66470e90d06" />
+<img width="300" alt="image" src="https://github.com/user-attachments/assets/2ecaa2ac-61be-4f96-b567-95a3af76a5c1" />
+<img width="300" alt="image" src="https://github.com/user-attachments/assets/47e37f91-d3c1-4b9c-aa9f-49e765d6b28f" />
+<img width="300" alt="image" src="https://github.com/user-attachments/assets/fafa9b81-6e37-4aeb-ae24-40a74f577ee7" />
+<img width="300" alt="image" src="https://github.com/user-attachments/assets/a50fe164-809e-4cee-b456-6a9300ffad83" />
+
 
 
 ## Используемые технологии
