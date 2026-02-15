@@ -7,6 +7,8 @@
 A KMP application for aspiring artists, designed to simplify color work.
 Currently offers two tools: a palette editor and an interactive color testing laboratory.
 
+A KMP application for aspiring artists, providing various tools for creating palettes and experimenting with colors.
+
 ## 📖 Description
 
 🎨 Palette Editor
@@ -17,6 +19,13 @@ Currently offers two tools: a palette editor and an interactive color testing la
 🔬 Color Laboratory
 * A simple 3D scene for color evaluation.
 * Modify object colors in real-time: sphere color, surface color, and lighting.
+
+📦 ImageBusket (Desktop only)
+* Temporary storage for clipboard images
+* Quick image insertion with Ctrl+V
+* Convenient image viewing
+* Copy images back to clipboard
+* Option to saving images between sessions
 
 ## 📷 Screenshots
 
