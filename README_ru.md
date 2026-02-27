@@ -32,19 +32,20 @@ KMP приложение для начинающих художников, пр�
 
 #### Android
 
-<img width="180" alt="image" src="https://github.com/user-attachments/assets/8c758eb7-34f3-4e4c-bbef-93a810a83a4b" />
-<img width="180" alt="image" src="https://github.com/user-attachments/assets/1aba99fa-182a-4b1b-9389-fe205a5641dd" />
-<img width="180" alt="image" src="https://github.com/user-attachments/assets/6ef29a6f-9368-4ec2-a598-ee6deea460bb" />
-<img width="180" alt="image" src="https://github.com/user-attachments/assets/b763d126-9bee-438f-8e61-834c3c3e0149" />
-<img width="180" alt="image" src="https://github.com/user-attachments/assets/0e27f12d-9e89-4130-b7e5-793336656970" />
+<img width="180" alt="image" src="https://github.com/user-attachments/assets/7720e0c7-ecb2-45ec-b502-36364ef4d8eb" />
+<img width="180" alt="image" src="https://github.com/user-attachments/assets/7e788641-1b36-47ea-8b1a-521c1b061145" />
+<img width="180" alt="image" src="https://github.com/user-attachments/assets/dee80326-ad11-418f-a490-b33265c9dfc9" />
+<img width="180" alt="image" src="https://github.com/user-attachments/assets/9438c244-22e1-4320-b4e3-034ede79759f" />
+<img width="180" alt="image" src="https://github.com/user-attachments/assets/f34592e6-fe7a-4f2b-9dbd-427bb4901d4f" />
 
 
 #### Десктоп
 
-<img width="300" alt="image" src="https://github.com/user-attachments/assets/2ecaa2ac-61be-4f96-b567-95a3af76a5c1" />
-<img width="300" alt="image" src="https://github.com/user-attachments/assets/47e37f91-d3c1-4b9c-aa9f-49e765d6b28f" />
-<img width="300" alt="image" src="https://github.com/user-attachments/assets/fafa9b81-6e37-4aeb-ae24-40a74f577ee7" />
-<img width="300" alt="image" src="https://github.com/user-attachments/assets/a50fe164-809e-4cee-b456-6a9300ffad83" />
+<img width="300" alt="image" src="https://github.com/user-attachments/assets/77af801a-eead-46d1-b6dc-c828544404e9" />
+<img width="300" alt="image" src="https://github.com/user-attachments/assets/135ff2d3-6e22-49c3-a9a4-316c8be911f1" />
+<img width="300" alt="image" src="https://github.com/user-attachments/assets/232a3186-53cc-4685-a122-97d7b0d4e0d2" />
+<img width="300" alt="image" src="https://github.com/user-attachments/assets/47df0d0c-9998-4c0e-91d8-270594428181" />
+<img width="300" alt="image" src="https://github.com/user-attachments/assets/819356c8-b5cf-4929-81f4-863975220ba6" />
 
 
 ## Используемые технологии
