@@ -17,6 +17,7 @@ interface PaletteListComponent {
     fun showDeleteMessage(colorPalette: ColorPalette)
     fun onAddButtonClicked()
     fun deletePalette(colorPalette: ColorPalette)
+    fun showExtractPaletteComponent(uri: String)
     fun showExtractPaletteComponent()
     fun closeExtractPaletteComponent()
 
@@ -26,7 +27,6 @@ interface PaletteListComponent {
         object NoChild: Child()
         class PaletteChild(val component: PaletteComponent): Child()
     }
-
 
     sealed class ModalChild {
         object NoModal : ModalChild()

@@ -31,7 +31,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -66,6 +65,7 @@ import ui.composeComponents.DeleteColorDialog
 import ui.composeComponents.DeletePaletteDialog
 import ui.theme.Dimens
 import ui.theme.LocalColorProvider
+import utils.rememberIsPortrait
 import utils.toColor
 import utils.toHex
 
@@ -97,11 +97,7 @@ fun PaletteScreen(
         }
     }
 
-    val isPortrait = remember(windowSize) {
-        derivedStateOf {
-            windowSize.width < windowSize.height
-        }
-    }
+    val isPortrait = rememberIsPortrait(windowSize)
 
     LaunchedEffect(component.labels) {
         component.labels.collect { label ->

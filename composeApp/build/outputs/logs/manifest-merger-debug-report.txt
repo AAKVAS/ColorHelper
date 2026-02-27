@@ -1,9 +1,20 @@
 -- Merging decision tree log ---
+provider#androidx.core.content.FileProvider
+INJECTED from C:\Users\Hp\Documents\projects\kotlin\ColorHelper\composeApp\src\androidMain\AndroidManifest.xml:31:9-39:20
+	android:grantUriPermissions
+		ADDED from C:\Users\Hp\Documents\projects\kotlin\ColorHelper\composeApp\src\androidMain\AndroidManifest.xml:35:13-47
+	android:authorities
+		INJECTED from C:\Users\Hp\Documents\projects\kotlin\ColorHelper\composeApp\src\androidMain\AndroidManifest.xml
+		ADDED from C:\Users\Hp\Documents\projects\kotlin\ColorHelper\composeApp\src\androidMain\AndroidManifest.xml:33:13-64
+	android:exported
+		ADDED from C:\Users\Hp\Documents\projects\kotlin\ColorHelper\composeApp\src\androidMain\AndroidManifest.xml:34:13-37
+	android:name
+		ADDED from C:\Users\Hp\Documents\projects\kotlin\ColorHelper\composeApp\src\androidMain\AndroidManifest.xml:32:13-62
 manifest
-ADDED from C:\Users\Hp\Documents\projects\kotlin\ColorHelper\composeApp\src\androidMain\AndroidManifest.xml:2:1-26:12
-INJECTED from C:\Users\Hp\Documents\projects\kotlin\ColorHelper\composeApp\src\androidMain\AndroidManifest.xml:2:1-26:12
-INJECTED from C:\Users\Hp\Documents\projects\kotlin\ColorHelper\composeApp\src\androidMain\AndroidManifest.xml:2:1-26:12
-INJECTED from C:\Users\Hp\Documents\projects\kotlin\ColorHelper\composeApp\src\androidMain\AndroidManifest.xml:2:1-26:12
+ADDED from C:\Users\Hp\Documents\projects\kotlin\ColorHelper\composeApp\src\androidMain\AndroidManifest.xml:2:1-42:12
+INJECTED from C:\Users\Hp\Documents\projects\kotlin\ColorHelper\composeApp\src\androidMain\AndroidManifest.xml:2:1-42:12
+INJECTED from C:\Users\Hp\Documents\projects\kotlin\ColorHelper\composeApp\src\androidMain\AndroidManifest.xml:2:1-42:12
+INJECTED from C:\Users\Hp\Documents\projects\kotlin\ColorHelper\composeApp\src\androidMain\AndroidManifest.xml:2:1-42:12
 MERGED from [com.google.accompanist:accompanist-permissions:0.36.0] C:\Users\Hp\.gradle\caches\9.2.1\transforms\5640ba54d952656a159db4945b6bd362\workspace\transformed\accompanist-permissions-0.36.0\AndroidManifest.xml:17:1-23:12
 MERGED from [com.google.accompanist:accompanist-systemuicontroller:0.36.0] C:\Users\Hp\.gradle\caches\9.2.1\transforms\05550477424a877d4d10ffb158d7a664\workspace\transformed\accompanist-systemuicontroller-0.36.0\AndroidManifest.xml:17:1-23:12
 MERGED from [com.github.zakgof:korender-android:0.6.0] C:\Users\Hp\.gradle\caches\9.2.1\transforms\0949bfe10a0bfe3a54397dfaa540da16\workspace\transformed\korender\AndroidManifest.xml:2:1-7:12
@@ -121,8 +132,8 @@ ADDED from C:\Users\Hp\Documents\projects\kotlin\ColorHelper\composeApp\src\andr
 	android:name
 		ADDED from C:\Users\Hp\Documents\projects\kotlin\ColorHelper\composeApp\src\androidMain\AndroidManifest.xml:4:22-73
 application
-ADDED from C:\Users\Hp\Documents\projects\kotlin\ColorHelper\composeApp\src\androidMain\AndroidManifest.xml:5:5-24:19
-INJECTED from C:\Users\Hp\Documents\projects\kotlin\ColorHelper\composeApp\src\androidMain\AndroidManifest.xml:5:5-24:19
+ADDED from C:\Users\Hp\Documents\projects\kotlin\ColorHelper\composeApp\src\androidMain\AndroidManifest.xml:5:5-40:19
+INJECTED from C:\Users\Hp\Documents\projects\kotlin\ColorHelper\composeApp\src\androidMain\AndroidManifest.xml:5:5-40:19
 MERGED from [org.jetbrains.compose.components:components-resources-android:1.9.3] C:\Users\Hp\.gradle\caches\9.2.1\transforms\8391618cca59161407b7bdc63c5bdbb2\workspace\transformed\library-release\AndroidManifest.xml:7:5-14:19
 MERGED from [org.jetbrains.compose.components:components-resources-android:1.9.3] C:\Users\Hp\.gradle\caches\9.2.1\transforms\8391618cca59161407b7bdc63c5bdbb2\workspace\transformed\library-release\AndroidManifest.xml:7:5-14:19
 MERGED from [androidx.emoji2:emoji2:1.4.0] C:\Users\Hp\.gradle\caches\9.2.1\transforms\7f494479efaa6bff257d9fb832da056b\workspace\transformed\emoji2-1.4.0\AndroidManifest.xml:23:5-33:19
@@ -160,7 +171,7 @@ MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\Hp\.gradle\caches\
 	android:name
 		ADDED from C:\Users\Hp\Documents\projects\kotlin\ColorHelper\composeApp\src\androidMain\AndroidManifest.xml:6:9-58
 activity#com.example.MainActivity
-ADDED from C:\Users\Hp\Documents\projects\kotlin\ColorHelper\composeApp\src\androidMain\AndroidManifest.xml:14:9-23:20
+ADDED from C:\Users\Hp\Documents\projects\kotlin\ColorHelper\composeApp\src\androidMain\AndroidManifest.xml:14:9-29:20
 	android:exported
 		ADDED from C:\Users\Hp\Documents\projects\kotlin\ColorHelper\composeApp\src\androidMain\AndroidManifest.xml:15:13-36
 	android:configChanges
@@ -177,6 +188,26 @@ category#android.intent.category.LAUNCHER
 ADDED from C:\Users\Hp\Documents\projects\kotlin\ColorHelper\composeApp\src\androidMain\AndroidManifest.xml:21:17-77
 	android:name
 		ADDED from C:\Users\Hp\Documents\projects\kotlin\ColorHelper\composeApp\src\androidMain\AndroidManifest.xml:21:27-74
+intent-filter#action:name:android.intent.action.SEND+category:name:android.intent.category.DEFAULT+data:mimeType:image/*
+ADDED from C:\Users\Hp\Documents\projects\kotlin\ColorHelper\composeApp\src\androidMain\AndroidManifest.xml:24:13-28:29
+action#android.intent.action.SEND
+ADDED from C:\Users\Hp\Documents\projects\kotlin\ColorHelper\composeApp\src\androidMain\AndroidManifest.xml:25:17-69
+	android:name
+		ADDED from C:\Users\Hp\Documents\projects\kotlin\ColorHelper\composeApp\src\androidMain\AndroidManifest.xml:25:25-66
+category#android.intent.category.DEFAULT
+ADDED from C:\Users\Hp\Documents\projects\kotlin\ColorHelper\composeApp\src\androidMain\AndroidManifest.xml:26:17-76
+	android:name
+		ADDED from C:\Users\Hp\Documents\projects\kotlin\ColorHelper\composeApp\src\androidMain\AndroidManifest.xml:26:27-73
+data
+ADDED from C:\Users\Hp\Documents\projects\kotlin\ColorHelper\composeApp\src\androidMain\AndroidManifest.xml:27:17-52
+	android:mimeType
+		ADDED from C:\Users\Hp\Documents\projects\kotlin\ColorHelper\composeApp\src\androidMain\AndroidManifest.xml:27:23-49
+meta-data#android.support.FILE_PROVIDER_PATHS
+ADDED from C:\Users\Hp\Documents\projects\kotlin\ColorHelper\composeApp\src\androidMain\AndroidManifest.xml:36:13-38:54
+	android:resource
+		ADDED from C:\Users\Hp\Documents\projects\kotlin\ColorHelper\composeApp\src\androidMain\AndroidManifest.xml:38:17-51
+	android:name
+		ADDED from C:\Users\Hp\Documents\projects\kotlin\ColorHelper\composeApp\src\androidMain\AndroidManifest.xml:37:17-67
 uses-sdk
 INJECTED from C:\Users\Hp\Documents\projects\kotlin\ColorHelper\composeApp\src\androidMain\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from C:\Users\Hp\Documents\projects\kotlin\ColorHelper\composeApp\src\androidMain\AndroidManifest.xml

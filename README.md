@@ -3,7 +3,7 @@
 
 <img width="361" height="93" alt="KMP ColorHelper" src="https://github.com/user-attachments/assets/ad311ea2-6fc3-4552-a4a9-f7805f98521b" />
 
-A KMP application for aspiring artists, providing various tools for creating palettes and experimenting with colors.
+A KMP application for aspiring artists, providing various tools for creating color palettes and visualization.
 
 ## 📖 Description
 
@@ -11,17 +11,27 @@ A KMP application for aspiring artists, providing various tools for creating pal
 * Create color palettes for your projects.
 * Add, delete and modify colors within palettes.
 * Extract color palettes from photos using different color extraction algorithms.
+* Get recommendations for colors that harmonize with your palette
+
+
+📐 Perspective Builder
+* Create perspective grids with adjustable vanishing points and rays.
+* Ready-to-use samples for quick setup.
+* Export your perspective grid as an image.
+
+
+📦 ImageBusket (Desktop only).
+* Temporary storage for clipboard images.
+* Quick image insertion with Ctrl+V.
+* Convenient image viewing.
+* Copy images back to clipboard.
+* Option to saving images between sessions.
+
 
 🔬 Color Laboratory
 * A simple 3D scene for color evaluation.
 * Modify object colors in real-time: sphere color, surface color, and lighting.
 
-📦 ImageBusket (Desktop only)
-* Temporary storage for clipboard images
-* Quick image insertion with Ctrl+V
-* Convenient image viewing
-* Copy images back to clipboard
-* Option to saving images between sessions
 
 ## 📷 Screenshots
 

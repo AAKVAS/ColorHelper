@@ -2,9 +2,6 @@
 
 package com.example
 
-import kotlin.OptIn
-import kotlin.String
-import kotlin.collections.MutableMap
 import org.jetbrains.compose.resources.InternalResourceApi
 import org.jetbrains.compose.resources.LanguageQualifier
 import org.jetbrains.compose.resources.ResourceItem
@@ -228,75 +225,163 @@ public val Res.string.not_canceled_action: StringResource by lazy {
       ))
     }
 
+public val Res.string.one_point_perspective: StringResource by lazy {
+      StringResource("string:one_point_perspective", "one_point_perspective", setOf(
+        ResourceItem(setOf(LanguageQualifier("en"), ), "${MD}values-en/strings.commonMain.cvr", 1290, 57),
+        ResourceItem(setOf(LanguageQualifier("ru"), ), "${MD}values-ru/strings.commonMain.cvr", 1966, 93),
+        ResourceItem(setOf(), "${MD}values/strings.commonMain.cvr", 1290, 57),
+      ))
+    }
+
 public val Res.string.palette_generated: StringResource by lazy {
       StringResource("string:palette_generated", "palette_generated", setOf(
-        ResourceItem(setOf(LanguageQualifier("en"), ), "${MD}values-en/strings.commonMain.cvr", 1290, 49),
-        ResourceItem(setOf(LanguageQualifier("ru"), ), "${MD}values-ru/strings.commonMain.cvr", 1966, 57),
-        ResourceItem(setOf(), "${MD}values/strings.commonMain.cvr", 1290, 49),
+        ResourceItem(setOf(LanguageQualifier("en"), ), "${MD}values-en/strings.commonMain.cvr", 1348, 49),
+        ResourceItem(setOf(LanguageQualifier("ru"), ), "${MD}values-ru/strings.commonMain.cvr", 2060, 57),
+        ResourceItem(setOf(), "${MD}values/strings.commonMain.cvr", 1348, 49),
       ))
     }
 
 public val Res.string.palettes: StringResource by lazy {
       StringResource("string:palettes", "palettes", setOf(
-        ResourceItem(setOf(LanguageQualifier("en"), ), "${MD}values-en/strings.commonMain.cvr", 1340, 28),
-        ResourceItem(setOf(LanguageQualifier("ru"), ), "${MD}values-ru/strings.commonMain.cvr", 2024, 36),
-        ResourceItem(setOf(), "${MD}values/strings.commonMain.cvr", 1340, 28),
+        ResourceItem(setOf(LanguageQualifier("en"), ), "${MD}values-en/strings.commonMain.cvr", 1398, 28),
+        ResourceItem(setOf(LanguageQualifier("ru"), ), "${MD}values-ru/strings.commonMain.cvr", 2118, 36),
+        ResourceItem(setOf(), "${MD}values/strings.commonMain.cvr", 1398, 28),
+      ))
+    }
+
+public val Res.string.perspective: StringResource by lazy {
+      StringResource("string:perspective", "perspective", setOf(
+        ResourceItem(setOf(LanguageQualifier("en"), ), "${MD}values-en/strings.commonMain.cvr", 1427, 35),
+        ResourceItem(setOf(LanguageQualifier("ru"), ), "${MD}values-ru/strings.commonMain.cvr", 2155, 51),
+        ResourceItem(setOf(), "${MD}values/strings.commonMain.cvr", 1427, 35),
+      ))
+    }
+
+public val Res.string.point: StringResource by lazy {
+      StringResource("string:point", "point", setOf(
+        ResourceItem(setOf(LanguageQualifier("en"), ), "${MD}values-en/strings.commonMain.cvr", 1463, 29),
+        ResourceItem(setOf(LanguageQualifier("ru"), ), "${MD}values-ru/strings.commonMain.cvr", 2207, 37),
+        ResourceItem(setOf(), "${MD}values/strings.commonMain.cvr", 1463, 29),
       ))
     }
 
 public val Res.string.preview: StringResource by lazy {
       StringResource("string:preview", "preview", setOf(
-        ResourceItem(setOf(LanguageQualifier("en"), ), "${MD}values-en/strings.commonMain.cvr", 1369, 27),
-        ResourceItem(setOf(LanguageQualifier("ru"), ), "${MD}values-ru/strings.commonMain.cvr", 2061, 47),
-        ResourceItem(setOf(), "${MD}values/strings.commonMain.cvr", 1369, 27),
+        ResourceItem(setOf(LanguageQualifier("en"), ), "${MD}values-en/strings.commonMain.cvr", 1493, 27),
+        ResourceItem(setOf(LanguageQualifier("ru"), ), "${MD}values-ru/strings.commonMain.cvr", 2245, 47),
+        ResourceItem(setOf(), "${MD}values/strings.commonMain.cvr", 1493, 27),
+      ))
+    }
+
+public val Res.string.ray_count: StringResource by lazy {
+      StringResource("string:ray_count", "ray_count", setOf(
+        ResourceItem(setOf(LanguageQualifier("en"), ), "${MD}values-en/strings.commonMain.cvr", 1521, 29),
+        ResourceItem(setOf(LanguageQualifier("ru"), ), "${MD}values-ru/strings.commonMain.cvr", 2293, 61),
+        ResourceItem(setOf(), "${MD}values/strings.commonMain.cvr", 1521, 29),
+      ))
+    }
+
+public val Res.string.samples: StringResource by lazy {
+      StringResource("string:samples", "samples", setOf(
+        ResourceItem(setOf(LanguageQualifier("en"), ), "${MD}values-en/strings.commonMain.cvr", 1551, 27),
+        ResourceItem(setOf(LanguageQualifier("ru"), ), "${MD}values-ru/strings.commonMain.cvr", 2355, 35),
+        ResourceItem(setOf(), "${MD}values/strings.commonMain.cvr", 1551, 27),
       ))
     }
 
 public val Res.string.save_image_busket_message: StringResource by lazy {
       StringResource("string:save_image_busket_message", "save_image_busket_message", setOf(
-        ResourceItem(setOf(LanguageQualifier("en"), ), "${MD}values-en/strings.commonMain.cvr", 1397, 125),
-        ResourceItem(setOf(LanguageQualifier("ru"), ), "${MD}values-ru/strings.commonMain.cvr", 2109, 217),
-        ResourceItem(setOf(), "${MD}values/strings.commonMain.cvr", 1397, 125),
+        ResourceItem(setOf(LanguageQualifier("en"), ), "${MD}values-en/strings.commonMain.cvr", 1579, 125),
+        ResourceItem(setOf(LanguageQualifier("ru"), ), "${MD}values-ru/strings.commonMain.cvr", 2391, 217),
+        ResourceItem(setOf(), "${MD}values/strings.commonMain.cvr", 1579, 125),
       ))
     }
 
 public val Res.string.select_photo: StringResource by lazy {
       StringResource("string:select_photo", "select_photo", setOf(
-        ResourceItem(setOf(LanguageQualifier("en"), ), "${MD}values-en/strings.commonMain.cvr", 1523, 36),
-        ResourceItem(setOf(LanguageQualifier("ru"), ), "${MD}values-ru/strings.commonMain.cvr", 2327, 52),
-        ResourceItem(setOf(), "${MD}values/strings.commonMain.cvr", 1523, 36),
+        ResourceItem(setOf(LanguageQualifier("en"), ), "${MD}values-en/strings.commonMain.cvr", 1705, 36),
+        ResourceItem(setOf(LanguageQualifier("ru"), ), "${MD}values-ru/strings.commonMain.cvr", 2609, 52),
+        ResourceItem(setOf(), "${MD}values/strings.commonMain.cvr", 1705, 36),
       ))
     }
 
 public val Res.string.selected_photo: StringResource by lazy {
       StringResource("string:selected_photo", "selected_photo", setOf(
-        ResourceItem(setOf(LanguageQualifier("en"), ), "${MD}values-en/strings.commonMain.cvr", 1560, 42),
-        ResourceItem(setOf(LanguageQualifier("ru"), ), "${MD}values-ru/strings.commonMain.cvr", 2380, 58),
-        ResourceItem(setOf(), "${MD}values/strings.commonMain.cvr", 1560, 42),
+        ResourceItem(setOf(LanguageQualifier("en"), ), "${MD}values-en/strings.commonMain.cvr", 1742, 42),
+        ResourceItem(setOf(LanguageQualifier("ru"), ), "${MD}values-ru/strings.commonMain.cvr", 2662, 58),
+        ResourceItem(setOf(), "${MD}values/strings.commonMain.cvr", 1742, 42),
+      ))
+    }
+
+public val Res.string.share: StringResource by lazy {
+      StringResource("string:share", "share", setOf(
+        ResourceItem(setOf(LanguageQualifier("en"), ), "${MD}values-en/strings.commonMain.cvr", 1785, 21),
+        ResourceItem(setOf(LanguageQualifier("ru"), ), "${MD}values-ru/strings.commonMain.cvr", 2721, 41),
+        ResourceItem(setOf(), "${MD}values/strings.commonMain.cvr", 1785, 21),
+      ))
+    }
+
+public val Res.string.sharing_failed: StringResource by lazy {
+      StringResource("string:sharing_failed", "sharing_failed", setOf(
+        ResourceItem(setOf(LanguageQualifier("en"), ), "${MD}values-en/strings.commonMain.cvr", 1807, 42),
+        ResourceItem(setOf(LanguageQualifier("ru"), ), "${MD}values-ru/strings.commonMain.cvr", 2763, 78),
+        ResourceItem(setOf(), "${MD}values/strings.commonMain.cvr", 1807, 42),
+      ))
+    }
+
+public val Res.string.show_grid: StringResource by lazy {
+      StringResource("string:show_grid", "show_grid", setOf(
+        ResourceItem(setOf(LanguageQualifier("en"), ), "${MD}values-en/strings.commonMain.cvr", 1850, 29),
+        ResourceItem(setOf(LanguageQualifier("ru"), ), "${MD}values-ru/strings.commonMain.cvr", 2842, 53),
+        ResourceItem(setOf(), "${MD}values/strings.commonMain.cvr", 1850, 29),
       ))
     }
 
 public val Res.string.sphere_color: StringResource by lazy {
       StringResource("string:sphere_color", "sphere_color", setOf(
-        ResourceItem(setOf(LanguageQualifier("en"), ), "${MD}values-en/strings.commonMain.cvr", 1603, 40),
-        ResourceItem(setOf(LanguageQualifier("ru"), ), "${MD}values-ru/strings.commonMain.cvr", 2439, 48),
-        ResourceItem(setOf(), "${MD}values/strings.commonMain.cvr", 1603, 40),
+        ResourceItem(setOf(LanguageQualifier("en"), ), "${MD}values-en/strings.commonMain.cvr", 1880, 40),
+        ResourceItem(setOf(LanguageQualifier("ru"), ), "${MD}values-ru/strings.commonMain.cvr", 2896, 48),
+        ResourceItem(setOf(), "${MD}values/strings.commonMain.cvr", 1880, 40),
+      ))
+    }
+
+public val Res.string.three_point_perspective_bottom: StringResource by lazy {
+      StringResource("string:three_point_perspective_bottom", "three_point_perspective_bottom", setOf(
+        ResourceItem(setOf(LanguageQualifier("en"), ), "${MD}values-en/strings.commonMain.cvr", 1921, 90),
+        ResourceItem(setOf(LanguageQualifier("ru"), ), "${MD}values-ru/strings.commonMain.cvr", 2945, 130),
+        ResourceItem(setOf(), "${MD}values/strings.commonMain.cvr", 1921, 90),
+      ))
+    }
+
+public val Res.string.three_point_perspective_top: StringResource by lazy {
+      StringResource("string:three_point_perspective_top", "three_point_perspective_top", setOf(
+        ResourceItem(setOf(LanguageQualifier("en"), ), "${MD}values-en/strings.commonMain.cvr", 2012, 83),
+        ResourceItem(setOf(LanguageQualifier("ru"), ), "${MD}values-ru/strings.commonMain.cvr", 3076, 127),
+        ResourceItem(setOf(), "${MD}values/strings.commonMain.cvr", 2012, 83),
       ))
     }
 
 public val Res.string.title: StringResource by lazy {
       StringResource("string:title", "title", setOf(
-        ResourceItem(setOf(LanguageQualifier("en"), ), "${MD}values-en/strings.commonMain.cvr", 1644, 29),
-        ResourceItem(setOf(LanguageQualifier("ru"), ), "${MD}values-ru/strings.commonMain.cvr", 2488, 29),
-        ResourceItem(setOf(), "${MD}values/strings.commonMain.cvr", 1644, 29),
+        ResourceItem(setOf(LanguageQualifier("en"), ), "${MD}values-en/strings.commonMain.cvr", 2096, 29),
+        ResourceItem(setOf(LanguageQualifier("ru"), ), "${MD}values-ru/strings.commonMain.cvr", 3204, 29),
+        ResourceItem(setOf(), "${MD}values/strings.commonMain.cvr", 2096, 29),
       ))
     }
 
 public val Res.string.total: StringResource by lazy {
       StringResource("string:total", "total", setOf(
-        ResourceItem(setOf(LanguageQualifier("en"), ), "${MD}values-en/strings.commonMain.cvr", 1674, 29),
-        ResourceItem(setOf(LanguageQualifier("ru"), ), "${MD}values-ru/strings.commonMain.cvr", 2518, 37),
-        ResourceItem(setOf(), "${MD}values/strings.commonMain.cvr", 1674, 29),
+        ResourceItem(setOf(LanguageQualifier("en"), ), "${MD}values-en/strings.commonMain.cvr", 2126, 29),
+        ResourceItem(setOf(LanguageQualifier("ru"), ), "${MD}values-ru/strings.commonMain.cvr", 3234, 37),
+        ResourceItem(setOf(), "${MD}values/strings.commonMain.cvr", 2126, 29),
+      ))
+    }
+
+public val Res.string.two_point_perspective: StringResource by lazy {
+      StringResource("string:two_point_perspective", "two_point_perspective", setOf(
+        ResourceItem(setOf(LanguageQualifier("en"), ), "${MD}values-en/strings.commonMain.cvr", 2156, 57),
+        ResourceItem(setOf(LanguageQualifier("ru"), ), "${MD}values-ru/strings.commonMain.cvr", 3272, 93),
+        ResourceItem(setOf(), "${MD}values/strings.commonMain.cvr", 2156, 57),
       ))
     }
 
@@ -329,13 +414,24 @@ internal fun _collectCommonMainString0Resources(map: MutableMap<String, StringRe
   map.put("light_color", Res.string.light_color)
   map.put("median_cut", Res.string.median_cut)
   map.put("not_canceled_action", Res.string.not_canceled_action)
+  map.put("one_point_perspective", Res.string.one_point_perspective)
   map.put("palette_generated", Res.string.palette_generated)
   map.put("palettes", Res.string.palettes)
+  map.put("perspective", Res.string.perspective)
+  map.put("point", Res.string.point)
   map.put("preview", Res.string.preview)
+  map.put("ray_count", Res.string.ray_count)
+  map.put("samples", Res.string.samples)
   map.put("save_image_busket_message", Res.string.save_image_busket_message)
   map.put("select_photo", Res.string.select_photo)
   map.put("selected_photo", Res.string.selected_photo)
+  map.put("share", Res.string.share)
+  map.put("sharing_failed", Res.string.sharing_failed)
+  map.put("show_grid", Res.string.show_grid)
   map.put("sphere_color", Res.string.sphere_color)
+  map.put("three_point_perspective_bottom", Res.string.three_point_perspective_bottom)
+  map.put("three_point_perspective_top", Res.string.three_point_perspective_top)
   map.put("title", Res.string.title)
   map.put("total", Res.string.total)
+  map.put("two_point_perspective", Res.string.two_point_perspective)
 }

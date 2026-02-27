@@ -29,7 +29,7 @@ interface PhotoPickerStore : Store<PhotoPickerStore.Intent, PhotoPickerStore.Sta
 
     sealed class Msg {
         object LoadImage: Msg()
-        data class PaletteExtractionStarted(val selectedImagePath: String) : Msg()
+        object PaletteExtractionStarted : Msg()
         data class PaletteExtracted(val palette: ColorPalette) : Msg()
         object ImageNotLoaded: Msg()
         object ExtractionCanceled : Msg()

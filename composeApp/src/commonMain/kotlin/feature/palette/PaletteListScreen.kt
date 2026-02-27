@@ -27,7 +27,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -50,6 +49,7 @@ import ui.composeComponents.RoundedAddButton
 import ui.composeComponents.RoundedCameraButton
 import ui.theme.Dimens
 import ui.theme.LocalColorProvider
+import utils.rememberIsPortrait
 import utils.toColor
 
 @Composable
@@ -78,11 +78,7 @@ fun PaletteListScreen(
         }
     }
 
-    val isPortrait = remember(windowSize) {
-        derivedStateOf {
-            windowSize.width < windowSize.height
-        }
-    }
+    val isPortrait = rememberIsPortrait(windowSize)
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),

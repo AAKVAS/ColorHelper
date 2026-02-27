@@ -29,7 +29,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
@@ -72,6 +71,7 @@ import utils.HandleClipboardPaste
 import utils.copyImageToClipboard
 import utils.getImageFromClipboard
 import utils.rememberImageBitmap
+import utils.rememberIsPortrait
 import kotlin.math.max
 import kotlin.math.min
 
@@ -82,11 +82,7 @@ actual fun ImageBusketScreen(
     windowSize: DpSize
 ) {
     val state = component.state.collectAsState()
-    val isPortrait = remember(windowSize) {
-        derivedStateOf {
-            windowSize.width < windowSize.height
-        }
-    }
+    val isPortrait = rememberIsPortrait(windowSize)
     var imageInBuffer by remember { mutableStateOf<ImageData?>(null) }
     var lastClipboardHash by remember { mutableIntStateOf(0) }
 

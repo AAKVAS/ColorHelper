@@ -51,4 +51,8 @@ object Dimens {
 
     val bufferedPhotoHeight = 100.dp
     val bufferedPhotoWidth = 250.dp
+
+    val coordinateTextFieldWidth = 100.dp
+    val perspectiveSceneHeight = 200.dp
+    val perspectiveBuilderSettingsWidth = 340.dp
 }

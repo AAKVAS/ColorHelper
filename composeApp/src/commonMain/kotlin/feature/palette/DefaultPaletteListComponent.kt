@@ -83,7 +83,8 @@ class DefaultPaletteListComponent(
         )
 
     private fun photoPickerComponent(
-        componentContext: ComponentContext
+        componentContext: ComponentContext,
+        uri: String? = null
     ): PhotoPickerComponent {
         return DefaultPhotoPickerComponent(
             componentContext = componentContext,
@@ -95,7 +96,8 @@ class DefaultPaletteListComponent(
             navToPalette = { palette ->
                 closeExtractPaletteComponent()
                 showEditComponent(palette)
-            }
+            },
+            uri = uri
         )
     }
 
@@ -123,6 +125,12 @@ class DefaultPaletteListComponent(
             listOf(Config.NoChildren)
         }
         _store.accept(PaletteListStore.Intent.DeletePalette(colorPalette.uid))
+    }
+
+    override fun showExtractPaletteComponent(uri: String) {
+        _modalChild.value = PaletteListComponent.ModalChild.PhotoPickerChild(
+            photoPickerComponent(componentContext = this, uri)
+        )
     }
 
     override fun showExtractPaletteComponent() {

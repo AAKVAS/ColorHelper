@@ -21,15 +21,13 @@ import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SecondaryTabRow
+import androidx.compose.material3.SecondaryScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -43,11 +41,13 @@ import feature.colorLab.ColorLabScreen
 import feature.home.RootComponent
 import feature.imageBusket.ImageBusketScreen
 import feature.palette.PaletteListScreen
+import feature.perspectiveBuilder.PerspectiveBuilderScreen
 import kotlinx.coroutines.launch
 import ui.composeComponents.MenuButton
 import ui.theme.AppTheme
 import ui.theme.Dimens
 import ui.theme.LocalColorProvider
+import utils.rememberIsPortrait
 
 @Composable
 fun App(
@@ -55,27 +55,26 @@ fun App(
     windowSize: DpSize
 ) {
     AppTheme {
-        val isPortrait = remember(windowSize) {
-            derivedStateOf {
-                windowSize.width < windowSize.height
-            }
-        }
+        val isPortrait = rememberIsPortrait(windowSize)
 
         val tabPageComponents = rootComponent.children
         val pagerState = rememberPagerState(
             initialPage = 0,
             pageCount = { tabPageComponents.size }
         )
-        val activePageIndex = remember { mutableIntStateOf(0) }
-        LaunchedEffect(activePageIndex.intValue) {
-            pagerState.animateScrollToPage(activePageIndex.intValue)
+
+        LaunchedEffect(rootComponent) {
+            rootComponent.openChild.collect { targetChild ->
+                val targetIndex = tabPageComponents.indexOfFirst { it == targetChild }
+                if (targetIndex != -1 && targetIndex != pagerState.currentPage) {
+                    pagerState.animateScrollToPage(targetIndex)
+                }
+            }
         }
-        LaunchedEffect(pagerState.currentPage) {
-            activePageIndex.intValue = pagerState.currentPage
-        }
+
         val isSceneInteracting = remember { mutableStateOf(false) }
         val tabs = getMenuTabs()
-
+        val scope = rememberCoroutineScope()
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             contentWindowInsets = WindowInsets.systemBars
@@ -94,7 +93,7 @@ fun App(
                         isPortrait = isPortrait.value,
                         selectedTabIndex = pagerState.currentPage
                     ) { index ->
-                        activePageIndex.intValue = index
+                        scope.launch { pagerState.animateScrollToPage(index) }
                     }
 
                     HorizontalPager(
@@ -124,12 +123,15 @@ fun App(
                                 component = child.component,
                                 windowSize = windowSize,
                             )
+                            is RootComponent.Child.PerspectiveBuilderChild -> PerspectiveBuilderScreen(
+                                component = child.component,
+                                windowSize = windowSize
+                            )
                         }
                     }
                 }
             } else {
                 val drawerState = rememberDrawerState(DrawerValue.Closed)
-                val scope = rememberCoroutineScope()
                 ModalNavigationDrawer(
                     drawerState = drawerState,
                     modifier = Modifier
@@ -139,10 +141,10 @@ fun App(
                     drawerContent = {
                         VerticalNavModalSheet(
                             tabs = tabs,
-                            selectedItemIndex = activePageIndex.intValue,
+                            selectedItemIndex = pagerState.currentPage,
                             onItemClick = { index ->
                                 scope.launch { drawerState.close() }
-                                activePageIndex.intValue = index
+                                scope.launch { pagerState.animateScrollToPage(index) }
                             }
                         )
                     }
@@ -183,6 +185,10 @@ fun App(
                                     component = child.component,
                                     windowSize = windowSize,
                                 )
+                                is RootComponent.Child.PerspectiveBuilderChild -> PerspectiveBuilderScreen(
+                                    component = child.component,
+                                    windowSize = windowSize
+                                )
                             }
                         }
                     }
@@ -222,7 +228,7 @@ fun RowTabulation(
     tabs: List<String>,
     onTabClick: (Int) -> Unit
 ) {
-    SecondaryTabRow(
+    SecondaryScrollableTabRow(
         selectedTabIndex = 0,
         modifier = Modifier.fillMaxWidth(),
         containerColor = LocalColorProvider.current.primaryContainer,

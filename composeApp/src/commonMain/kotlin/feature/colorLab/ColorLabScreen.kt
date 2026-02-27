@@ -25,7 +25,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -62,6 +61,7 @@ import ui.composeComponents.CustomTextField
 import ui.composeComponents.TooltipWrapper
 import ui.theme.Dimens
 import ui.theme.LocalColorProvider
+import utils.rememberIsPortrait
 import utils.toColor
 import utils.toHex
 import utils.toRGB
@@ -84,11 +84,7 @@ fun ColorLabScreen(
     val floorColorController: MutableState<ColorPickerController?> = remember { mutableStateOf(null) }
     val lightColorController: MutableState<ColorPickerController?> = remember { mutableStateOf(null) }
 
-    val isPortrait = remember(windowSize) {
-        derivedStateOf {
-            windowSize.width < windowSize.height
-        }
-    }
+    val isPortrait = rememberIsPortrait(windowSize)
 
     val copied = stringResource(Res.string.copied)
     val snackbarHostState = remember { SnackbarHostState() }

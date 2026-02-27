@@ -29,10 +29,10 @@ class PhotoPickerStoreFactory (
 ): KoinComponent {
     private val repository by inject<PaletteRepository>()
 
-    fun create(): Store<PhotoPickerStore.Intent, PhotoPickerStore.State, Nothing> =
+    fun create(uri: String?): Store<PhotoPickerStore.Intent, PhotoPickerStore.State, Nothing> =
         object : Store<PhotoPickerStore.Intent, PhotoPickerStore.State, Nothing> by storeFactory.create(
             name = "PhotoPickerStore",
-            initialState = PhotoPickerStore.State(),
+            initialState = PhotoPickerStore.State(selectedImagePath = uri),
             executorFactory = ::createExecutor,
             reducer = ReducerImpl()
         ) {}
@@ -72,7 +72,7 @@ class PhotoPickerStoreFactory (
             colorCount: Int,
             extractionMethod: ExtractionMethod
         ) {
-            dispatch(PhotoPickerStore.Msg.PaletteExtractionStarted(image.path))
+            dispatch(PhotoPickerStore.Msg.PaletteExtractionStarted)
             val extractor = getExtractor(extractionMethod)
 
             _extractionJob = scope.launch(Dispatchers.Main) {
@@ -126,7 +126,6 @@ class PhotoPickerStoreFactory (
                 is PhotoPickerStore.Msg.PaletteExtractionStarted -> copy(
                     isLoading = true,
                     error = null,
-                    selectedImagePath = msg.selectedImagePath,
                     loadImage = false,
                 )
                 is PhotoPickerStore.Msg.PaletteExtracted -> copy(
@@ -134,8 +133,7 @@ class PhotoPickerStoreFactory (
                     extractedPalette = msg.palette
                 )
                 is PhotoPickerStore.Msg.ExtractionCanceled -> copy(
-                    isLoading = false,
-                    selectedImagePath = null
+                    isLoading = false
                 )
                 is PhotoPickerStore.Msg.Error -> copy(
                     isLoading = false,

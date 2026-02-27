@@ -10,6 +10,7 @@
     <string name="lab">Color lab</string>
     <string name="palettes">Palettes</string>
     <string name="image_busket">Image busket</string>
+    <string name="perspective">Perspective</string>
     <string name="harmonious_colors">Harmonious colors</string>
     <string name="delete">Delete</string>
     <string name="add">Add</string>
@@ -36,4 +37,14 @@
     <string name="k_means_clustering">K-Means Clustering (Most accurate for photos and analysis)</string>
     <string name="median_cut">Median Cut (Ideal for gradients and smooth transitions)</string>
     <string name="color_thief_algorithm">Color Thief Algorithm (Best for harmonious palettes)</string>
+    <string name="show_grid">Show grid</string>
+    <string name="point">Point: %1$s</string>
+    <string name="ray_count">Ray count</string>
+    <string name="share">Share</string>
+    <string name="sharing_failed">Sharing failed</string>
+    <string name="samples">Samples</string>
+    <string name="one_point_perspective">One-point perspective</string>
+    <string name="two_point_perspective">Two-point perspective</string>
+    <string name="three_point_perspective_top">Three-point perspective (top view)</string>
+    <string name="three_point_perspective_bottom">Three-point perspective (bottom view)</string>
 </resources>

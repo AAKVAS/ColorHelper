@@ -2,9 +2,6 @@
 
 package com.example
 
-import kotlin.OptIn
-import kotlin.String
-import kotlin.collections.MutableMap
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.InternalResourceApi
 import org.jetbrains.compose.resources.ResourceItem
@@ -65,6 +62,12 @@ public val Res.drawable.paste_icon: DrawableResource by lazy {
       ))
     }
 
+public val Res.drawable.share: DrawableResource by lazy {
+      DrawableResource("drawable:share", setOf(
+        ResourceItem(setOf(), "${MD}drawable/share.xml", -1, -1),
+      ))
+    }
+
 @InternalResourceApi
 internal fun _collectCommonMainDrawable0Resources(map: MutableMap<String, DrawableResource>) {
   map.put("add_icon", Res.drawable.add_icon)
@@ -76,4 +79,5 @@ internal fun _collectCommonMainDrawable0Resources(map: MutableMap<String, Drawab
   map.put("menu_icon", Res.drawable.menu_icon)
   map.put("outline_delete", Res.drawable.outline_delete)
   map.put("paste_icon", Res.drawable.paste_icon)
+  map.put("share", Res.drawable.share)
 }

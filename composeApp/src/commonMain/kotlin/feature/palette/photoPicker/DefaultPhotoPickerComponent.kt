@@ -13,10 +13,11 @@ class DefaultPhotoPickerComponent(
     componentContext: ComponentContext,
     storeFactory: PhotoPickerStoreFactory,
     private val navToPalette: (ColorPalette) -> Unit,
-    private val onExtractionCancel: () -> Unit
+    private val onExtractionCancel: () -> Unit,
+    uri: String?
 ) : PhotoPickerComponent, ComponentContext by componentContext {
     private val _store = instanceKeeper.getStore(key = INSTANCE_KEEPER_KEY) {
-        storeFactory.create()
+        storeFactory.create(uri)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)

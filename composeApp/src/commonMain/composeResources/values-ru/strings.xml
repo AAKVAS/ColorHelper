@@ -10,6 +10,7 @@
     <string name="lab">Лаборатория</string>
     <string name="palettes">Палитры</string>
     <string name="image_busket">Корзинка</string>
+    <string name="perspective">Перспектива</string>
     <string name="harmonious_colors">Гармонирующие цвета</string>
     <string name="delete">Удалить</string>
     <string name="add">Добавить</string>
@@ -36,4 +37,14 @@
     <string name="k_means_clustering">Кластеризация K-средних (для сложных изображений)</string>
     <string name="median_cut">Алгоритм Median Cut (быстрое извлечение, подходит для градиентов)</string>
     <string name="color_thief_algorithm">Алгоритм Color Thief (для гармоничных палитр)</string>
+    <string name="show_grid">Показать сетку</string>
+    <string name="point">Точка: %1$s</string>
+    <string name="ray_count">Количество лучей</string>
+    <string name="share">Поделиться</string>
+    <string name="sharing_failed">Не удалось поделиться</string>
+    <string name="samples">Шаблоны</string>
+    <string name="one_point_perspective">Одноточечная перспектива</string>
+    <string name="two_point_perspective">Двухточечная перспектива</string>
+    <string name="three_point_perspective_top">Трехточечная перспектива (вид сверху)</string>
+    <string name="three_point_perspective_bottom">Трехточечная перспектива (вид снизу)</string>
 </resources>
