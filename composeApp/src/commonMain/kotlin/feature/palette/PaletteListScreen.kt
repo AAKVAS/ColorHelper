@@ -39,18 +39,18 @@ import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import core.ui.composeComponents.DeleteButton
+import core.ui.composeComponents.DeletePaletteDialog
+import core.ui.composeComponents.RoundedAddButton
+import core.ui.composeComponents.RoundedCameraButton
+import core.ui.theme.Dimens
+import core.ui.theme.LocalColorProvider
+import core.utils.rememberIsPortrait
+import core.utils.toColor
 import feature.palette.PaletteListStore.Label
 import feature.palette.model.ColorModel
 import feature.palette.model.ColorPalette
 import feature.palette.photoPicker.PhotoPickerScreen
-import ui.composeComponents.DeleteButton
-import ui.composeComponents.DeletePaletteDialog
-import ui.composeComponents.RoundedAddButton
-import ui.composeComponents.RoundedCameraButton
-import ui.theme.Dimens
-import ui.theme.LocalColorProvider
-import utils.rememberIsPortrait
-import utils.toColor
 
 @Composable
 fun PaletteListScreen(

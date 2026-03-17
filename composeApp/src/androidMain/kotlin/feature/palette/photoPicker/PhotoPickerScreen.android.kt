@@ -1,8 +1,8 @@
 package feature.palette.photoPicker
 import android.graphics.Color
 import coil3.Bitmap
-import feature.palette.photoPicker.model.Image
-import feature.palette.photoPicker.model.RGBPixel
+import core.model.Image
+import core.model.RGBPixel
 
 
 fun Bitmap.toImage(path: String, sampleStep: Int = 4): Image {

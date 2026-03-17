@@ -1,7 +1,7 @@
 package feature.palette.photoPicker
 
+import core.model.Image
 import feature.palette.photoPicker.domain.ExtractionMethod
-import feature.palette.photoPicker.model.Image
 import kotlinx.coroutines.flow.StateFlow
 
 interface PhotoPickerComponent {

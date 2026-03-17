@@ -13,12 +13,14 @@ import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import com.arkivanov.decompose.DefaultComponentContext
 import com.arkivanov.essenty.lifecycle.LifecycleRegistry
-import di.initKoin
+import core.GlobalShortcutManager
+import core.LocalShortcutManager
+import core.di.initKoin
+import core.utils.runOnUiThread
 import feature.home.DefaultRootComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import utils.runOnUiThread
 
 fun main() {
     initKoin()

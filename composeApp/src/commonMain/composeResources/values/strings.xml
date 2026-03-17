@@ -47,4 +47,9 @@
     <string name="two_point_perspective">Two-point perspective</string>
     <string name="three_point_perspective_top">Three-point perspective (top view)</string>
     <string name="three_point_perspective_bottom">Three-point perspective (bottom view)</string>
+    <string name="extract_from_photo">Extract from photo</string>
+    <string name="show_hide">Show/Hide</string>
+    <string name="nav_back">Navigate to back</string>
+    <string name="menu">Menu</string>
+    <string name="close">Close</string>
 </resources>

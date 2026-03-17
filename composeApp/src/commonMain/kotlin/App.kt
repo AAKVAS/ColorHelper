@@ -21,7 +21,7 @@ import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SecondaryScrollableTabRow
+import androidx.compose.material3.SecondaryTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.Text
@@ -37,18 +37,27 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.DpSize
+import com.example.Res
+import com.example.image_busket
+import com.example.lab
+import com.example.palettes
+import com.example.perspective
+import core.ui.composeComponents.MenuButton
+import core.ui.theme.AppTheme
+import core.ui.theme.Dimens
+import core.ui.theme.LocalColorProvider
+import core.utils.rememberIsPortrait
 import feature.colorLab.ColorLabScreen
+import feature.colorLab.Experimental3DScene
 import feature.home.RootComponent
+import feature.home.RootComponent.Child
 import feature.imageBusket.ImageBusketScreen
 import feature.palette.PaletteListScreen
 import feature.perspectiveBuilder.PerspectiveBuilderScreen
 import kotlinx.coroutines.launch
-import ui.composeComponents.MenuButton
-import ui.theme.AppTheme
-import ui.theme.Dimens
-import ui.theme.LocalColorProvider
-import utils.rememberIsPortrait
+import org.jetbrains.compose.resources.stringResource
 
+@OptIn(Experimental3DScene::class)
 @Composable
 fun App(
     rootComponent: RootComponent,
@@ -73,7 +82,9 @@ fun App(
         }
 
         val isSceneInteracting = remember { mutableStateOf(false) }
-        val tabs = getMenuTabs()
+        val tabs = tabPageComponents.map {
+            getMenuTab(it)
+        }
         val scope = rememberCoroutineScope()
         Scaffold(
             modifier = Modifier.fillMaxSize(),
@@ -108,22 +119,22 @@ fun App(
                         userScrollEnabled = !isSceneInteracting.value
                     ) { page ->
                         when (val child = tabPageComponents[page]) {
-                            is RootComponent.Child.PaletteListChild -> PaletteListScreen(
+                            is Child.PaletteListChild -> PaletteListScreen(
                                 component = child.component,
                                 windowSize = windowSize
                             )
-                            is RootComponent.Child.ColorLabChild -> ColorLabScreen(
+                            is Child.ColorLabChild -> ColorLabScreen(
                                 component = child.component,
                                 windowSize = windowSize,
                                 onSceneInteractionChange = { interacting ->
                                     isSceneInteracting.value = interacting
                                 }
                             )
-                            is RootComponent.Child.ImageBusketChild -> ImageBusketScreen(
+                            is Child.ImageBusketChild -> ImageBusketScreen(
                                 component = child.component,
                                 windowSize = windowSize,
                             )
-                            is RootComponent.Child.PerspectiveBuilderChild -> PerspectiveBuilderScreen(
+                            is Child.PerspectiveBuilderChild -> PerspectiveBuilderScreen(
                                 component = child.component,
                                 windowSize = windowSize
                             )
@@ -170,22 +181,22 @@ fun App(
                             userScrollEnabled = false
                         ) { page ->
                             when (val child = tabPageComponents[page]) {
-                                is RootComponent.Child.PaletteListChild -> PaletteListScreen(
+                                is Child.PaletteListChild -> PaletteListScreen(
                                     component = child.component,
                                     windowSize = windowSize
                                 )
-                                is RootComponent.Child.ColorLabChild -> ColorLabScreen(
+                                is Child.ColorLabChild -> ColorLabScreen(
                                     component = child.component,
                                     windowSize = windowSize,
                                     onSceneInteractionChange = { interacting ->
                                         isSceneInteracting.value = interacting
                                     }
                                 )
-                                is RootComponent.Child.ImageBusketChild -> ImageBusketScreen(
+                                is Child.ImageBusketChild -> ImageBusketScreen(
                                     component = child.component,
                                     windowSize = windowSize,
                                 )
-                                is RootComponent.Child.PerspectiveBuilderChild -> PerspectiveBuilderScreen(
+                                is Child.PerspectiveBuilderChild -> PerspectiveBuilderScreen(
                                     component = child.component,
                                     windowSize = windowSize
                                 )
@@ -228,14 +239,14 @@ fun RowTabulation(
     tabs: List<String>,
     onTabClick: (Int) -> Unit
 ) {
-    SecondaryScrollableTabRow(
-        selectedTabIndex = 0,
-        modifier = Modifier.fillMaxWidth(),
+    SecondaryTabRow(
+        selectedTabIndex = selectedTabIndex,
+        modifier = Modifier.wrapContentWidth(),
         containerColor = LocalColorProvider.current.primaryContainer,
         indicator = @Composable {
             TabRowDefaults.SecondaryIndicator(
                 modifier = Modifier.tabIndicatorOffset(
-                    selectedTabIndex
+                    selectedTabIndex,
                 ),
                 height = Dimens.paddingXXSmall,
                 color = LocalColorProvider.current.primary
@@ -250,7 +261,7 @@ fun RowTabulation(
                 },
                 text = { Text(title) },
                 selectedContentColor = LocalColorProvider.current.primary,
-                unselectedContentColor = LocalColorProvider.current.onBackground
+                unselectedContentColor = LocalColorProvider.current.onBackground,
             )
         }
     }
@@ -414,4 +425,11 @@ fun CustomDrawerItem(
 }
 
 @Composable
-expect fun getMenuTabs(): List<String>
+fun getMenuTab(child: Child): String {
+    return when(child) {
+        is Child.PerspectiveBuilderChild -> stringResource(Res.string.perspective)
+        is Child.ImageBusketChild -> stringResource(Res.string.image_busket)
+        is Child.PaletteListChild -> stringResource(Res.string.palettes)
+        is Child.ColorLabChild -> stringResource(Res.string.lab)
+    }
+}

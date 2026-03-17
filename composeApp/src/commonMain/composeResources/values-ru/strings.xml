@@ -47,4 +47,9 @@
     <string name="two_point_perspective">Двухточечная перспектива</string>
     <string name="three_point_perspective_top">Трехточечная перспектива (вид сверху)</string>
     <string name="three_point_perspective_bottom">Трехточечная перспектива (вид снизу)</string>
+    <string name="extract_from_photo">Извлечь из фото</string>
+    <string name="show_hide">Показать/Скрыть</string>
+    <string name="nav_back">Выйти</string>
+    <string name="menu">Меню</string>
+    <string name="close">Закрыть</string>
 </resources>

@@ -29,35 +29,13 @@ class DefaultRootComponent(
     componentContext: ComponentContext,
     withImageBusket: Boolean = false
 ) : RootComponent, CloseHandler, ComponentContext by componentContext {
-    override val children: List<RootComponent.Child> =
+    override val children: List<RootComponent.Child> = buildList {
+        add(RootComponent.Child.PaletteListChild(paletteListComponent(componentContext)))
+        add(RootComponent.Child.PerspectiveBuilderChild(perspectiveBuilderComponent(componentContext)))
         if (withImageBusket) {
-            listOf(
-                RootComponent.Child.PaletteListChild(
-                    paletteListComponent(componentContext)
-                ),
-                RootComponent.Child.ImageBusketChild(
-                    imageBusketComponent(componentContext)
-                ),
-                RootComponent.Child.PerspectiveBuilderChild(
-                    perspectiveBuilderComponent(componentContext)
-                ),
-                RootComponent.Child.ColorLabChild(
-                    colorLabComponent(componentContext)
-                ),
-            )
-        } else {
-            listOf(
-                RootComponent.Child.PaletteListChild(
-                    paletteListComponent(componentContext)
-                ),
-                RootComponent.Child.PerspectiveBuilderChild(
-                    perspectiveBuilderComponent(componentContext)
-                ),
-                RootComponent.Child.ColorLabChild(
-                    colorLabComponent(componentContext)
-                ),
-            )
+            add(RootComponent.Child.ImageBusketChild(imageBusketComponent(componentContext)))
         }
+    }
 
     private val _openChild = MutableSharedFlow<RootComponent.Child>()
     override val openChild: Flow<RootComponent.Child> = _openChild.asSharedFlow()

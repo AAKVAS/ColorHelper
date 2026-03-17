@@ -12,8 +12,8 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.toSize
 import com.arkivanov.decompose.DefaultComponentContext
 import com.arkivanov.essenty.lifecycle.LifecycleRegistry
+import core.ui.composeComponents.SetupStatusBar
 import feature.home.DefaultRootComponent
-import ui.composeComponents.SetupStatusBar
 
 class MainActivity : ComponentActivity() {
     private lateinit var root: DefaultRootComponent

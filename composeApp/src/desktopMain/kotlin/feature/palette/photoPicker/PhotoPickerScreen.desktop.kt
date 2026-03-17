@@ -2,8 +2,8 @@ package feature.palette.photoPicker
 
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.toPixelMap
-import feature.palette.photoPicker.model.Image
-import feature.palette.photoPicker.model.RGBPixel
+import core.model.Image
+import core.model.RGBPixel
 import java.awt.image.BufferedImage
 import java.util.UUID
 
@@ -37,6 +37,9 @@ fun ImageBitmap.toImage(sampleStep: Int = 4): Image {
 
     val pixelMap = this.toPixelMap()
 
+    val newWidth = (width + sampleStep - 1) / sampleStep
+    val newHeight = (height + sampleStep - 1) / sampleStep
+
     for (y in 0 until height step sampleStep) {
         for (x in 0 until width step sampleStep) {
             val color = pixelMap[x, y]
@@ -49,5 +52,5 @@ fun ImageBitmap.toImage(sampleStep: Int = 4): Image {
         }
     }
 
-    return Image(path, width, height, pixels)
+    return Image(path, newWidth, newHeight, pixels)
 }

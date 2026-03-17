@@ -1,7 +1,8 @@
 package feature.palette.photoPicker.domain
 
 import androidx.compose.ui.graphics.Color
-import feature.palette.photoPicker.model.RGBPixel
+import core.model.RGBPixel
+import core.model.toColor
 import kotlin.random.Random
 
 

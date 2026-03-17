@@ -6,6 +6,7 @@ import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
+import core.model.Image
 import feature.palette.domain.PaletteRepository
 import feature.palette.model.ColorPalette
 import feature.palette.photoPicker.domain.ColorThiefPaletteExtractor
@@ -14,7 +15,6 @@ import feature.palette.photoPicker.domain.ExtractionMethod
 import feature.palette.photoPicker.domain.KMeansPaletteExtractor
 import feature.palette.photoPicker.domain.MedianCutPaletteExtractor
 import feature.palette.photoPicker.domain.PaletteExtractor
-import feature.palette.photoPicker.model.Image
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch

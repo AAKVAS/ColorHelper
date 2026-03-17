@@ -1,5 +1,6 @@
 package feature.perspectiveBuilder
 
+import core.model.Image
 import feature.perspectiveBuilder.model.PerspectivePoint
 import feature.perspectiveBuilder.model.PerspectiveScene
 import kotlinx.coroutines.flow.Flow
@@ -15,4 +16,6 @@ interface PerspectiveBuilderComponent {
     fun updatePointByIndex(index: Int, point: PerspectivePoint)
     fun changeRayCount(count: Int)
     fun changeSelectedPointIndex(index: Int)
+    fun generateSceneFromImage(image: Image)
+    fun cancelGeneration()
 }

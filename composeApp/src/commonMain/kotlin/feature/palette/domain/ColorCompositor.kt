@@ -1,11 +1,11 @@
 package feature.palette.domain
 
 import androidx.compose.ui.graphics.Color
+import core.utils.hslToColor
+import core.utils.toColor
+import core.utils.toHex
+import core.utils.toHsl
 import feature.palette.model.ColorModel
-import utils.hslToColor
-import utils.toColor
-import utils.toHex
-import utils.toHsl
 import kotlin.math.abs
 
 class ColorCompositor {

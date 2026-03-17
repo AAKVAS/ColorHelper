@@ -38,10 +38,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpSize
-import coil3.compose.AsyncImage
 import com.example.Res
 import com.example.color_count
 import com.example.color_thief_algorithm
@@ -53,24 +51,21 @@ import com.example.k_means_clustering
 import com.example.median_cut
 import com.example.palette_generated
 import com.example.selected_photo
+import core.ui.composeComponents.CloseButton
+import core.ui.composeComponents.DisplayImage
+import core.ui.composeComponents.ImagePicker
+import core.ui.composeComponents.ImageSource
+import core.ui.composeComponents.PhotoInputArea
+import core.ui.composeComponents.SimpleButton
+import core.ui.theme.Dimens
+import core.ui.theme.LocalColorProvider
+import core.utils.GetImageBySource
+import core.utils.HandleClipboardPaste
+import core.utils.pasteImageFromClipboard
+import core.utils.toColor
 import feature.palette.model.ColorModel
 import feature.palette.photoPicker.domain.ExtractionMethod
 import org.jetbrains.compose.resources.stringResource
-import ui.composeComponents.CloseButton
-import ui.composeComponents.ImagePicker
-import ui.composeComponents.PhotoInputBox
-import ui.composeComponents.SimpleButton
-import ui.theme.Dimens
-import ui.theme.LocalColorProvider
-import utils.GetImageBySource
-import utils.HandleClipboardPaste
-import utils.pasteImageFromClipboard
-import utils.toColor
-
-sealed interface ImageSource {
-    data class Path(val value: String): ImageSource
-    data class BitmapSource(val value: ImageBitmap): ImageSource
-}
 
 @Composable
 fun PhotoPickerScreen(
@@ -125,7 +120,7 @@ fun PhotoPickerScreen(
                         verticalAlignment = Alignment.Top,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        PhotoInputArea(
+                        PhotoInputSection(
                             imageSource = imageSource,
                             onImageDropped = { source ->
                                 imageSource = source
@@ -155,7 +150,7 @@ fun PhotoPickerScreen(
                         component.onCancel()
                     }
 
-                    PhotoInputArea(
+                    PhotoInputSection(
                         imageSource = imageSource,
                         onImageDropped = { source ->
                             imageSource = source
@@ -178,9 +173,34 @@ fun PhotoPickerScreen(
                 }
             }
 
-            state.value.extractedPalette?.let { palette ->
-                if (palette.colors.isNotEmpty()) {
-                    GeneratedPaletteColors(palette.colors)
+            if (state.value.isLoading) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(Dimens.paddingSmall)
+                        .background(Color.Black.copy(alpha = 0.5f))
+                        .clickable(
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() }
+                        ) {}
+                ) {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .size(Dimens.circularProgressIndicatorSize)
+                            .align(Alignment.Center),
+                        strokeWidth = Dimens.paddingXXSmall
+                    )
+                    CloseButton(
+                        modifier = Modifier.align(Alignment.TopEnd)
+                    ) {
+                        component.onCancel()
+                    }
+                }
+            } else {
+                state.value.extractedPalette?.let { palette ->
+                    if (palette.colors.isNotEmpty()) {
+                        GeneratedPaletteColors(palette.colors)
+                    }
                 }
             }
 
@@ -216,30 +236,6 @@ fun PhotoPickerScreen(
                     showImagePicker = false
                 }
             }
-            if (state.value.isLoading) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(Dimens.paddingSmall)
-                        .background(Color.Black.copy(alpha = 0.5f))
-                        .clickable(
-                            indication = null,
-                            interactionSource = remember { MutableInteractionSource() }
-                        ) {}
-                ) {
-                    CircularProgressIndicator(
-                        modifier = Modifier
-                            .size(Dimens.circularProgressIndicatorSize)
-                            .align(Alignment.Center),
-                        strokeWidth = Dimens.paddingXXSmall
-                    )
-                    CloseButton(
-                        modifier = Modifier.align(Alignment.TopStart)
-                    ) {
-                        component.onCancel()
-                    }
-                }
-            }
             if (state.value.loadImage) {
                 imageSource?.let { source ->
                     GetImageBySource(source) { image ->
@@ -256,54 +252,26 @@ fun PhotoPickerScreen(
 }
 
 @Composable
-fun PhotoInputArea(
+fun PhotoInputSection(
     imageSource: ImageSource?,
     onImageDropped: (ImageSource) -> Unit,
     onPickButtonClick: () -> Unit,
     onCloseImageButtonClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    imageSource?.let { source ->
-        Box(
-            modifier = modifier
-                .padding(Dimens.paddingSmall)
-                .clip(RoundedCornerShape(Dimens.roundedCornerShapeSize))
-                .background(LocalColorProvider.current.onPrimary)
-                .padding(Dimens.paddingXXSmall)
-                .clip(RoundedCornerShape(Dimens.roundedCornerShapeSize))
-                .background(LocalColorProvider.current.onPrimary)
+    PhotoInputArea(
+        imageSource = imageSource,
+        onImageDropped = onImageDropped,
+        onPickButtonClick = onPickButtonClick,
+        onCloseImageButtonClick = onCloseImageButtonClick,
+        modifier = modifier,
+    ) { source ->
+        DisplayImage(
+            source = source,
+            contentDescription = stringResource(Res.string.selected_photo),
+            modifier = Modifier
+                .fillMaxWidth()
                 .height(Dimens.pickedPhotoHeight)
-        ) {
-            when (source) {
-                is ImageSource.Path -> AsyncImage(
-                    model = source.value,
-                    contentDescription = stringResource(Res.string.selected_photo),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(Dimens.pickedPhotoHeight)
-                )
-                is ImageSource.BitmapSource -> {
-                    androidx.compose.foundation.Image(
-                        bitmap = source.value,
-                        contentDescription = stringResource(Res.string.selected_photo),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(Dimens.pickedPhotoHeight)
-                    )
-                }
-            }
-            CloseButton(
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .padding(Dimens.paddingSmall),
-                onClick = onCloseImageButtonClick
-            )
-        }
-    } ?: run {
-        PhotoInputBox(
-            onImageDropped = onImageDropped,
-            onPickButtonClick = onPickButtonClick,
-            modifier = modifier
         )
     }
 }

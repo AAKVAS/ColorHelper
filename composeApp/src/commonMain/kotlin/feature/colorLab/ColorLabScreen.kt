@@ -51,23 +51,31 @@ import com.zakgof.korender.math.Transform.Companion.translate
 import com.zakgof.korender.math.Vec3
 import com.zakgof.korender.math.y
 import com.zakgof.korender.math.z
+import core.ui.`3d`.camera.OrbitCamera
+import core.ui.composeComponents.ColorPickerUI
+import core.ui.composeComponents.CustomTextField
+import core.ui.composeComponents.TooltipWrapper
+import core.ui.theme.Dimens
+import core.ui.theme.LocalColorProvider
+import core.utils.rememberIsPortrait
+import core.utils.toColor
+import core.utils.toHex
+import core.utils.toRGB
+import core.utils.toRGBA
 import feature.colorLab.model.ColorLabState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
-import ui.`3d`.camera.OrbitCamera
-import ui.composeComponents.ColorPickerUI
-import ui.composeComponents.CustomTextField
-import ui.composeComponents.TooltipWrapper
-import ui.theme.Dimens
-import ui.theme.LocalColorProvider
-import utils.rememberIsPortrait
-import utils.toColor
-import utils.toHex
-import utils.toRGB
-import utils.toRGBA
 
+@RequiresOptIn(
+    level = RequiresOptIn.Level.WARNING,
+    message = "3D сцена в разработке"
+)
+@Retention(AnnotationRetention.BINARY)
+@Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION)
+annotation class Experimental3DScene
 
+@Experimental3DScene
 @Composable
 fun ColorLabScreen(
     component: ColorLabComponent,

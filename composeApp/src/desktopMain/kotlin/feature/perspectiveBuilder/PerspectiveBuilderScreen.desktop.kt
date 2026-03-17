@@ -4,9 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
-import ui.composeComponents.CopyButton
-import utils.copyImageToClipboard
-import utils.toBufferedImage
+import core.ui.composeComponents.CopyButton
+import core.utils.copyImageToClipboard
+import core.utils.toBufferedImage
 
 @Composable
 actual fun ExportButton(modifier: Modifier, onClick: () -> Unit) {

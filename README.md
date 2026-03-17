@@ -28,7 +28,7 @@ A KMP application for aspiring artists, providing various tools for creating col
 * Option to saving images between sessions.
 
 
-🔬 Color Laboratory
+🔬 Color Laboratory (Beta)
 * A simple 3D scene for color evaluation.
 * Modify object colors in real-time: sphere color, surface color, and lighting.
 

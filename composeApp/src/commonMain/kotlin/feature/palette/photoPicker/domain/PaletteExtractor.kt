@@ -1,12 +1,12 @@
 package feature.palette.photoPicker.domain
 
 import androidx.compose.ui.graphics.Color
+import core.model.Image
+import core.model.RGBPixel
+import core.utils.toHex
+import core.utils.toHsl
 import feature.palette.model.ColorModel
 import feature.palette.model.ColorPalette
-import feature.palette.photoPicker.model.Image
-import feature.palette.photoPicker.model.RGBPixel
-import utils.toHex
-import utils.toHsl
 import java.util.UUID
 
 

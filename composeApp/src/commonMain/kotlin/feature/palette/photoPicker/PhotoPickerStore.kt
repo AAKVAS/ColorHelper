@@ -1,9 +1,9 @@
 package feature.palette.photoPicker
 
 import com.arkivanov.mvikotlin.core.store.Store
+import core.model.Image
 import feature.palette.model.ColorPalette
 import feature.palette.photoPicker.domain.ExtractionMethod
-import feature.palette.photoPicker.model.Image
 
 interface PhotoPickerStore : Store<PhotoPickerStore.Intent, PhotoPickerStore.State, Nothing> {
     sealed class Intent {
@@ -12,10 +12,10 @@ interface PhotoPickerStore : Store<PhotoPickerStore.Intent, PhotoPickerStore.Sta
             val colorCount: Int,
             val extractionMethod: ExtractionMethod
         ): Intent()
-        object CancelExtraction: Intent()
+        data object CancelExtraction: Intent()
         data class SavePaletteFromExtraction(val palette: ColorPalette): Intent()
-        object LoadImage: Intent()
-        object ImageNotLoaded: Intent()
+        data object LoadImage: Intent()
+        data object ImageNotLoaded: Intent()
     }
 
     data class State(
@@ -28,13 +28,13 @@ interface PhotoPickerStore : Store<PhotoPickerStore.Intent, PhotoPickerStore.Sta
     )
 
     sealed class Msg {
-        object LoadImage: Msg()
-        object PaletteExtractionStarted : Msg()
+        data object LoadImage: Msg()
+        data object PaletteExtractionStarted : Msg()
         data class PaletteExtracted(val palette: ColorPalette) : Msg()
-        object ImageNotLoaded: Msg()
-        object ExtractionCanceled : Msg()
+        data object ImageNotLoaded: Msg()
+        data object ExtractionCanceled : Msg()
         data class Error(val message: String) : Msg()
-        object Loading : Msg()
-        object NavigateToSavedPalettePage: Msg()
+        data object Loading : Msg()
+        data object NavigateToSavedPalettePage: Msg()
     }
 }

@@ -52,22 +52,22 @@ import com.example.delete
 import com.example.harmonious_colors
 import com.example.outline_delete
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
+import core.ui.composeComponents.BackHandlerWrapper
+import core.ui.composeComponents.BackNavigationButton
+import core.ui.composeComponents.ColorPickerUI
+import core.ui.composeComponents.CustomTextField
+import core.ui.composeComponents.DeleteButton
+import core.ui.composeComponents.DeleteColorDialog
+import core.ui.composeComponents.DeletePaletteDialog
+import core.ui.theme.Dimens
+import core.ui.theme.LocalColorProvider
+import core.utils.rememberIsPortrait
+import core.utils.toColor
+import core.utils.toHex
 import feature.palette.model.ColorModel
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import ui.composeComponents.BackHandlerWrapper
-import ui.composeComponents.BackNavigationButton
-import ui.composeComponents.ColorPickerUI
-import ui.composeComponents.CustomTextField
-import ui.composeComponents.DeleteButton
-import ui.composeComponents.DeleteColorDialog
-import ui.composeComponents.DeletePaletteDialog
-import ui.theme.Dimens
-import ui.theme.LocalColorProvider
-import utils.rememberIsPortrait
-import utils.toColor
-import utils.toHex
 
 
 @Composable

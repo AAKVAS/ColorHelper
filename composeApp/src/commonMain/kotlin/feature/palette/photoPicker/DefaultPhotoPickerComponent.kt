@@ -3,9 +3,9 @@ package feature.palette.photoPicker
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
+import core.model.Image
 import feature.palette.model.ColorPalette
 import feature.palette.photoPicker.domain.ExtractionMethod
-import feature.palette.photoPicker.model.Image
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
 

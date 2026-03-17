@@ -13,9 +13,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.FileProvider
 import com.example.Res
 import com.example.title
+import core.ui.composeComponents.ShareButton
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
-import ui.composeComponents.ShareButton
 import java.io.File
 import java.io.FileOutputStream
 
@@ -72,4 +72,8 @@ actual fun ExportPerspectiveScene(bitmap: ImageBitmap) {
             }
         }
     }
+}
+
+@Composable
+actual fun ExportPerspectiveScene(bitmap: ImageBitmap) {
 }
