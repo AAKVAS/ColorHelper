@@ -7,7 +7,9 @@ import kotlin.math.sin
 data class Line(
     val rho: Double,
     val theta: Double,
-    val votes: Int = 0
+    val votes: Int = 0,
+    val length: Float? = null,
+    val density: Float? = null
 ) {
     fun toPoints(width: Int, height: Int): Pair<Pair<Int, Int>, Pair<Int, Int>> {
         val a = cos(theta)

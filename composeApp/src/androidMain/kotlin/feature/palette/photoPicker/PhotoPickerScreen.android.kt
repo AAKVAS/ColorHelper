@@ -5,13 +5,23 @@ import core.model.Image
 import core.model.RGBPixel
 
 
-fun Bitmap.toImage(path: String, sampleStep: Int = 4): Image {
-    val pixels = mutableListOf<RGBPixel>()
-    val width = this.width
-    val height = this.height
+fun Bitmap.toImage(path: String, maxDimension: Int = 2000): Image {
+    val originalWidth = this.width
+    val originalHeight = this.height
 
-    for (x in 0 until width step sampleStep) {
-        for (y in 0 until height step sampleStep) {
+    val sampleStep = if (originalWidth > maxDimension || originalHeight > maxDimension) {
+        (maxOf(originalWidth, originalHeight) / maxDimension).coerceAtLeast(1)
+    } else {
+        1
+    }
+
+    val pixels = mutableListOf<RGBPixel>()
+
+    val newWidth = originalWidth / sampleStep
+    val newHeight = originalHeight / sampleStep
+
+    for (x in 0 until originalWidth step sampleStep) {
+        for (y in 0 until originalHeight step sampleStep) {
             val color = getPixel(x, y)
             pixels.add(
                 RGBPixel(
@@ -23,5 +33,10 @@ fun Bitmap.toImage(path: String, sampleStep: Int = 4): Image {
         }
     }
 
-    return Image(path, width, height, pixels)
+    return Image(
+        path = path,
+        width = newWidth,
+        height = newHeight,
+        pixels = pixels
+    )
 }

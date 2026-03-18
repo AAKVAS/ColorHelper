@@ -42,8 +42,8 @@ class PerspectiveSceneExtractorImpl : PerspectiveSceneExtractor {
         )
     }
 
-    private fun detectEdges(grayImage: GrayImage): GrayImage {
-        val edges = IntArray(grayImage.height * grayImage.width)
+    private fun detectEdges(grayImage: GrayImage): BlackWhiteImage {
+        val edges = BooleanArray(grayImage.height * grayImage.width) { false }
         val thresholdSq = 16384
 
         for (y in 1 until grayImage.height - 1) {
@@ -52,12 +52,12 @@ class PerspectiveSceneExtractorImpl : PerspectiveSceneExtractor {
                 val gy = computeGradientY(grayImage, x, y)
 
                 if (gx * gx + gy * gy > thresholdSq) {
-                    edges[y * grayImage.width + x] = 255
+                    edges[y * grayImage.width + x] = true
                 }
             }
         }
 
-        return GrayImage(edges, grayImage.height, grayImage.width)
+        return BlackWhiteImage(edges, grayImage.height, grayImage.width)
     }
 
     private fun computeGradientX(grayImage: GrayImage, x: Int, y: Int): Int {
@@ -99,9 +99,9 @@ class PerspectiveSceneExtractorImpl : PerspectiveSceneExtractor {
 
         val strongLines = lines.take(30)
 
-        val parallelGroups = findParallelLines(strongLines)
+        val parallelGroups = findParallelLines(lines)
         val infinitePoints = parallelGroups.map { group ->
-            val avgAngle = group.angles.average().toFloat()
+            val avgAngle = calculateCircularAverage(group.angles)
             PerspectivePoint.infinite(avgAngle)
         }
 
@@ -109,9 +109,8 @@ class PerspectiveSceneExtractorImpl : PerspectiveSceneExtractor {
             .filter { point ->
                 !isPointNearInfiniteDirection(point, infinitePoints, height, width,)
             }
-            .take(2)
 
-        return infinitePoints + finitePoints
+        return (infinitePoints.take(2) + finitePoints).take(4)
     }
 
     private data class ParallelGroup(
@@ -120,50 +119,72 @@ class PerspectiveSceneExtractorImpl : PerspectiveSceneExtractor {
     )
 
     private fun findParallelLines(lines: List<Line>): List<ParallelGroup> {
-        val angles = lines.map { Math.toDegrees(it.theta).toFloat() % 180 }
+        val denseLines = lines.filter { (it.density ?: 0f) >= 0.7f }
+        val angles = denseLines.map {
+            (Math.toDegrees(it.theta).toFloat() + 90) % 180 to (it.density ?: 0f)
+        }
 
-        val clusters = clusterAngles(angles, tolerance = 9f)
+        val clusters = clusterAngles(angles, step = 10).filter { it.size >= 3 }
 
-        return clusters
-            .filter { it.size >= 3 }
-            .map { cluster ->
-                val clusterLines = lines.filterIndexed { index, _ ->
-                    angles[index] in cluster.angles
-                }
-                ParallelGroup(clusterLines, cluster.angles)
+        val maxClusterDensity = clusters.maxOfOrNull { it.avgDensity } ?: 1.0f
+
+        val filteredClusters = clusters
+            .filter {
+                it.avgDensity >= maxClusterDensity * 0.93f
             }
+            .sortedByDescending { it.avgDensity }
+
+        val uniqueClusters = mutableListOf<AngleCluster>()
+        val angleThreshold = 15f
+
+        for (cluster in filteredClusters) {
+            val tooClose = uniqueClusters.any { existing ->
+                val diff = abs(existing.center - cluster.center)
+                minOf(diff, 180 - diff) < angleThreshold
+            }
+            if (!tooClose) {
+                uniqueClusters.add(cluster)
+            }
+        }
+
+         return uniqueClusters.map { cluster ->
+            val clusterLines = denseLines.filterIndexed { index, _ ->
+                angles[index].first in cluster.angles
+            }
+            ParallelGroup(clusterLines, cluster.angles)
+        }
     }
 
     private data class AngleCluster(
         val center: Float,
         val angles: List<Float>,
-        val size: Int
+        val size: Int,
+        val avgDensity: Float
     )
 
-    private fun clusterAngles(angles: List<Float>, tolerance: Float = 5f): List<AngleCluster> {
+    private fun clusterAngles(angles: List<Pair<Float, Float>>, step: Int): List<AngleCluster> {
         if (angles.isEmpty()) return emptyList()
+        val bins = mutableMapOf<Int, MutableList<Pair<Float, Float>>>()
+        val halfStep = step / 2
 
-        val sorted = angles.sorted()
-        val clusters = mutableListOf<AngleCluster>()
+        for (angle in angles) {
+            val shifted = (angle.first + halfStep) % 180
+            val binIndex = (shifted / step).toInt()
+            bins.getOrPut(binIndex) { mutableListOf() }.add(angle)
+        }
 
-        var currentCluster = mutableListOf(sorted[0])
-
-        for (i in 1 until sorted.size) {
-            if (abs(sorted[i] - sorted[i-1]) < tolerance) {
-                currentCluster.add(sorted[i])
-            } else {
-                val center = currentCluster.average().toFloat()
-                clusters.add(AngleCluster(center, currentCluster.toList(), currentCluster.size))
-                currentCluster = mutableListOf(sorted[i])
+        return bins.map { (_, binAngles) ->
+            val sumSin = binAngles.sumOf {
+                Math.toRadians((it.first * 2).toDouble()).let { rad -> sin(rad) }
             }
-        }
+            val sumCos = binAngles.sumOf {
+                Math.toRadians((it.first * 2).toDouble()).let { rad -> cos(rad) }
+            }
 
-        if (currentCluster.isNotEmpty()) {
-            val center = currentCluster.average().toFloat()
-            clusters.add(AngleCluster(center, currentCluster.toList(), currentCluster.size))
+            val center = (Math.toDegrees(atan2(sumSin, sumCos)).toFloat() / 2 + 180) % 180
+            val avgDensity = binAngles.map { it.second }.average().toFloat()
+            AngleCluster(center, binAngles.map { it.first }, binAngles.size, avgDensity)
         }
-
-        return clusters
     }
 
     private fun findIntersectionPoints(
@@ -292,5 +313,21 @@ class PerspectiveSceneExtractorImpl : PerspectiveSceneExtractor {
             }
         }
         return false
+    }
+
+    private fun calculateCircularAverage(angles: List<Float>): Float {
+        if (angles.isEmpty()) return 0f
+
+        var sumSin = 0.0
+        var sumCos = 0.0
+
+        for (angle in angles) {
+            val rad = Math.toRadians((angle * 2).toDouble())
+            sumSin += sin(rad)
+            sumCos += cos(rad)
+        }
+
+        val avgRad = atan2(sumSin, sumCos)
+        return ((Math.toDegrees(avgRad).toFloat() / 2) + 180) % 180
     }
 }
