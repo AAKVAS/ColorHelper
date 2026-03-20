@@ -6,6 +6,7 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import core.model.Image
+import core.model.ImageSource
 import feature.perspectiveBuilder.domain.PerspectiveSceneExtractor
 import feature.perspectiveBuilder.model.PerspectiveScene
 import kotlinx.coroutines.Dispatchers
@@ -55,6 +56,9 @@ class PerspectiveBuilderStoreFactory (
                 is PerspectiveBuilderStore.Intent.CancelGeneration -> {
                     cancelGeneration()
                 }
+                is PerspectiveBuilderStore.Intent.UpdateImageSource -> {
+                    updateImageSource(intent.imageSource)
+                }
             }
 
         private fun updateScene(scene: PerspectiveScene) {
@@ -81,6 +85,10 @@ class PerspectiveBuilderStoreFactory (
         private fun cancelGeneration() {
             generationJob?.cancel()
             dispatch(PerspectiveBuilderStore.Msg.CancelGeneration)
+        }
+
+        private fun updateImageSource(imageSource: ImageSource?) {
+            dispatch(PerspectiveBuilderStore.Msg.ImageSourceUpdated(imageSource))
         }
     }
 
@@ -115,6 +123,9 @@ class PerspectiveBuilderStoreFactory (
                 is PerspectiveBuilderStore.Msg.CancelGeneration -> copy(
                     isLoading = false,
                     imageKey = null
+                )
+                is PerspectiveBuilderStore.Msg.ImageSourceUpdated -> copy(
+                    imageSource = msg.imageSource
                 )
             }
         }

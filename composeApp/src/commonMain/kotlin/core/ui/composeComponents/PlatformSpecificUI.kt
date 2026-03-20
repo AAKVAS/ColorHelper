@@ -2,6 +2,7 @@ package core.ui.composeComponents
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import core.model.ImageSource
 
 @Composable
 expect fun TooltipWrapper(

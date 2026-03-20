@@ -51,10 +51,11 @@ import com.example.k_means_clustering
 import com.example.median_cut
 import com.example.palette_generated
 import com.example.selected_photo
+import core.model.ImageSource
 import core.ui.composeComponents.CloseButton
 import core.ui.composeComponents.DisplayImage
 import core.ui.composeComponents.ImagePicker
-import core.ui.composeComponents.ImageSource
+
 import core.ui.composeComponents.PhotoInputArea
 import core.ui.composeComponents.SimpleButton
 import core.ui.theme.Dimens

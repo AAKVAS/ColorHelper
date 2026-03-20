@@ -13,14 +13,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ImageBitmap
 import coil3.compose.AsyncImage
+import core.model.ImageSource
 import core.ui.theme.Dimens
 import core.ui.theme.LocalColorProvider
 
-
-sealed interface ImageSource {
-    data class Path(val value: String): ImageSource
-    data class BitmapSource(val value: ImageBitmap): ImageSource
-}
 
 @Composable
 fun PhotoInputArea(

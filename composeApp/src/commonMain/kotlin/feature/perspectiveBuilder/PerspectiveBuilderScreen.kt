@@ -30,13 +30,11 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -64,12 +62,12 @@ import com.example.three_point_perspective_bottom
 import com.example.three_point_perspective_top
 import com.example.two_point_perspective
 import core.model.Image
+import core.model.ImageSource
 import core.ui.composeComponents.CameraIconButton
 import core.ui.composeComponents.CustomTextField
 import core.ui.composeComponents.DeleteButton
 import core.ui.composeComponents.DisplayImage
 import core.ui.composeComponents.ImagePicker
-import core.ui.composeComponents.ImageSource
 import core.ui.composeComponents.PhotoInputArea
 import core.ui.composeComponents.SimpleButton
 import core.ui.composeComponents.VisibilityButton
@@ -86,7 +84,6 @@ import feature.perspectiveBuilder.model.PerspectiveScene
 import feature.perspectiveBuilder.model.SceneSamples
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
-import java.lang.Exception
 import kotlin.math.cos
 import kotlin.math.pow
 import kotlin.math.sin
@@ -100,12 +97,9 @@ fun PerspectiveBuilderScreen(
 ) {
     val isPortrait = rememberIsPortrait(windowSize)
     val state = component.state.collectAsState()
-    val gridEnabled = remember { mutableStateOf(true) }
     val graphicsLayer = rememberGraphicsLayer()
     val scope = rememberCoroutineScope()
     var exportBitmap by remember { mutableStateOf<ImageBitmap?>(null) }
-    var usedSample by remember { mutableStateOf(SceneSamples.NONE) }
-    var showPhotoInput by rememberSaveable { mutableStateOf(false) }
 
     HandleClipboardCopy {
         scope.launch {
@@ -127,19 +121,16 @@ fun PerspectiveBuilderScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(Dimens.perspectiveSceneHeight),
+                imageSource = state.value.imageSource,
+                updateImageSource = { newImageSource ->
+                    component.updateImageSource(newImageSource)
+                },
                 graphicsLayer = graphicsLayer,
-                scene = state.value.scene,
-                usedSample = usedSample,
-                gridEnabled = gridEnabled.value,
+                state = state.value,
                 updatePointPosition = { index, pos ->
                     component.updatePointByIndex(index, pos)
                 },
-                updateScene = { scene ->
-                    usedSample = SceneSamples.NONE
-                    component.updateScene(scene)
-                },
-                showPhotoInput = showPhotoInput,
-                activatePhotoInput = { showPhotoInput = true},
+                activatePhotoInput = { component.changePhotoInputVisibility(true) },
                 generateSceneFromImage = { image ->
                     component.generateSceneFromImage(image)
                 },
@@ -148,18 +139,17 @@ fun PerspectiveBuilderScreen(
                 },
                 onPointSelected = { index ->
                     component.changeSelectedPointIndex(index)
-                },
-                isLoading = state.value.isLoading
+                }
             )
             PerspectiveBuilderSettings(
                 modifier = Modifier.fillMaxWidth(),
                 state = state.value,
                 component = component,
                 showGridChanged = { enabled ->
-                    gridEnabled.value = enabled
+                    component.changeGridVisibility(enabled)
                 },
                 onPhotoInputClick = {
-                    showPhotoInput = true
+                    component.changePhotoInputVisibility(!state.value.scene.showPhotoInput)
                 },
                 onExportButtonClick = {
                     scope.launch {
@@ -167,7 +157,7 @@ fun PerspectiveBuilderScreen(
                     }
                 },
                 onSampleClick = { sample ->
-                    usedSample = sample
+                    component.useSample(sample)
                 }
             )
         }
@@ -182,18 +172,15 @@ fun PerspectiveBuilderScreen(
                     .fillMaxHeight()
                     .weight(1f),
                 graphicsLayer = graphicsLayer,
-                scene = state.value.scene,
-                usedSample = usedSample,
-                gridEnabled = gridEnabled.value,
+                imageSource = state.value.imageSource,
+                updateImageSource = { newImageSource ->
+                    component.updateImageSource(newImageSource)
+                },
+                state = state.value,
                 updatePointPosition = { index, pos ->
                     component.updatePointByIndex(index, pos)
                 },
-                updateScene = { scene ->
-                    usedSample = SceneSamples.NONE
-                    component.updateScene(scene)
-                },
-                showPhotoInput = showPhotoInput,
-                activatePhotoInput = { showPhotoInput = true},
+                activatePhotoInput = { component.changePhotoInputVisibility(true) },
                 generateSceneFromImage = { image ->
                     component.generateSceneFromImage(image)
                 },
@@ -202,18 +189,17 @@ fun PerspectiveBuilderScreen(
                 },
                 onPointSelected = { index ->
                     component.changeSelectedPointIndex(index)
-                },
-                isLoading = state.value.isLoading
+                }
             )
             PerspectiveBuilderSettings(
                 modifier = Modifier.width(Dimens.perspectiveBuilderSettingsWidth),
                 state = state.value,
                 component = component,
                 showGridChanged = { enabled ->
-                    gridEnabled.value = enabled
+                    component.changeGridVisibility(enabled)
                 },
                 onPhotoInputClick = {
-                    showPhotoInput = !showPhotoInput
+                    component.changePhotoInputVisibility(!state.value.scene.showPhotoInput)
                 },
                 onExportButtonClick = {
                     scope.launch {
@@ -221,7 +207,7 @@ fun PerspectiveBuilderScreen(
                     }
                 },
                 onSampleClick = { sample ->
-                    usedSample = sample
+                    component.useSample(sample)
                 }
             )
         }
@@ -231,53 +217,44 @@ fun PerspectiveBuilderScreen(
 @Composable
 fun PerspectiveBuilderSceneView(
     modifier: Modifier = Modifier,
+    imageSource: ImageSource?,
+    updateImageSource: (ImageSource?) -> Unit,
     graphicsLayer: GraphicsLayer,
-    scene: PerspectiveScene,
-    gridEnabled: Boolean,
-    usedSample: SceneSamples,
-    updateScene: (PerspectiveScene) -> Unit,
+    state: PerspectiveBuilderStore.State,
     updatePointPosition: (Int, PerspectivePoint) -> Unit,
-    showPhotoInput: Boolean,
     activatePhotoInput: () -> Unit,
-    isLoading: Boolean,
     generateSceneFromImage: (Image) -> Unit,
     onPointSelected: (Int) -> Unit,
     cancelGeneration: () -> Unit
 ) {
-    var imageSource by rememberSaveable { mutableStateOf<ImageSource?>(null) }
-    var image by rememberSaveable { mutableStateOf<Image?>(null) }
     var showImagePicker by remember { mutableStateOf(false) }
 
     imageSource?.let {
         GetImageBySource(it) { newImage ->
-            image = newImage
-        }
-    }
-
-    LaunchedEffect(image) {
-        image?.let {
-            generateSceneFromImage(it)
+            newImage?.let { image ->
+                generateSceneFromImage(image)
+            }
         }
     }
 
     HandleClipboardPaste {
-        imageSource = pasteImageFromClipboard()?.let {
+        pasteImageFromClipboard()?.let {
             activatePhotoInput()
-            ImageSource.BitmapSource(it)
+            updateImageSource(ImageSource.BitmapSource(it))
         }
     }
 
-    if (showPhotoInput) {
+    if (state.scene.showPhotoInput) {
         PhotoInputArea(
             imageSource = imageSource,
             onImageDropped = { source ->
-                imageSource = source
+                updateImageSource(source)
             },
             onPickButtonClick = {
                 showImagePicker = true
             },
             onCloseImageButtonClick = {
-                imageSource = null
+                updateImageSource(null)
                 cancelGeneration()
             },
             modifier = modifier,
@@ -295,7 +272,7 @@ fun PerspectiveBuilderSceneView(
                     contentDescription = stringResource(Res.string.selected_photo),
                     modifier = Modifier.fillMaxSize()
                 )
-                if (isLoading) {
+                if (state.isLoading) {
                     CircularProgressIndicator(
                         modifier = Modifier
                             .size(Dimens.circularProgressIndicatorSize)
@@ -305,12 +282,10 @@ fun PerspectiveBuilderSceneView(
                 } else {
                     PerspectiveSceneCanvas(
                         modifier = Modifier.fillMaxSize(),
-                        scene = scene,
-                        gridEnabled = gridEnabled,
-                        usedSample = usedSample,
-                        updateScene = updateScene,
+                        scene = state.scene,
+                        gridEnabled = state.scene.gridEnabled,
                         updatePointPosition = updatePointPosition,
-                        withBackground = !showPhotoInput,
+                        withBackground = !state.scene.showPhotoInput,
                         onPointSelected = onPointSelected
                     )
                 }
@@ -320,10 +295,8 @@ fun PerspectiveBuilderSceneView(
     else {
         PerspectiveSceneCanvas(
             modifier = modifier,
-            scene = scene,
-            gridEnabled = gridEnabled,
-            usedSample = usedSample,
-            updateScene = updateScene,
+            scene = state.scene,
+            gridEnabled = state.scene.gridEnabled,
             updatePointPosition = updatePointPosition,
             withBackground = true,
             onPointSelected = onPointSelected
@@ -331,7 +304,7 @@ fun PerspectiveBuilderSceneView(
     }
     if (showImagePicker) {
         ImagePicker { source ->
-            imageSource = source
+            updateImageSource(source)
             showImagePicker = false
         }
     }
@@ -342,8 +315,6 @@ fun PerspectiveSceneCanvas(
     modifier: Modifier = Modifier,
     scene: PerspectiveScene,
     gridEnabled: Boolean,
-    usedSample: SceneSamples,
-    updateScene: (PerspectiveScene) -> Unit,
     updatePointPosition: (Int, PerspectivePoint) -> Unit,
     withBackground: Boolean,
     onPointSelected: (Int) -> Unit
@@ -413,65 +384,26 @@ fun PerspectiveSceneCanvas(
                     )
                 }
         ) {
-            if (usedSample == SceneSamples.NONE) {
-                scene.apply {
-                    val pointsForDrawing = if (draggingPoint == null) {
-                        points
-                    } else {
-                        points.mapIndexed { index, point ->
-                            if (draggingPoint!!.first == index) {
-                                draggingPoint!!.second
-                            } else {
-                                point
-                            }
+            scene.apply {
+                val pointsForDrawing = if (draggingPoint == null) {
+                    points
+                } else {
+                    points.mapIndexed { index, point ->
+                        if (draggingPoint!!.first == index) {
+                            draggingPoint!!.second
+                        } else {
+                            point
                         }
                     }
-
-                    drawScene(
-                        points = pointsForDrawing,
-                        transformer = transformer,
-                        rayCount = rayCount,
-                        withBackground = withBackground,
-                        gridEnabled = gridEnabled,
-                    )
                 }
-            } else {
-                val centerX = scene.width / 2f
-                val centerY = scene.height / 2f
-                val leftX = -1f * scene.width
-                val rightX = scene.width * 2f
-                val topY = scene.height * 3f
-                val downY = scene.height * -2f
 
-                val points = when (usedSample) {
-                    SceneSamples.ONE_POINT -> {
-                        listOf(PerspectivePoint(centerX, centerY))
-                    }
-
-                    SceneSamples.TWO_POINT -> {
-                        listOf(
-                            PerspectivePoint(leftX, centerY),
-                            PerspectivePoint(rightX, centerY),
-                        )
-                    }
-
-                    SceneSamples.THREE_POINT_TOP -> {
-                        listOf(
-                            PerspectivePoint(leftX, centerY * 0.75f),
-                            PerspectivePoint(rightX, centerY * 0.75f),
-                            PerspectivePoint(centerX, topY),
-                        )
-                    }
-
-                    SceneSamples.THREE_POINT_DOWN -> {
-                        listOf(
-                            PerspectivePoint(leftX, centerY * 1.75f),
-                            PerspectivePoint(rightX, centerY * 1.75f),
-                            PerspectivePoint(centerX, downY),
-                        )
-                    }
-                }
-                updateScene(scene.copy(points = points))
+                drawScene(
+                    points = pointsForDrawing,
+                    transformer = transformer,
+                    rayCount = rayCount,
+                    withBackground = withBackground,
+                    gridEnabled = gridEnabled,
+                )
             }
         }
     }

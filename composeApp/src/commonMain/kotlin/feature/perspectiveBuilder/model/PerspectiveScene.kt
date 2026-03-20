@@ -7,7 +7,8 @@ data class PerspectiveScene(
     val rayCount: Int = 17,
     val width: Int = 1000,
     val height: Int = 1000,
-    val sample: SceneSamples = SceneSamples.NONE
+    val gridEnabled: Boolean = true,
+    val showPhotoInput: Boolean = false
 )
 
 @OptIn(ExperimentalContracts::class)
@@ -19,8 +20,6 @@ data class PerspectivePoint(
 ) {
     val isFinite: Boolean get() =
         x != Float.MAX_VALUE && y != Float.MAX_VALUE
-
-    val isInfinite: Boolean get() = !isFinite
 
     companion object {
         fun infinite(directionDegrees: Float) =

@@ -5,7 +5,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.graphics.ImageBitmap
 import core.LocalShortcutManager
 import core.model.Image
-import core.ui.composeComponents.ImageSource
+import core.model.ImageSource
 import feature.palette.photoPicker.toImage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

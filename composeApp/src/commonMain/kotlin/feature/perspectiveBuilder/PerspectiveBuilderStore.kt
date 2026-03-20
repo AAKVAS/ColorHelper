@@ -2,6 +2,7 @@ package feature.perspectiveBuilder
 
 import com.arkivanov.mvikotlin.core.store.Store
 import core.model.Image
+import core.model.ImageSource
 import feature.perspectiveBuilder.model.PerspectivePoint
 import feature.perspectiveBuilder.model.PerspectiveScene
 
@@ -12,6 +13,7 @@ interface PerspectiveBuilderStore
         data class ChangeSelectedPointIndex(val index: Int): Intent()
         data class GenerateSceneFromImage(val image: Image): Intent()
         data object CancelGeneration: Intent()
+        data class UpdateImageSource(val imageSource: ImageSource?): Intent()
     }
 
     data class State(
@@ -19,7 +21,8 @@ interface PerspectiveBuilderStore
         val isLoading: Boolean = false,
         val error: String? = null,
         val selectedPointIndex: Int = -1,
-        val imageKey: Int? = null
+        val imageKey: Int? = null,
+        val imageSource: ImageSource? = null
     )
 
     sealed class Label {
@@ -33,5 +36,6 @@ interface PerspectiveBuilderStore
         data class StartGeneratingSceneFromImage(val image: Image): Msg()
         data class SceneGenerated(val image: Image, val points: List<PerspectivePoint>): Msg()
         data object CancelGeneration: Msg()
+        data class ImageSourceUpdated(val imageSource: ImageSource?): Msg()
     }
 }

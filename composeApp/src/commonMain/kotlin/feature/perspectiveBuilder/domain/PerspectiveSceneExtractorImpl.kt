@@ -140,7 +140,7 @@ class PerspectiveSceneExtractorImpl : PerspectiveSceneExtractor {
     private fun findParallelLines(lines: List<Line>): List<List<Line>> {
         val denseLines = lines.filter { it.density >= 0.8f }
 
-        val clusters = clusterLinesByAngles(denseLines, step = 16).filter { it.size >= 3 }
+        val clusters = clusterLinesByAngles(denseLines, step = 10).filter { it.size >= 3 }
 
         val maxClusterDensity = clusters.maxOfOrNull { it.avgDensity } ?: 1.0f
         val maxVotes = clusters.maxOfOrNull { it.topVotes } ?: 1

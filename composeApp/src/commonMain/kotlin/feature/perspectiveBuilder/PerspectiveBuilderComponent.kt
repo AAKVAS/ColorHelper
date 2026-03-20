@@ -1,8 +1,10 @@
 package feature.perspectiveBuilder
 
 import core.model.Image
+import core.model.ImageSource
 import feature.perspectiveBuilder.model.PerspectivePoint
 import feature.perspectiveBuilder.model.PerspectiveScene
+import feature.perspectiveBuilder.model.SceneSamples
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -18,4 +20,8 @@ interface PerspectiveBuilderComponent {
     fun changeSelectedPointIndex(index: Int)
     fun generateSceneFromImage(image: Image)
     fun cancelGeneration()
+    fun changePhotoInputVisibility(visible: Boolean)
+    fun changeGridVisibility(visible: Boolean)
+    fun useSample(sample: SceneSamples)
+    fun updateImageSource(imageSource: ImageSource?)
 }
