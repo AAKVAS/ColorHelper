@@ -73,7 +73,3 @@ actual fun ExportPerspectiveScene(bitmap: ImageBitmap) {
         }
     }
 }
-
-@Composable
-actual fun ExportPerspectiveScene(bitmap: ImageBitmap) {
-}

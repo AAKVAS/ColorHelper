@@ -14,7 +14,7 @@ import kotlin.math.sqrt
 class PerspectiveSceneExtractorImpl : PerspectiveSceneExtractor {
     private val houghTransform = HoughTransform(
         thetaSteps = 180,
-        threshold = 50,
+        threshold = 20,
         localMaxWindow = 3
     )
 
@@ -97,40 +97,58 @@ class PerspectiveSceneExtractorImpl : PerspectiveSceneExtractor {
     ): List<PerspectivePoint> {
         if (lines.size < 2) return emptyList()
 
-        val strongLines = lines.take(30)
-
         val parallelGroups = findParallelLines(lines)
         val infinitePoints = parallelGroups.map { group ->
-            val avgAngle = calculateCircularAverage(group.angles)
+            val angles = group.map {it.angle }
+            val avgAngle = calculateCircularCenter(angles)
             PerspectivePoint.infinite(avgAngle)
         }
 
-        val finitePoints = findIntersectionPoints(strongLines, height, width)
+        val strongLines = takeStrongLines(lines, parallelGroups)
+        val rawFinite  = findIntersectionPoints(strongLines, height, width)
             .filter { point ->
                 !isPointNearInfiniteDirection(point, infinitePoints, height, width,)
             }
 
-        return (infinitePoints.take(2) + finitePoints).take(4)
+        val finitePoints = sortVanishingPoints(rawFinite, width, height)
+
+        return infinitePoints.take(3) + finitePoints.take(3)
     }
 
-    private data class ParallelGroup(
-        val lines: List<Line>,
-        val angles: List<Float>
-    )
+    private fun takeStrongLines(lines: List<Line>, parallelGroups: List<List<Line>>): List<Line> {
+        val parallelAngles = parallelGroups.flatMap { lines ->
+            lines.map {
+                it.angle
+            }
+        }.distinct()
+        val tolerance = 7f
 
-    private fun findParallelLines(lines: List<Line>): List<ParallelGroup> {
-        val denseLines = lines.filter { (it.density ?: 0f) >= 0.7f }
-        val angles = denseLines.map {
-            (Math.toDegrees(it.theta).toFloat() + 90) % 180 to (it.density ?: 0f)
+        val sortedVotes = lines.map {it.votes}.sortedDescending()
+        val threshold = sortedVotes[sortedVotes.size * 35 / 100]
+
+        return lines.filter { line ->
+            line.votes >= threshold && line.density >= 0.9f && parallelAngles.none { parallelAngle ->
+                val diff = abs(line.angle - parallelAngle)
+                minOf(diff, 180 - diff) < tolerance
+            }
         }
+        .sortedWith(compareByDescending<Line> { it.density }.thenByDescending { it.votes })
+        .take(40)
+    }
 
-        val clusters = clusterAngles(angles, step = 10).filter { it.size >= 3 }
+
+    private fun findParallelLines(lines: List<Line>): List<List<Line>> {
+        val denseLines = lines.filter { it.density >= 0.8f }
+
+        val clusters = clusterLinesByAngles(denseLines, step = 16).filter { it.size >= 3 }
 
         val maxClusterDensity = clusters.maxOfOrNull { it.avgDensity } ?: 1.0f
+        val maxVotes = clusters.maxOfOrNull { it.topVotes } ?: 1
 
         val filteredClusters = clusters
             .filter {
                 it.avgDensity >= maxClusterDensity * 0.93f
+                && it.topVotes >= maxVotes * 0.8
             }
             .sortedByDescending { it.avgDensity }
 
@@ -147,43 +165,34 @@ class PerspectiveSceneExtractorImpl : PerspectiveSceneExtractor {
             }
         }
 
-         return uniqueClusters.map { cluster ->
-            val clusterLines = denseLines.filterIndexed { index, _ ->
-                angles[index].first in cluster.angles
-            }
-            ParallelGroup(clusterLines, cluster.angles)
-        }
+         return uniqueClusters.map { it.lines }
     }
 
     private data class AngleCluster(
         val center: Float,
-        val angles: List<Float>,
+        val lines: List<Line>,
         val size: Int,
-        val avgDensity: Float
+        val avgDensity: Float,
+        val topVotes: Int
     )
 
-    private fun clusterAngles(angles: List<Pair<Float, Float>>, step: Int): List<AngleCluster> {
-        if (angles.isEmpty()) return emptyList()
-        val bins = mutableMapOf<Int, MutableList<Pair<Float, Float>>>()
+    private fun clusterLinesByAngles(lines: List<Line>, step: Int): List<AngleCluster> {
+        if (lines.isEmpty()) return emptyList()
+        val bins = mutableMapOf<Int, MutableList<Line>>()
         val halfStep = step / 2
 
-        for (angle in angles) {
-            val shifted = (angle.first + halfStep) % 180
+        for (line in lines) {
+            val shifted = (line.angle + halfStep) % 180
             val binIndex = (shifted / step).toInt()
-            bins.getOrPut(binIndex) { mutableListOf() }.add(angle)
+            bins.getOrPut(binIndex) { mutableListOf() }.add(line)
         }
 
         return bins.map { (_, binAngles) ->
-            val sumSin = binAngles.sumOf {
-                Math.toRadians((it.first * 2).toDouble()).let { rad -> sin(rad) }
-            }
-            val sumCos = binAngles.sumOf {
-                Math.toRadians((it.first * 2).toDouble()).let { rad -> cos(rad) }
-            }
-
-            val center = (Math.toDegrees(atan2(sumSin, sumCos)).toFloat() / 2 + 180) % 180
-            val avgDensity = binAngles.map { it.second }.average().toFloat()
-            AngleCluster(center, binAngles.map { it.first }, binAngles.size, avgDensity)
+            val center = calculateCircularCenter(binAngles.map { it.angle })
+            val avgDensity = binAngles.map { it.density }.average().toFloat()
+            val sortedVotes = binAngles.map {it.votes}.sortedDescending()
+            val topVotes = sortedVotes[sortedVotes.size * 20 / 100]
+            AngleCluster(center, binAngles, binAngles.size, avgDensity, topVotes)
         }
     }
 
@@ -315,19 +324,32 @@ class PerspectiveSceneExtractorImpl : PerspectiveSceneExtractor {
         return false
     }
 
-    private fun calculateCircularAverage(angles: List<Float>): Float {
-        if (angles.isEmpty()) return 0f
+    private fun sortVanishingPoints(points: List<PerspectivePoint>, width: Int, height: Int): List<PerspectivePoint> {
+        if (points.isEmpty()) return emptyList()
 
-        var sumSin = 0.0
-        var sumCos = 0.0
+        val threshold = max(width, height) * 0.01f
+        val uniqueResult = mutableListOf<PerspectivePoint>()
+        val similarPoints = mutableListOf<PerspectivePoint>()
 
-        for (angle in angles) {
-            val rad = Math.toRadians((angle * 2).toDouble())
-            sumSin += sin(rad)
-            sumCos += cos(rad)
+        for (point in points) {
+            val uniquePointExists = uniqueResult.any { existing ->
+                val distance =
+                    (point.x - existing.x).pow(2) + (point.y - existing.y).pow(2)
+                distance < threshold
+            }
+
+            val similarPointExists = similarPoints.any { existing ->
+                val distance =
+                    (point.x - existing.x).pow(2) + (point.y - existing.y).pow(2)
+                distance < threshold
+            }
+
+            if (uniquePointExists || similarPointExists) {
+                similarPoints.add(point)
+            } else {
+                uniqueResult.add(point)
+            }
         }
-
-        val avgRad = atan2(sumSin, sumCos)
-        return ((Math.toDegrees(avgRad).toFloat() / 2) + 180) % 180
+        return uniqueResult + similarPoints
     }
 }

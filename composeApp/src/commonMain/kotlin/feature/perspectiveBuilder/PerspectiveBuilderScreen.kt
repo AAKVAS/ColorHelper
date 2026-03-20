@@ -47,6 +47,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.layer.GraphicsLayer
 import androidx.compose.ui.graphics.layer.drawLayer
 import androidx.compose.ui.graphics.rememberGraphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
@@ -85,6 +86,7 @@ import feature.perspectiveBuilder.model.PerspectiveScene
 import feature.perspectiveBuilder.model.SceneSamples
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
+import java.lang.Exception
 import kotlin.math.cos
 import kotlin.math.pow
 import kotlin.math.sin
@@ -107,7 +109,11 @@ fun PerspectiveBuilderScreen(
 
     HandleClipboardCopy {
         scope.launch {
-            exportBitmap = graphicsLayer.toImageBitmap()
+            try {
+                exportBitmap = graphicsLayer.toImageBitmap()
+            } catch (_: Exception) {
+                
+            }
         }
     }
 
@@ -120,13 +126,8 @@ fun PerspectiveBuilderScreen(
             PerspectiveBuilderSceneView(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(Dimens.perspectiveSceneHeight)
-                    .drawWithContent {
-                        graphicsLayer.record {
-                            this@drawWithContent.drawContent()
-                        }
-                        drawLayer(graphicsLayer)
-                    },
+                    .height(Dimens.perspectiveSceneHeight),
+                graphicsLayer = graphicsLayer,
                 scene = state.value.scene,
                 usedSample = usedSample,
                 gridEnabled = gridEnabled.value,
@@ -179,13 +180,8 @@ fun PerspectiveBuilderScreen(
             PerspectiveBuilderSceneView(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .weight(1f)
-                    .drawWithContent {
-                        graphicsLayer.record {
-                            this@drawWithContent.drawContent()
-                        }
-                        drawLayer(graphicsLayer)
-                    },
+                    .weight(1f),
+                graphicsLayer = graphicsLayer,
                 scene = state.value.scene,
                 usedSample = usedSample,
                 gridEnabled = gridEnabled.value,
@@ -235,6 +231,7 @@ fun PerspectiveBuilderScreen(
 @Composable
 fun PerspectiveBuilderSceneView(
     modifier: Modifier = Modifier,
+    graphicsLayer: GraphicsLayer,
     scene: PerspectiveScene,
     gridEnabled: Boolean,
     usedSample: SceneSamples,
@@ -285,29 +282,38 @@ fun PerspectiveBuilderSceneView(
             },
             modifier = modifier,
         ) { source ->
-            DisplayImage(
-                source = source,
-                contentDescription = stringResource(Res.string.selected_photo),
-                modifier = Modifier.fillMaxSize()
-            )
-            if (isLoading) {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .size(Dimens.circularProgressIndicatorSize)
-                        .align(Alignment.Center),
-                    strokeWidth = Dimens.paddingXXSmall
+            Box(modifier = Modifier
+                .drawWithContent {
+                    graphicsLayer.record {
+                        this@drawWithContent.drawContent()
+                    }
+                    drawLayer(graphicsLayer)
+                }
+            ) {
+                DisplayImage(
+                    source = source,
+                    contentDescription = stringResource(Res.string.selected_photo),
+                    modifier = Modifier.fillMaxSize()
                 )
-            } else {
-                PerspectiveSceneCanvas(
-                    modifier = Modifier.fillMaxSize(),
-                    scene = scene,
-                    gridEnabled = gridEnabled,
-                    usedSample = usedSample,
-                    updateScene = updateScene,
-                    updatePointPosition = updatePointPosition,
-                    withBackground = !showPhotoInput,
-                    onPointSelected = onPointSelected
-                )
+                if (isLoading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .size(Dimens.circularProgressIndicatorSize)
+                            .align(Alignment.Center),
+                        strokeWidth = Dimens.paddingXXSmall
+                    )
+                } else {
+                    PerspectiveSceneCanvas(
+                        modifier = Modifier.fillMaxSize(),
+                        scene = scene,
+                        gridEnabled = gridEnabled,
+                        usedSample = usedSample,
+                        updateScene = updateScene,
+                        updatePointPosition = updatePointPosition,
+                        withBackground = !showPhotoInput,
+                        onPointSelected = onPointSelected
+                    )
+                }
             }
         }
     }

@@ -96,9 +96,6 @@ class HoughTransform(
         }
 
         return lines
-        .sortedByDescending { line ->
-            line.density ?: 0f
-        }.sortedByDescending { it.votes }
     }
 
     private fun isLocalMaximum(
