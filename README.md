@@ -17,6 +17,7 @@ A KMP application for aspiring artists, providing various tools for creating col
 📐 Perspective Builder
 * Create perspective grids with adjustable vanishing points and rays.
 * Ready-to-use samples for quick setup.
+* Load image and generate a perspective grid.
 * Export your perspective grid as an image.
 
 

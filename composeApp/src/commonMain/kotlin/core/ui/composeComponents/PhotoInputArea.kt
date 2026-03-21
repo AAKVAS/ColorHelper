@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -22,22 +23,22 @@ import core.ui.theme.LocalColorProvider
 fun PhotoInputArea(
     imageSource: ImageSource?,
     onImageDropped: (ImageSource) -> Unit,
-    onPickButtonClick: () -> Unit,
     onCloseImageButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
+    emptySourceBlock: @Composable BoxScope.() -> Unit,
     block: @Composable BoxScope.(ImageSource) -> Unit
 ) {
-    imageSource?.let { source ->
-        Box(
-            modifier = modifier
-                .padding(Dimens.paddingSmall)
-                .clip(RoundedCornerShape(Dimens.roundedCornerShapeSize))
-                .background(LocalColorProvider.current.onPrimary)
-                .padding(Dimens.paddingXXSmall)
-                .clip(RoundedCornerShape(Dimens.roundedCornerShapeSize))
-                .background(LocalColorProvider.current.onPrimary)
-                .height(Dimens.pickedPhotoHeight)
-        ) {
+    Box(
+        modifier = modifier
+            .padding(Dimens.paddingSmall)
+            .clip(RoundedCornerShape(Dimens.roundedCornerShapeSize))
+            .background(LocalColorProvider.current.onPrimary)
+            .padding(Dimens.paddingXXSmall)
+            .clip(RoundedCornerShape(Dimens.roundedCornerShapeSize))
+            .background(LocalColorProvider.current.onPrimary)
+            .height(Dimens.pickedPhotoHeight)
+    ) {
+        imageSource?.let { source ->
             block(source)
 
             CloseButton(
@@ -46,12 +47,13 @@ fun PhotoInputArea(
                     .padding(Dimens.paddingSmall),
                 onClick = onCloseImageButtonClick
             )
+
+        } ?: run {
+            emptySourceBlock()
         }
-    } ?: run {
         PhotoInputBox(
+            modifier = Modifier.fillMaxSize(),
             onImageDropped = onImageDropped,
-            onPickButtonClick = onPickButtonClick,
-            modifier = modifier
         )
     }
 }

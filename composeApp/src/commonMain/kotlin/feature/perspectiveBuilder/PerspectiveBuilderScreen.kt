@@ -148,9 +148,6 @@ fun PerspectiveBuilderScreen(
                 showGridChanged = { enabled ->
                     component.changeGridVisibility(enabled)
                 },
-                onPhotoInputClick = {
-                    component.changePhotoInputVisibility(!state.value.scene.showPhotoInput)
-                },
                 onExportButtonClick = {
                     scope.launch {
                         exportBitmap = graphicsLayer.toImageBitmap()
@@ -158,7 +155,10 @@ fun PerspectiveBuilderScreen(
                 },
                 onSampleClick = { sample ->
                     component.useSample(sample)
-                }
+                },
+                updateImageSource = { newImageSource ->
+                    component.updateImageSource(newImageSource)
+                },
             )
         }
     } else {
@@ -173,9 +173,6 @@ fun PerspectiveBuilderScreen(
                     .weight(1f),
                 graphicsLayer = graphicsLayer,
                 imageSource = state.value.imageSource,
-                updateImageSource = { newImageSource ->
-                    component.updateImageSource(newImageSource)
-                },
                 state = state.value,
                 updatePointPosition = { index, pos ->
                     component.updatePointByIndex(index, pos)
@@ -189,7 +186,10 @@ fun PerspectiveBuilderScreen(
                 },
                 onPointSelected = { index ->
                     component.changeSelectedPointIndex(index)
-                }
+                },
+                updateImageSource = { newImageSource ->
+                    component.updateImageSource(newImageSource)
+                },
             )
             PerspectiveBuilderSettings(
                 modifier = Modifier.width(Dimens.perspectiveBuilderSettingsWidth),
@@ -198,9 +198,6 @@ fun PerspectiveBuilderScreen(
                 showGridChanged = { enabled ->
                     component.changeGridVisibility(enabled)
                 },
-                onPhotoInputClick = {
-                    component.changePhotoInputVisibility(!state.value.scene.showPhotoInput)
-                },
                 onExportButtonClick = {
                     scope.launch {
                         exportBitmap = graphicsLayer.toImageBitmap()
@@ -208,6 +205,9 @@ fun PerspectiveBuilderScreen(
                 },
                 onSampleClick = { sample ->
                     component.useSample(sample)
+                },
+                updateImageSource = { newImageSource ->
+                    component.updateImageSource(newImageSource)
                 }
             )
         }
@@ -227,8 +227,6 @@ fun PerspectiveBuilderSceneView(
     onPointSelected: (Int) -> Unit,
     cancelGeneration: () -> Unit
 ) {
-    var showImagePicker by remember { mutableStateOf(false) }
-
     imageSource?.let {
         GetImageBySource(it) { newImage ->
             newImage?.let { image ->
@@ -244,68 +242,57 @@ fun PerspectiveBuilderSceneView(
         }
     }
 
-    if (state.scene.showPhotoInput) {
-        PhotoInputArea(
-            imageSource = imageSource,
-            onImageDropped = { source ->
-                updateImageSource(source)
-            },
-            onPickButtonClick = {
-                showImagePicker = true
-            },
-            onCloseImageButtonClick = {
-                updateImageSource(null)
-                cancelGeneration()
-            },
-            modifier = modifier,
-        ) { source ->
-            Box(modifier = Modifier
-                .drawWithContent {
-                    graphicsLayer.record {
-                        this@drawWithContent.drawContent()
-                    }
-                    drawLayer(graphicsLayer)
-                }
-            ) {
-                DisplayImage(
-                    source = source,
-                    contentDescription = stringResource(Res.string.selected_photo),
-                    modifier = Modifier.fillMaxSize()
-                )
-                if (state.isLoading) {
-                    CircularProgressIndicator(
-                        modifier = Modifier
-                            .size(Dimens.circularProgressIndicatorSize)
-                            .align(Alignment.Center),
-                        strokeWidth = Dimens.paddingXXSmall
-                    )
-                } else {
-                    PerspectiveSceneCanvas(
-                        modifier = Modifier.fillMaxSize(),
-                        scene = state.scene,
-                        gridEnabled = state.scene.gridEnabled,
-                        updatePointPosition = updatePointPosition,
-                        withBackground = !state.scene.showPhotoInput,
-                        onPointSelected = onPointSelected
-                    )
-                }
-            }
-        }
-    }
-    else {
-        PerspectiveSceneCanvas(
-            modifier = modifier,
-            scene = state.scene,
-            gridEnabled = state.scene.gridEnabled,
-            updatePointPosition = updatePointPosition,
-            withBackground = true,
-            onPointSelected = onPointSelected
-        )
-    }
-    if (showImagePicker) {
-        ImagePicker { source ->
+    PhotoInputArea(
+        imageSource = imageSource,
+        onImageDropped = { source ->
             updateImageSource(source)
-            showImagePicker = false
+        },
+        onCloseImageButtonClick = {
+            updateImageSource(null)
+            cancelGeneration()
+        },
+        modifier = modifier,
+        emptySourceBlock = {
+            PerspectiveSceneCanvas(
+                modifier = Modifier.fillMaxSize(),
+                scene = state.scene,
+                gridEnabled = state.scene.gridEnabled,
+                updatePointPosition = updatePointPosition,
+                withBackground = true,
+                onPointSelected = onPointSelected
+            )
+        }
+    ) { source ->
+        Box(modifier = Modifier
+            .drawWithContent {
+                graphicsLayer.record {
+                    this@drawWithContent.drawContent()
+                }
+                drawLayer(graphicsLayer)
+            }
+        ) {
+            DisplayImage(
+                source = source,
+                contentDescription = stringResource(Res.string.selected_photo),
+                modifier = Modifier.fillMaxSize()
+            )
+            if (state.isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .size(Dimens.circularProgressIndicatorSize)
+                        .align(Alignment.Center),
+                    strokeWidth = Dimens.paddingXXSmall
+                )
+            } else {
+                PerspectiveSceneCanvas(
+                    modifier = Modifier.fillMaxSize(),
+                    scene = state.scene,
+                    gridEnabled = state.scene.gridEnabled,
+                    updatePointPosition = updatePointPosition,
+                    withBackground = false,
+                    onPointSelected = onPointSelected
+                )
+            }
         }
     }
 }
@@ -321,6 +308,9 @@ fun PerspectiveSceneCanvas(
 ) {
     var draggingPoint by remember { mutableStateOf<Pair<Int, PerspectivePoint>?>(null) }
     val dragThresholdDp = 18f
+
+    val sceneColor = LocalColorProvider.current.primaryVariant
+    val backgroundColor = LocalColorProvider.current.primaryContainer
 
     BoxWithConstraints(
         modifier = modifier
@@ -403,6 +393,8 @@ fun PerspectiveSceneCanvas(
                     rayCount = rayCount,
                     withBackground = withBackground,
                     gridEnabled = gridEnabled,
+                    backgroundColor = backgroundColor,
+                    sceneColor = sceneColor
                 )
             }
         }
@@ -415,30 +407,41 @@ fun DrawScope.drawScene(
     rayCount: Int,
     withBackground: Boolean,
     gridEnabled: Boolean,
+    backgroundColor: Color,
+    sceneColor: Color
 ) {
     if (withBackground) {
-        drawRect(color = Color.White, size = this.size)
+        drawRect(color = backgroundColor, size = this.size)
     }
 
     if (gridEnabled) {
         drawGrid()
     }
+
     points.forEach { point ->
         if (point.isVisible) {
             if (point.isFinite) {
                 val pointPos = transformer.toScreen(point.x, point.y)
-                drawPoint(pointPos)
-                drawRaysFromPoint(pointPos, rayCount)
+                drawRaysFromPoint(sceneColor, pointPos, rayCount)
             } else {
-                drawParallelLines(point, rayCount)
+                drawParallelLines(sceneColor, point, rayCount)
             }
         }
     }
+    points.filter {
+        it.isVisible && it.isFinite
+    }.forEach {  point ->
+        val pointPos = transformer.toScreen(point.x, point.y)
+        drawPoint(sceneColor, pointPos)
+    }
 }
 
-fun DrawScope.drawPoint(pointPos: Offset) {
+fun DrawScope.drawPoint(
+    pointColor: Color,
+    pointPos: Offset
+) {
     drawCircle(
-        color = Color.Blue,
+        color = pointColor,
         radius = 8f,
         center = pointPos,
         style = Stroke(width = 2f)
@@ -451,13 +454,17 @@ fun DrawScope.drawPoint(pointPos: Offset) {
     )
 
     drawCircle(
-        color = Color.Blue,
+        color = pointColor,
         radius = 2f,
         center = pointPos,
     )
 }
 
-fun DrawScope.drawRaysFromPoint(pointPos: Offset, rayCount: Int) {
+fun DrawScope.drawRaysFromPoint(
+    lineColor: Color,
+    pointPos: Offset,
+    rayCount: Int
+) {
     if (rayCount < 2) return
 
     val angleStep = 360f / rayCount
@@ -477,7 +484,7 @@ fun DrawScope.drawRaysFromPoint(pointPos: Offset, rayCount: Int) {
         val endY = pointPos.y + (sin(angle) * rayLength).toFloat()
 
         drawLine(
-            color = Color.Blue.copy(alpha = 0.3f),
+            color = lineColor.copy(alpha = 0.5f),
             start = Offset(pointPos.x, pointPos.y),
             end = Offset(endX, endY),
             strokeWidth = 1f
@@ -485,7 +492,11 @@ fun DrawScope.drawRaysFromPoint(pointPos: Offset, rayCount: Int) {
     }
 }
 
-private fun DrawScope.drawParallelLines(point: PerspectivePoint, rayCount: Int) {
+private fun DrawScope.drawParallelLines(
+    lineColor: Color,
+    point: PerspectivePoint,
+    rayCount: Int
+) {
     val direction = point.direction ?: return
     val rad = Math.toRadians(direction.toDouble())
 
@@ -512,7 +523,7 @@ private fun DrawScope.drawParallelLines(point: PerspectivePoint, rayCount: Int) 
         val y2 = centerY + offsetY + lineDy * diagonal
 
         drawLine(
-            color = Color.Blue.copy(alpha = 0.3f),
+            color = lineColor.copy(alpha = 0.5f),
             start = Offset(x1, y1),
             end = Offset(x2, y2),
             strokeWidth = 1f
@@ -556,13 +567,14 @@ fun PerspectiveBuilderSettings(
     state: PerspectiveBuilderStore.State,
     component: PerspectiveBuilderComponent,
     showGridChanged: (Boolean) -> Unit,
-    onPhotoInputClick: () -> Unit,
     onSampleClick: (SceneSamples) -> Unit,
-    onExportButtonClick: () -> Unit
+    onExportButtonClick: () -> Unit,
+    updateImageSource: (ImageSource?) -> Unit,
 ) {
     val selectedPointIndex = state.selectedPointIndex
     val scrollState = rememberScrollState(0)
     var expanded by remember { mutableStateOf(false) }
+    var showImagePicker by remember { mutableStateOf(false) }
 
     Column(
         modifier = modifier
@@ -582,7 +594,7 @@ fun PerspectiveBuilderSettings(
             CameraIconButton(
                 modifier = Modifier.padding(vertical = Dimens.paddingXSmall)
             ) {
-                onPhotoInputClick()
+                showImagePicker = !showImagePicker
             }
         }
 
@@ -653,6 +665,13 @@ fun PerspectiveBuilderSettings(
             ExportButton(modifier = Modifier.padding(top = Dimens.paddingXSmall)) {
                 onExportButtonClick()
             }
+        }
+    }
+
+    if (showImagePicker) {
+        ImagePicker { source ->
+            updateImageSource(source)
+            showImagePicker = false
         }
     }
 }

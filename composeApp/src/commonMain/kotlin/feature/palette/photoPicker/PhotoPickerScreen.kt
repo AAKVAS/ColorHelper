@@ -57,6 +57,7 @@ import core.ui.composeComponents.DisplayImage
 import core.ui.composeComponents.ImagePicker
 
 import core.ui.composeComponents.PhotoInputArea
+import core.ui.composeComponents.PickPhotoButton
 import core.ui.composeComponents.SimpleButton
 import core.ui.theme.Dimens
 import core.ui.theme.LocalColorProvider
@@ -263,9 +264,13 @@ fun PhotoInputSection(
     PhotoInputArea(
         imageSource = imageSource,
         onImageDropped = onImageDropped,
-        onPickButtonClick = onPickButtonClick,
         onCloseImageButtonClick = onCloseImageButtonClick,
         modifier = modifier,
+        emptySourceBlock = {
+            PickPhotoButton(modifier = Modifier.align(Alignment.Center)) {
+                onPickButtonClick()
+            }
+        }
     ) { source ->
         DisplayImage(
             source = source,

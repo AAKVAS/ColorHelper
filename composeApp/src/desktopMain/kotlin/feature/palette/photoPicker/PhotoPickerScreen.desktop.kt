@@ -13,8 +13,11 @@ fun BufferedImage.toImage(path: String, sampleStep: Int = 4): Image {
     val width = this.width
     val height = this.height
 
-    for (x in 0 until width step sampleStep) {
-        for (y in 0 until height step sampleStep) {
+    val newWidth = (width + sampleStep - 1) / sampleStep
+    val newHeight = (height + sampleStep - 1) / sampleStep
+
+    for (y in 0 until height step sampleStep) {
+        for (x in 0 until width step sampleStep) {
             val rgb = getRGB(x, y)
             pixels.add(
                 RGBPixel(
@@ -26,7 +29,7 @@ fun BufferedImage.toImage(path: String, sampleStep: Int = 4): Image {
         }
     }
 
-    return Image(path, width, height, pixels)
+    return Image(path, newWidth, newHeight, pixels)
 }
 
 fun ImageBitmap.toImage(sampleStep: Int = 4): Image {

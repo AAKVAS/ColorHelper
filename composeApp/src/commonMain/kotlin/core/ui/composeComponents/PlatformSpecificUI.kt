@@ -28,6 +28,5 @@ expect fun ImagePicker(onImagePicked: (ImageSource?) -> Unit)
 @Composable
 expect fun PhotoInputBox(
     modifier: Modifier = Modifier,
-    onImageDropped: (ImageSource) -> Unit,
-    onPickButtonClick: () -> Unit
+    onImageDropped: (ImageSource) -> Unit
 )

@@ -62,6 +62,7 @@ class PerspectiveBuilderStoreFactory (
             }
 
         private fun updateScene(scene: PerspectiveScene) {
+            generationJob?.cancel()
             dispatch(PerspectiveBuilderStore.Msg.SceneUpdated(scene))
         }
 
@@ -88,6 +89,7 @@ class PerspectiveBuilderStoreFactory (
         }
 
         private fun updateImageSource(imageSource: ImageSource?) {
+            generationJob?.cancel()
             dispatch(PerspectiveBuilderStore.Msg.ImageSourceUpdated(imageSource))
         }
     }
@@ -125,7 +127,8 @@ class PerspectiveBuilderStoreFactory (
                     imageKey = null
                 )
                 is PerspectiveBuilderStore.Msg.ImageSourceUpdated -> copy(
-                    imageSource = msg.imageSource
+                    imageSource = msg.imageSource,
+                    isLoading = false
                 )
             }
         }

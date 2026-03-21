@@ -4,24 +4,15 @@ package core.ui.composeComponents
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import core.model.ImageSource
-import core.ui.theme.Dimens
-import core.ui.theme.LocalColorProvider
 
 @Composable
 actual fun TooltipWrapper(
@@ -78,20 +69,6 @@ actual fun ImagePicker(onImagePicked: (ImageSource?) -> Unit) {
 actual fun PhotoInputBox(
     modifier: Modifier,
     onImageDropped: (ImageSource) -> Unit,
-    onPickButtonClick: () -> Unit
 ) {
-    Box(
-        modifier = modifier
-            .padding(Dimens.paddingSmall)
-            .clip(RoundedCornerShape(Dimens.roundedCornerShapeSize))
-            .background(LocalColorProvider.current.onBackground)
-            .padding(Dimens.paddingXXSmall)
-            .clip(RoundedCornerShape(Dimens.roundedCornerShapeSize))
-            .background(LocalColorProvider.current.primaryContainer)
-            .height(Dimens.photoPickerHeight)
-    ) {
-        PickPhotoButton(modifier = Modifier.align(Alignment.Center)) {
-            onPickButtonClick()
-        }
-    }
+
 }
