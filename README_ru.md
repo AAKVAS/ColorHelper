@@ -36,7 +36,7 @@ KMP приложение для начинающих художников, пр�
 <img width="180" alt="image" src="https://github.com/user-attachments/assets/7720e0c7-ecb2-45ec-b502-36364ef4d8eb" />
 <img width="180" alt="image" src="https://github.com/user-attachments/assets/7e788641-1b36-47ea-8b1a-521c1b061145" />
 <img width="180" alt="image" src="https://github.com/user-attachments/assets/dee80326-ad11-418f-a490-b33265c9dfc9" />
-<img width="180" alt="image" src="https://github.com/user-attachments/assets/9438c244-22e1-4320-b4e3-034ede79759f" />
+<img width="180" alt="image" src="https://github.com/user-attachments/assets/d8c95113-5e32-4a06-b595-ba4a5677f4fa" />
 <img width="180" alt="image" src="https://github.com/user-attachments/assets/f34592e6-fe7a-4f2b-9dbd-427bb4901d4f" />
 
 
@@ -44,8 +44,8 @@ KMP приложение для начинающих художников, пр�
 
 <img width="300" alt="image" src="https://github.com/user-attachments/assets/77af801a-eead-46d1-b6dc-c828544404e9" />
 <img width="300" alt="image" src="https://github.com/user-attachments/assets/135ff2d3-6e22-49c3-a9a4-316c8be911f1" />
-<img width="300" alt="image" src="https://github.com/user-attachments/assets/232a3186-53cc-4685-a122-97d7b0d4e0d2" />
 <img width="300" alt="image" src="https://github.com/user-attachments/assets/47df0d0c-9998-4c0e-91d8-270594428181" />
+<img width="300" alt="image" src="https://github.com/user-attachments/assets/446028f4-14cc-4cf3-85d0-08b3be16d476" />
 <img width="300" alt="image" src="https://github.com/user-attachments/assets/819356c8-b5cf-4929-81f4-863975220ba6" />
 
 
