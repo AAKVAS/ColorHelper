@@ -37,11 +37,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.DpSize
-import com.example.Res
-import com.example.image_busket
-import com.example.lab
-import com.example.palettes
-import com.example.perspective
+import com.aakvas.Res
+import com.aakvas.image_busket
+import com.aakvas.lab
+import com.aakvas.palettes
+import com.aakvas.perspective
 import core.ui.composeComponents.MenuButton
 import core.ui.theme.AppTheme
 import core.ui.theme.Dimens

@@ -1,6 +1,5 @@
 package feature.perspectiveBuilder.model
 
-import kotlin.contracts.ExperimentalContracts
 
 data class PerspectiveScene(
     val points: List<PerspectivePoint> = emptyList(),
@@ -11,7 +10,6 @@ data class PerspectiveScene(
     val showPhotoInput: Boolean = false
 )
 
-@OptIn(ExperimentalContracts::class)
 data class PerspectivePoint(
     val x: Float,
     val y: Float,

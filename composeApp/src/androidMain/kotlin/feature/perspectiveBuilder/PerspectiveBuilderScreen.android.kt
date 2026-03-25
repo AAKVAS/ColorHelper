@@ -11,8 +11,8 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.FileProvider
-import com.example.Res
-import com.example.title
+import com.aakvas.Res
+import com.aakvas.title
 import core.ui.composeComponents.ShareButton
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource

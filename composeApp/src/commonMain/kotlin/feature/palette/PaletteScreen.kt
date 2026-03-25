@@ -46,11 +46,11 @@ import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.DpSize
-import com.example.Res
-import com.example.copied
-import com.example.delete
-import com.example.harmonious_colors
-import com.example.outline_delete
+import com.aakvas.Res
+import com.aakvas.copied
+import com.aakvas.delete
+import com.aakvas.harmonious_colors
+import com.aakvas.outline_delete
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 import core.ui.composeComponents.BackHandlerWrapper
 import core.ui.composeComponents.BackNavigationButton

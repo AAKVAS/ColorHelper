@@ -17,8 +17,8 @@ import androidx.compose.ui.draganddrop.DragAndDropEvent
 import androidx.compose.ui.draganddrop.DragAndDropTarget
 import androidx.compose.ui.draganddrop.awtTransferable
 import androidx.compose.ui.graphics.Color
-import com.example.Res
-import com.example.select_photo
+import com.aakvas.Res
+import com.aakvas.select_photo
 import core.model.ImageSource
 import core.ui.theme.LocalColorProvider
 import kotlinx.coroutines.Dispatchers

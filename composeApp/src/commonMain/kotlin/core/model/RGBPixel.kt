@@ -14,12 +14,5 @@ value class RGBPixel(private val packed: Int) {
     val g: Int get() = (packed shr 8) and 0xFF
     val b: Int get() = packed and 0xFF
 
-    val hasAlpha: Boolean get() = a < 255
-
     override fun toString(): String = "RGBPixel(r=$r, g=$g, b=$b)"
-
-    companion object {
-        val BLACK = RGBPixel(0)
-        val WHITE = RGBPixel(r = 255, g = 255, b = 255)
-    }
 }

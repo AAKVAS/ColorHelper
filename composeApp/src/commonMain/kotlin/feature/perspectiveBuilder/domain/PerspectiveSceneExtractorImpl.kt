@@ -62,7 +62,7 @@ class PerspectiveSceneExtractorImpl : PerspectiveSceneExtractor {
 
     private fun computeGradientX(grayImage: GrayImage, x: Int, y: Int): Int {
         with(grayImage) {
-            val idx = y * grayImage.width + x
+            val idx = y * width + x
 
             return (
                 -image[idx - width - 1]
@@ -140,7 +140,7 @@ class PerspectiveSceneExtractorImpl : PerspectiveSceneExtractor {
     private fun findParallelLines(lines: List<Line>): List<List<Line>> {
         val denseLines = lines.filter { it.density >= 0.8f }
 
-        val clusters = clusterLinesByAngles(denseLines, step = 10).filter { it.size >= 3 }
+        val clusters = clusterLinesByAngles(denseLines, step = 10).filter { it.lines.size >= 3 }
 
         val maxClusterDensity = clusters.maxOfOrNull { it.avgDensity } ?: 1.0f
         val maxVotes = clusters.maxOfOrNull { it.topVotes } ?: 1
@@ -171,7 +171,6 @@ class PerspectiveSceneExtractorImpl : PerspectiveSceneExtractor {
     private data class AngleCluster(
         val center: Float,
         val lines: List<Line>,
-        val size: Int,
         val avgDensity: Float,
         val topVotes: Int
     )
@@ -192,7 +191,7 @@ class PerspectiveSceneExtractorImpl : PerspectiveSceneExtractor {
             val avgDensity = binAngles.map { it.density }.average().toFloat()
             val sortedVotes = binAngles.map {it.votes}.sortedDescending()
             val topVotes = sortedVotes[sortedVotes.size * 20 / 100]
-            AngleCluster(center, binAngles, binAngles.size, avgDensity, topVotes)
+            AngleCluster(center, binAngles, avgDensity, topVotes)
         }
     }
 

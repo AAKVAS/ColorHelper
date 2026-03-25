@@ -14,7 +14,7 @@ plugins {
 
 compose.resources {
     publicResClass = true
-    packageOfResClass = "com.example"
+    packageOfResClass = "com.aakvas"
     generateResClass = auto
 }
 
@@ -94,15 +94,15 @@ dependencies {
 }
 
 android {
-    namespace = "org.example"
+    namespace = "org.aakvas"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "org.example"
+        applicationId = "org.aakvas"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
-        versionName = "1.0"
+        versionName = "1.0.1"
     }
     packaging {
         resources {
@@ -112,6 +112,10 @@ android {
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
     compileOptions {
