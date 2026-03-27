@@ -66,3 +66,9 @@ A KMP application for aspiring artists, providing various tools for creating col
 * Korender
 * ColorPickerView
 
+## Install
+<div>
+<a href="https://github.com/AAKVAS/ColorHelper/releases/latest">
+      <img alt="Get it on GitHub" src="https://raw.githubusercontent.com/deckerst/common/main/assets/get-it-on-github.png" height="100">
+</a>
+</div>
