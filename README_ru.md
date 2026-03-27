@@ -60,3 +60,13 @@ KMP приложение для начинающих художников, пр�
 * Room
 * Korender
 * ColorPickerView
+
+## Установка
+<div>
+<a href="https://www.rustore.ru/catalog/app/org.aakvas">
+      <img alt="Get it on RuStore" src="https://github.com/AAKVAS/CircleOfFifth/assets/76523640/7ee0bc43-e132-451c-a795-ef5999fae0c8" height="100">
+</a>
+<a href="https://github.com/AAKVAS/ColorHelper/releases/latest">
+      <img alt="Get it on GitHub" src="https://raw.githubusercontent.com/deckerst/common/main/assets/get-it-on-github.png" height="100">
+</a>
+</div>
